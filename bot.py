@@ -10,8 +10,10 @@ class Bot:
             self.proc=Popen(shlex.split(prompt), stdout=PIPE)
         self.name=name
         self.coins=0
+        self.tempsoldiers=0
+        self.tempfleet=0
         self.philosophers=0
-        self.ownedTiles={}
+        self.ownedTiles=set()
     def __hash__(self):
         return hash(self.name)
     def get_move(self):

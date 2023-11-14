@@ -13,15 +13,14 @@ class TryingToBuildOnWater(Exception):
     pass
 
 class Pole:
-    def __init__(self, typ, value, owner, maxBuildings=0, id=[1]):
-        self.id=id[0]
-        id[0]+=1
+    def __init__(self, id, typ, value, owner, maxBuildings):
+        self.id=id
         self.typ=typ
         self.value=value
         self.owner=owner
         self.isMetropolis=False
         self.buildings=['plains' for i in range(maxBuildings)]
-        self.neighbours={}
+        self.neighbours=set()
     def __hash__(self):
         return self.id
     def increaseValue(self):
@@ -44,8 +43,8 @@ class Plansza:
     def __init__(self):
         self.pola={}
     def generateBoard(self):
-        self.pola.add(Pole('woda', 0, 'jan'))
-        self.pola.add(Pole('wyspa', 2, 'Kuba', 4))
+        self.pola[1]=Pole(1, 'woda', 0, 'jan', 0)
+        self.pola[2]=Pole(2, 'wyspa', 2, 'Kuba', 4)
         #......... tu najpierw genereujemy wszystkie pola, a następnie przypisujemy im jakich mają sąsiadów
     def build(self, kto, gdzie, co, slot):
         if self.pola[gdzie].owner!=kto:
@@ -57,5 +56,9 @@ class Plansza:
         if self.pola[gdzie].owner!=kto:
             raise AttemptedBuildingOnNotOwnedTile
         self.pola[gdzie].buildMetropolis()
+    def raiseValue(self, kto, gdzie):
+        if self.pola[gdzie].owner!=kto:
+            raise AttemptedBuildingOnNotOwnedTile
+        self.pola[gdzie].increaseValue
 
 
