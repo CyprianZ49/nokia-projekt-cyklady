@@ -112,8 +112,6 @@ def reset(zeus, atena, ares, poseidon, apollo):
 
 '''
 
--przyznać botom przychód
-(dzieje się licytacja)
 po licytacji mamy dla każdego boga który bot go  wylicytował
 iterować po bogach, jeśli bóg był przez kogoś wylicytowany to dajemu temu botowi mu sygnał, że jest jego kolej
 odbieramy od niego ruchy i wywołujemy adekwatne funkcje akcji
@@ -126,3 +124,4 @@ reset licytacj, to jest ustawienie botów w odwrotnej kolejności do tego jak gr
 randomizacja kolejności 4 głównych bogów
 
 '''
+
