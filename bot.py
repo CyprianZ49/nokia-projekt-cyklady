@@ -7,7 +7,7 @@ class Bot:
         if prompt is None:
             self.proc=Popen(shlex.split("python terminalbot.py"), stdout=PIPE, creationflags=CREATE_NEW_CONSOLE)
         else:
-            self.proc=Popen(shlex.split(prompt), stdout=PIPE)
+            self.proc=Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE)
         self.name=name
         self.coins=0
         self.philosophers=0
