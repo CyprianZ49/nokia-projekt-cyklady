@@ -72,10 +72,11 @@ class Plansza:
         self.pola=[[]]
     def generateBoard(self):
         for x in range(13):
+            self.pola.append([])
             for y in range(13):
-                self.pola.insert(x, Void(x, y))
+                self.pola[x].append(Void(x, y))
         for y in range(7):
-            for x in range(7+x):
+            for x in range(7+y):
                 self.pola[x][y]=Water(x, y, 0, -1)
         for y in range(7, 13):
             for x in range(y-6, 13):
@@ -148,3 +149,5 @@ class Plansza:
         self.pola[x][y].increaseValue
 
 
+board = Plansza()
+board.generateBoard()
