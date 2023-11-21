@@ -2,6 +2,7 @@ from typing import Any
 import pygame
 import math
 import random
+import plansza
 
 pygame.init()
 screen = pygame.display.set_mode((1820, 980))
@@ -58,25 +59,30 @@ def konw(centre,radius,typ):
     if typ == 6:
         return konw6(centre,radius)
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+def game():
+    running = 1
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        
+        screen.fill("light blue")
+        srodek = (900,450)
+        promien = 50
+        draw_hexagon(srodek,promien,"grey")
+        for i in range(1,7):
+            draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
+        # draw_hexagon((900,450),50,"gray")
 
     
-    screen.fill("light blue")
-    srodek = (900,450)
-    promien = 50
-    draw_hexagon(srodek,promien,"grey")
-    for i in range(1,7):
-        draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
-    # draw_hexagon((900,450),50,"gray")
-
-   
-    pygame.display.update()
-    clock.tick(60)
+        pygame.display.update()
+        clock.tick(60)
     
 
-   
+board = plansza.Plansza()
+board.generateBoard()
+print(board.pola)
+game()
 
 pygame.quit()
