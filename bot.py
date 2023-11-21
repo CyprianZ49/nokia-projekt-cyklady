@@ -11,7 +11,7 @@ class Bot:
         self.name=name
         self.coins=0
         self.tempsoldiers=0
-        self.tempfleet=0
+        self.tempfleets=0
         self.philosophers=0
         self.ownedTiles=set()
     def __hash__(self):
