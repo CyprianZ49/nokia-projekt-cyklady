@@ -6,7 +6,7 @@ import random
 pygame.init()
 screen = pygame.display.set_mode((1820, 980))
 running = True
-pygame.display.set_caption("Game")
+pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
 
 
@@ -23,6 +23,13 @@ def draw_hexagon(centre,radius,color):
         (centre[0]+radius*0.5,centre[1]+radius),
         (centre[0]+(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
         (centre[0]+radius*0.5,centre[1]-radius)])
+    pygame.draw.polygon(screen,"black",[
+        (centre[0]-radius*0.5,centre[1]-radius),
+        (centre[0]-(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
+        (centre[0]-radius*0.5,centre[1]+radius),
+        (centre[0]+radius*0.5,centre[1]+radius),
+        (centre[0]+(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
+        (centre[0]+radius*0.5,centre[1]-radius)],3)
     
 def konw1(centre,radius):#1 na gorze i pozniej wedlug wskazowek zegara
     return (centre[0],centre[1]-2*radius)
@@ -60,7 +67,7 @@ while running:
     screen.fill("light blue")
     srodek = (900,450)
     promien = 50
-    draw_hexagon(srodek,promien,"black")
+    draw_hexagon(srodek,promien,"red")
     for i in range(1,7):
         draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
     # draw_hexagon((900,450),50,"gray")
