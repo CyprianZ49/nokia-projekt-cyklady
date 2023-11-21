@@ -14,7 +14,7 @@ class Licytacja:
         return op,god,value
     
     def do_bid(self,i,_,god,value):
-        for bot in bots:
+        for bot in self.bots:
             bot.send_move(i,(_,god,value))
         if god=='ap':
             self.bids[god].append(i)
@@ -36,7 +36,7 @@ class Licytacja:
             self.do_bid(i,_,god,value)
         return self.bids
             
-
-bots = [Bot(i) for i in range(4)]
-l = Licytacja(bots)
-print(l.perform())
+if __name__ == "__main__":
+    bots = [Bot(i) for i in range(4)]
+    l = Licytacja(bots)
+    print(l.perform())
