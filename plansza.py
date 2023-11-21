@@ -71,8 +71,8 @@ class Plansza:
     def __init__(self):
         self.pola=[[]]
     def generateBoard(self):
-        for x in range(boardSize):
-            for y in range(boardSize):
+        for x in range(13):
+            for y in range(13):
                 self.pola.insert(x, Void(x, y))
         for y in range(7):
             for x in range(7+x):
