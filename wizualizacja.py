@@ -17,32 +17,32 @@ def draw_map(wspolrzedne_pierwszego_punktu,mapa,promien,odw): #mapa sklada się 
 
 def draw_hexagon(centre,radius,color):
     pygame.draw.polygon(screen,color,[
-        (centre[0]-radius*0.5,centre[1]-radius),
-        (centre[0]-(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
-        (centre[0]-radius*0.5,centre[1]+radius),
-        (centre[0]+radius*0.5,centre[1]+radius),
-        (centre[0]+(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
-        (centre[0]+radius*0.5,centre[1]-radius)])
+        (centre[0]-radius*math.tan(math.radians(30)),centre[1]-radius),
+        (centre[0]-(radius/math.cos(math.radians(30))),centre[1]),
+        (centre[0]-radius*math.tan(math.radians(30)),centre[1]+radius),
+        (centre[0]+radius*math.tan(math.radians(30)),centre[1]+radius),
+        (centre[0]+(radius/math.cos(math.radians(30))),centre[1]),
+        (centre[0]+radius*math.tan(math.radians(30)),centre[1]-radius)])
     pygame.draw.polygon(screen,"black",[
-        (centre[0]-radius*0.5,centre[1]-radius),
-        (centre[0]-(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
-        (centre[0]-radius*0.5,centre[1]+radius),
-        (centre[0]+radius*0.5,centre[1]+radius),
-        (centre[0]+(radius*0.5+radius/math.tan(math.radians(60))),centre[1]),
-        (centre[0]+radius*0.5,centre[1]-radius)],3)
+        (centre[0]-radius*math.tan(math.radians(30)),centre[1]-radius),
+        (centre[0]-(radius/math.cos(math.radians(30))),centre[1]),
+        (centre[0]-radius*math.tan(math.radians(30)),centre[1]+radius),
+        (centre[0]+radius*math.tan(math.radians(30)),centre[1]+radius),
+        (centre[0]+(radius/math.cos(math.radians(30))),centre[1]),
+        (centre[0]+radius*math.tan(math.radians(30)),centre[1]-radius)],3)
     
 def konw1(centre,radius):#1 na gorze i pozniej wedlug wskazowek zegara
     return (centre[0],centre[1]-2*radius)
 def konw2(centre,radius):
-    return (centre[0]+(0.5*radius+(radius*0.5+radius/math.tan(math.radians(60)))),centre[1]-radius)
+    return (centre[0]+2*(math.cos(math.radians(30))*radius),centre[1]-2*(math.sin(math.radians(30))*radius))
 def konw3(centre,radius):
-    return (centre[0]+(0.5*radius+(radius*0.5+radius/math.tan(math.radians(60)))),centre[1]+radius)
+    return (centre[0]+2*(math.cos(math.radians(30))*radius),centre[1]+2*(math.sin(math.radians(30))*radius))
 def konw4(centre,radius):#1 na gorze i pozniej wedlug wskazowek zegara
     return (centre[0],centre[1]+2*radius)
 def konw5(centre,radius):
-    return (centre[0]-(0.5*radius+(radius*0.5+radius/math.tan(math.radians(60)))),centre[1]+radius)
+    return (centre[0]-2*(math.cos(math.radians(30))*radius),centre[1]+2*(math.sin(math.radians(30))*radius))
 def konw6(centre,radius):
-    return (centre[0]-(0.5*radius+(radius*0.5+radius/math.tan(math.radians(60)))),centre[1]-radius)
+    return (centre[0]-2*(math.cos(math.radians(30))*radius),centre[1]-2*(math.sin(math.radians(30))*radius))
 
 def konw(centre,radius,typ):
     if typ == 1:
@@ -67,7 +67,7 @@ while running:
     screen.fill("light blue")
     srodek = (900,450)
     promien = 50
-    draw_hexagon(srodek,promien,"red")
+    draw_hexagon(srodek,promien,"grey")
     for i in range(1,7):
         draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
     # draw_hexagon((900,450),50,"gray")
