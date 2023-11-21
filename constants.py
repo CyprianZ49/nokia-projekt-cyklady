@@ -1,1 +1,1 @@
-boardSize = 14
+boardSize = 13
