@@ -76,10 +76,10 @@ class Plansza:
             for y in range(13):
                 self.pola[x].append(Void(x, y))
         for y in range(1, 7):
-            for x in range(1, 7+y):
+            for x in range(1, 6+y):
                 self.pola[x][y]=Water(x, y, 0, -1)
         for y in range(7, 12):
-            for x in range(y-5, 13):
+            for x in range(y-5, 12):
                 self.pola[x][y]=Water(x, y, 0, -1)
         self.pola[1][1].increaseValue()
         self.pola[6][1].increaseValue()

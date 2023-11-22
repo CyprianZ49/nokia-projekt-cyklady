@@ -60,40 +60,38 @@ def konw(centre,radius,typ):
         return konw6(centre,radius)
 
 
-odwiedzone = {}
-def crawl(x,y,centre,radius):
-    #print(board.pola[x][y]==plansza.Water)
-    if (x,y) not in odwiedzone:
-        print(x,y)
-        odwiedzone[(x,y)]=True
-        if isinstance(board.pola[x][y],plansza.Water):
-            draw_hexagon(centre,radius,"blue")
-        if isinstance(board.pola[x][y],plansza.Island):
-            draw_hexagon(centre,radius,"brown")
-        if isinstance(board.pola[x][y],plansza.Capital):
-            draw_hexagon(centre,radius,"gold")
-        
-        if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
-            crawl(x+1,y+1,konw(centre,radius,1),radius)
-
-        if x+1<len(board.pola) and y<len(board.pola[x+1]):
-            crawl(x+1,y,konw(centre,radius,2),radius)
-
-        if x>=0 and y-1>=0:
-            crawl(x,y-1,konw(centre,radius,3),radius)
-        
-        if x-1>=0 and y-1>=0:
-            crawl(x-1,y-1,konw(centre,radius,4),radius)
-        if x-1>=0 and y>=0:
-            crawl(x-1,y,konw(centre,radius,5),radius)
-        
-        # if x-1>=0 and y-1>=0:
-        #     crawl(x-1,y-1,konw(centre,radius,4),radius)
     
 
 def render_board(poczatkowy_srodek,promien):
-    odwiedzone.clear()
+    odwiedzone = {}
+    def crawl(x,y,centre,radius):
+        #print(board.pola[x][y]==plansza.Water)
+        if (x,y) not in odwiedzone:
+            print(x,y)
+            odwiedzone[(x,y)]=True
+            if isinstance(board.pola[x][y],plansza.Water):
+                draw_hexagon(centre,radius,"blue")
+            if isinstance(board.pola[x][y],plansza.Island):
+                draw_hexagon(centre,radius,"brown")
+            if isinstance(board.pola[x][y],plansza.Capital):
+                draw_hexagon(centre,radius,"gold")
+            
+            if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
+                crawl(x+1,y+1,konw(centre,radius,1),radius)
+
+            if x+1<len(board.pola) and y<len(board.pola[x+1]):
+                crawl(x+1,y,konw(centre,radius,2),radius)
+
+            if x>=0 and y-1>=0:
+                crawl(x,y-1,konw(centre,radius,3),radius)
+            
+            if x-1>=0 and y-1>=0:
+                crawl(x-1,y-1,konw(centre,radius,4),radius)
+            if x-1>=0 and y>=0:
+                crawl(x-1,y,konw(centre,radius,5),radius)
+                
     crawl(0,0,poczatkowy_srodek,promien)
+    
 
 def game():
     running = 1
