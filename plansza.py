@@ -23,8 +23,8 @@ class Water:
     def increaseValue(self):
         self.value+=1
     def changeOwner(self, newOwner):
-        self.owner.ownedTiles.remove([self.x, self.y])
-        newOwner.ownedTiles.add([self.x, self.y])
+        self.owner.ownedTiles.remove((self.x, self.y))
+        newOwner.ownedTiles.append((self.x, self.y))
         self.owner=newOwner
 
 class Void:
@@ -47,7 +47,7 @@ class Capital:
         self.value=value
         self.owner=owner
         self.isMetropolis=False
-        self.buildings=['plains' for i in range(maxBuildings)]
+        self.buildings=[0 for i in range(maxBuildings)]
         self.territory=territory
         self.typ='capital'
         self.strength=0
@@ -63,8 +63,8 @@ class Capital:
         self.isMetropolis=True
         self.buildings=self.buildings[:-2]
     def changeOwner(self, newOwner):
-        self.owner.ownedTiles.remove([self.x, self.y])
-        newOwner.ownedTiles.add([self.x, self.y])
+        self.owner.ownedTiles.remove((self.x, self.y))
+        newOwner.ownedTiles.append((self.x, self.y))
         self.owner=newOwner
 
 class Plansza:
@@ -75,11 +75,11 @@ class Plansza:
             self.pola.append([])
             for y in range(13):
                 self.pola[x].append(Void(x, y))
-        for y in range(7):
-            for x in range(7+y):
+        for y in range(1, 7):
+            for x in range(1, 7+y):
                 self.pola[x][y]=Water(x, y, 0, -1)
-        for y in range(7, 13):
-            for x in range(y-6, 13):
+        for y in range(7, 12):
+            for x in range(y-5, 13):
                 self.pola[x][y]=Water(x, y, 0, -1)
         self.pola[1][1].increaseValue()
         self.pola[6][1].increaseValue()
@@ -147,7 +147,6 @@ class Plansza:
         if self.pola[x][y].owner!=kto:
             raise AttemptedBuildingOnNotOwnedTile
         self.pola[x][y].increaseValue
-
 
 board = Plansza()
 board.generateBoard()

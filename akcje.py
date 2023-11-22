@@ -7,6 +7,9 @@ class InvalidFunds(Exception):
 class TooManyRecruitments(Exception):
     pass
 
+class TooMuchPraising(Exception):
+    pass
+
 class Ares:
     def __init__(self, plansza):
         self.ktora=0
@@ -22,21 +25,25 @@ class Ares:
         kto.tempsoldiers+=1
         kto.coins-=koszt
         ktora+=1
-    def buduj(self, kto, gdzie):
+    def buduj(self, kto, x, y, slot):
         if(kto.coins<2):
             raise InvalidFunds
-        self.plansza.build(kto, gdzie, 'twierdza')
+        self.plansza.build(kto, x, y, 3, slot)
         kto.coins-=2
+    def reset(self):
+        self.ktora=0
 
 class Zeus:
     def __init__(self, plansza):
         self.plansza=plansza
-    def buduj(self, kto, gdzie):
+    def buduj(self, kto, x, y, slot):
         koszt=2
         if(kto.coins<koszt):
             raise InvalidFunds
-        self.plansza.build(kto, gdzie, 'temple')
+        self.plansza.build(kto, x, y, 2, slot)
         kto.coins-=2
+    def reset(self):
+        pass
 
 class Poseidon:
     def __init__(self, plansza):
@@ -53,11 +60,13 @@ class Poseidon:
         kto.tempfleets+=1
         kto.coins-=koszt
         ktora+=1
-    def buduj(self, kto, gdzie):
+    def buduj(self, kto, x, y, slot):
         if(kto.coins<2):
             raise InvalidFunds
-        self.plansza.build(kto, gdzie, 'port')
+        self.plansza.build(kto, x, y, 4, slot)
         kto.coins-=2
+    def reset(self):
+        self.ktora=0
 
 class Athena:
     def __init__(self, plansza):
@@ -74,54 +83,31 @@ class Athena:
         kto.philosophers+=1
         kto.coins-=koszt
         ktora+=1
-    def buduj(self, kto, gdzie):
+    def buduj(self, kto, x, y, slot):
         if(kto.coins<2):
             raise InvalidFunds
-        self.plansza.build(kto, gdzie, 'uniwersytet')
+        self.plansza.build(kto, x, y, 1, slot)
         kto.coins-=2
+    def reset(self):
+        self.ktora=0
 
 class Apollo:
     def __init__(self, plansza):
         self.plansza=plansza
         self.ktory=0
         self.wykonane=set()
-    def praise(self, kto, gdzie):
+    def praise(self, kto, x, y):
         if kto in self.wykonane:
-            return
+            raise TooMuchPraising
         self.wykonane.add(kto)
         ileWysp=0
         for wys in kto.ownedTiles:
-            if wys.type=='wyspa':
+            if self.plansza.pola[wys[0]][wys[1]].type=='wyspa':
                 ileWysp+=1
         if ileWysp<=1:
             kto.coins+=4
         else:
             kto.coins+=1
         if self.ktory==0:
-            self.plansza.raiseValue(kto, gdzie)
+            self.plansza.raiseValue(kto, x, y)
         self.ktory+=1
-
-def reset(zeus, atena, ares, poseidon, apollo):
-    zeus.ktora=0
-    atena.ktora=0
-    ares.ktora=0
-    poseidon.ktora=0
-    apollo.ktora=0
-    apollo.wykonane=set()
-
-
-'''
-
-po licytacji mamy dla każdego boga który bot go  wylicytował
-iterować po bogach, jeśli bóg był przez kogoś wylicytowany to dajemu temu botowi mu sygnał, że jest jego kolej
-odbieramy od niego ruchy i wywołujemy adekwatne funkcje akcji
-
-tutaj *jeżel w trackie ruchów spełni warunek metropoli -> powiedział gdzie i jak ją buduje
-
-potem kończy kolejkę
-
-reset licytacj, to jest ustawienie botów w odwrotnej kolejności do tego jak grały oraz
-randomizacja kolejności 4 głównych bogów
-
-'''
-
