@@ -104,7 +104,7 @@ def game():
 
         
         screen.fill("light blue")
-        render_board((900,400),15)
+        render_board((900,850),30)
         # srodek = (900,450)
         # promien = 50
         # draw_hexagon(srodek,promien,"grey")
