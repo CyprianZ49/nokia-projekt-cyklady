@@ -59,6 +59,40 @@ def konw(centre,radius,typ):
     if typ == 6:
         return konw6(centre,radius)
 
+
+    
+
+def render_board(poczatkowy_srodek,promien):
+    odwiedzone = {}
+    def crawl(x,y,centre,radius):
+        #print(board.pola[x][y]==plansza.Water)
+        if (x,y) not in odwiedzone:
+            #print(x,y)
+            odwiedzone[(x,y)]=True
+            if isinstance(board.pola[x][y],plansza.Water):
+                draw_hexagon(centre,radius,"blue")
+            if isinstance(board.pola[x][y],plansza.Island):
+                draw_hexagon(centre,radius,"brown")
+            if isinstance(board.pola[x][y],plansza.Capital):
+                draw_hexagon(centre,radius,"gold")
+            
+            if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
+                crawl(x+1,y+1,konw(centre,radius,1),radius)
+
+            if x+1<len(board.pola) and y<len(board.pola[x+1]):
+                crawl(x+1,y,konw(centre,radius,2),radius)
+
+            if x>=0 and y-1>=0:
+                crawl(x,y-1,konw(centre,radius,3),radius)
+            
+            if x-1>=0 and y-1>=0:
+                crawl(x-1,y-1,konw(centre,radius,4),radius)
+            if x-1>=0 and y>=0:
+                crawl(x-1,y,konw(centre,radius,5),radius)
+
+    crawl(0,0,poczatkowy_srodek,promien)
+    
+
 def game():
     running = 1
     while running:
@@ -68,12 +102,13 @@ def game():
 
         
         screen.fill("light blue")
-        srodek = (900,450)
-        promien = 50
-        draw_hexagon(srodek,promien,"grey")
-        for i in range(1,7):
-            draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
-        # draw_hexagon((900,450),50,"gray")
+        render_board((910,970),40)
+        # srodek = (900,450)
+        # promien = 50
+        # draw_hexagon(srodek,promien,"grey")
+        # for i in range(1,7):
+        #     draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
+
 
     
         pygame.display.update()
@@ -82,7 +117,8 @@ def game():
 
 board = plansza.Plansza()
 board.generateBoard()
-print(board.pola)
+#print(board.pola)
 game()
+
 
 pygame.quit()
