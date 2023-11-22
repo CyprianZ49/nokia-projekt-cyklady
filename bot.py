@@ -23,6 +23,10 @@ class Bot:
         self.ownedTiles=[]
     def __hash__(self):
         return hash(self.name)
+    def __eq__(self, other):
+        return self.name==other.name
+    def __ne__(self, other):
+        return self.name!=other.name
     def get_move(self):
         if self.prompt is not None:
             return self.proc.stdout.readline().decode().split()
