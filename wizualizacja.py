@@ -67,7 +67,7 @@ def render_board(poczatkowy_srodek,promien):
     def crawl(x,y,centre,radius):
         #print(board.pola[x][y]==plansza.Water)
         if (x,y) not in odwiedzone:
-            print(x,y)
+            #print(x,y)
             odwiedzone[(x,y)]=True
             if isinstance(board.pola[x][y],plansza.Water):
                 draw_hexagon(centre,radius,"blue")
@@ -89,7 +89,7 @@ def render_board(poczatkowy_srodek,promien):
                 crawl(x-1,y-1,konw(centre,radius,4),radius)
             if x-1>=0 and y>=0:
                 crawl(x-1,y,konw(centre,radius,5),radius)
-                
+
     crawl(0,0,poczatkowy_srodek,promien)
     
 
@@ -102,7 +102,7 @@ def game():
 
         
         screen.fill("light blue")
-        render_board((900,850),30)
+        render_board((910,970),40)
         # srodek = (900,450)
         # promien = 50
         # draw_hexagon(srodek,promien,"grey")
@@ -119,5 +119,6 @@ board = plansza.Plansza()
 board.generateBoard()
 #print(board.pola)
 game()
+
 
 pygame.quit()
