@@ -8,7 +8,7 @@ class Bot:
         self.prompt=prompt
         if prompt is None:
             try:
-                with open(f'{name}.txt', 'x') as f:
+                with open(f'{name}.out', 'x') as f:
                     pass
             except FileExistsError:
                 pass
@@ -35,24 +35,32 @@ class Bot:
         else:
             print(f'ruch gracza {self.name}')
             while True:
-                f=open(f'{self.name}.txt', 'r')
+                f=open(f'{self.name}.out', 'r')
                 d=f.readline().strip().split()
                 rest=f.read()
                 if d!=[]:
                     print(d)
                     f.close()
-                    with open(f'{self.name}.txt', 'w') as f:
+                    with open(f'{self.name}.out', 'w') as f:
                         f.write(rest)
                     return d
                 f.close()
     def send_move(self,player,move):
         if self.prompt is not None:
             return self.proc.stdin.write(f"{player} {move}")
+        #for testing only
+        else:
+            print(f'ruch gracza {self.name}')
+            with open(f"{self.name}.in", "a") as f:
+                print(player, move, file=f)
 
     def __del__(self):
         self.proc.kill()
+        while self.proc.poll() is None:
+            pass
         if self.prompt is None:
-            remove(f'{self.name}.txt')
+            remove(f'{self.name}.in')
+            remove(f'{self.name}.out')
 
 
 if __name__=='__main__':

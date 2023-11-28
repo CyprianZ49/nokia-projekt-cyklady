@@ -7,8 +7,8 @@ from traceback import print_exception
 def game():
     players = [Bot(i) for i in range(2)] #zmiana na więcej graczy
     pusty = Bot(-1, prompt='where') #coś tu jest jakieś takie niefajne
-    board = Plansza()
-    board.generateBoard(pusty)
+    board = Plansza(pusty)
+    board.generateBoard()
     for x in range(13):
         for y in range(13):
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
@@ -25,6 +25,7 @@ def game():
 def turn(players, gods, board):
     print('produkcja')
     for kto in players:
+        kto.coins+=9 # test only
         for wys in kto.ownedTiles:
             kto.coins+=board.pola[wys[0]][wys[1]].value
     print('początek licytacji')
