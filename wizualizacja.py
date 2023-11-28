@@ -6,16 +6,20 @@ import plansza
 from bot import Bot
 
 pygame.init()
-screen = pygame.display.set_mode((1820, 980),pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1920/1.15, 1080/1.15),pygame.RESIZABLE)
 running = True
 pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
 
 
 
+class Warrior(pygame.sprite.Sprite):
+    def __init__(self,srodek):
+        super().__init__()
 
-def draw_map(wspolrzedne_pierwszego_punktu,mapa,promien,odw): #mapa sklada się z listy par (para(id,lista 6 sąsiadów(ich id)),rodzaj terenu(woda lub ziemia))
-    pass
+        self.image = pygame.image.load("graphics/warrior.png").convert_alpha()
+        self.rect = self.image.get_rect(center = srodek)
+
 
 def draw_hexagon(centre,radius,color):
     pygame.draw.polygon(screen,color,[
@@ -63,19 +67,25 @@ def konw(centre,radius,typ):
 
     
 
-def render_board(poczatkowy_srodek,promien):
+def render_board(package):
     odwiedzone = {}
+    poczatkowy_srodek,promien = package
     def crawl(x,y,centre,radius):
         #print(board.pola[x][y]==plansza.Water)
         if (x,y) not in odwiedzone:
             #print(x,y)
             odwiedzone[(x,y)]=True
             if isinstance(board.pola[x][y],plansza.Water):
-                draw_hexagon(centre,radius,"blue")
+                if (x,y)==(1,1):
+                    draw_hexagon(centre,radius,"green")
+                else:
+                    draw_hexagon(centre,radius,"blue")
+
             if isinstance(board.pola[x][y],plansza.Island):
                 draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
+                warriors.add(Warrior(centre))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius)
@@ -91,8 +101,33 @@ def render_board(poczatkowy_srodek,promien):
             if x-1>=0 and y>=0:
                 crawl(x-1,y,konw(centre,radius,5),radius)
 
-    crawl(0,0,poczatkowy_srodek,promien)
+    crawl(1,1,poczatkowy_srodek,promien)
+    #warriors.draw(screen)
+
+def generate_to_wh():
+    width,height = screen.get_width(),screen.get_height()
+    drawing_width,drawing_height = width*0.9,height*0.9
+    delta_width,delta_height = width-drawing_width,height-drawing_height
+    dozy_promien = 1/math.cos(math.radians(60))
+    ile_w_gore = 21
+    ile_w_dol = 1
+    ile_w_lewo = 8*dozy_promien
+    ile_w_prawo = 8*dozy_promien
+    pr = min(drawing_height/22,drawing_width/(16*dozy_promien))
+
+    y = height/2+10*pr
+    x = width/2
+    return ((x,y),pr)
+
+
+
+
+
+
     
+def set_up():
+    global warriors
+    warriors = pygame.sprite.Group()
 
 def game():
     running = 1
@@ -103,14 +138,9 @@ def game():
 
         
         screen.fill("light blue")
-        render_board((910,970),40)
-        # srodek = (900,450)
-        # promien = 50
-        # draw_hexagon(srodek,promien,"grey")
-        # for i in range(1,7):
-        #     draw_hexagon(konw(srodek,promien,i),promien,((i+5)**1.5,(i+5)**1.9,(i+5)**2.2))
-
-
+        #render_board((910,850),40)#tutaj mądrze trzeba to policzyć
+        render_board(generate_to_wh())
+        #print(screen.get_width(),screen.get_height())
     
         pygame.display.update()
         clock.tick(60)
@@ -118,7 +148,8 @@ def game():
 
 board = plansza.Plansza("xd")
 board.generateBoard()
-#print(board.pola)
+
+set_up()
 game()
 
 
