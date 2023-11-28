@@ -9,8 +9,8 @@ from typing import List
 from typing import Tuple
 
 import pygame
-from hexagon import FlatTopHexagonTile
-from hexagon import HexagonTile
+from idea_hexagon import FlatTopHexagonTile
+from idea_hexagon import HexagonTile
 
 # pylint: disable=no-member
 
