@@ -6,7 +6,7 @@ import plansza
 from bot import Bot
 
 pygame.init()
-screen = pygame.display.set_mode((1820, 980))
+screen = pygame.display.set_mode((1820, 980),pygame.FULLSCREEN)
 running = True
 pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
@@ -116,7 +116,7 @@ def game():
         clock.tick(60)
     
 
-board = plansza.Plansza(Bot("pusty"))
+board = plansza.Plansza("xd")
 board.generateBoard()
 #print(board.pola)
 game()
