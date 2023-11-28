@@ -10,6 +10,8 @@ screen = pygame.display.set_mode((1920/1.15, 1080/1.15),pygame.RESIZABLE)
 running = True
 pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
+icon = pygame.image.load('graphics/ikona.ico') 
+pygame.display.set_icon(icon)
 
 
 
@@ -20,10 +22,10 @@ class Warrior(pygame.sprite.Sprite):
         self.image = pygame.image.load("graphics/warrior.png").convert_alpha()
 
         dozy_promien = promien/math.cos(math.radians(60))
-        maxwidth = 1.4*dozy_promien
-        maxheight = 1.4*promien
+        maxwidth = 4*dozy_promien
+        maxheight = 4*promien
         skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
-        
+
         self.image = pygame.transform.scale(self.image,(self.image.get_height()*skala,self.image.get_width()*skala))
 
         self.rect = self.image.get_rect(center = srodek)
