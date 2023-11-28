@@ -3,6 +3,7 @@ import pygame
 import math
 import random
 import plansza
+from bot import Bot
 
 pygame.init()
 screen = pygame.display.set_mode((1820, 980))
@@ -115,7 +116,7 @@ def game():
         clock.tick(60)
     
 
-board = plansza.Plansza()
+board = plansza.Plansza(Bot("pusty"))
 board.generateBoard()
 #print(board.pola)
 game()
