@@ -27,6 +27,8 @@ class Water:
         self.owner.ownedTiles.remove((self.x, self.y))
         newOwner.ownedTiles.append((self.x, self.y))
         self.owner=newOwner
+    def increaseValue(self):
+        self.value+=1
 
 class Void:
     def __init__(self, x, y):
