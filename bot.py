@@ -17,9 +17,10 @@ class Bot:
             self.proc=Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE)
         self.name=name
         self.coins=0
-        self.tempsoldiers=0
-        self.tempfleets=0
+        self.soliderLimit=8
+        self.fleetLimit=8
         self.philosophers=0
+        self.priests=0
         self.ownedTiles=[]
     def __hash__(self):
         return hash(self.name)

@@ -25,7 +25,6 @@ def game():
 def turn(players, gods, board):
     print('produkcja')
     for kto in players:
-        kto.coins+=9 #do testowania
         for wys in kto.ownedTiles:
             kto.coins+=board.pola[wys[0]][wys[1]].value
     print('początek licytacji')
@@ -44,7 +43,7 @@ def turn(players, gods, board):
             if p[1]!=-1:
                 p_to_god[players[p[1]]] = gods[god]
                 order.append(players[p[1]])
-                players[p[1]].coins-=p[0]
+                players[p[1]].coins-=max(p[0]-players[p[1]].priests, 1)
 
     print('początek akcji')
     name_to_f = {'r':'rekrutuj','b':'buduj','m':'ruch'}

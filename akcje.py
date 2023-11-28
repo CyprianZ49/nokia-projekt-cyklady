@@ -10,11 +10,20 @@ class TooManyRecruitments(Exception):
 class TooMuchPraising(Exception):
     pass
 
+class TooManyPiecesOfThisType(Exception):
+    pass
+
+class InvalidMove(Exception):
+    pass
+
+class Battle(Exception):
+    pass
+
 class Ares:
     def __init__(self, plansza):
         self.ktora=0
         self.plansza=plansza
-    def rekrutuj(self, kto):
+    def rekrutuj(self, kto, x, y):
         if(self.ktora>=4):
             raise TooManyRecruitments
         koszt=0
@@ -22,18 +31,37 @@ class Ares:
             koszt+=self.ktora+1
         if(kto.coins<koszt):
             raise InvalidFunds
-        kto.tempsoldiers+=1
+        if(kto.soliderLimit==0):
+            raise TooManyPiecesOfThisType
+        self.plansza.makeSolider(x, y, kto)
         kto.coins-=koszt
+        kto.soliderLimit-=1
         self.ktora+=1
     def buduj(self, kto, x, y, slot):
         if(kto.coins<2):
             raise InvalidFunds
         self.plansza.build(kto, x, y, 3, slot)
         kto.coins-=2
+    def move(self, x, y, ile, x1, y1):
+        pass
+        #potrzebna funkcja pomocnicza, czy wyspa a i b są połączone statkami gracza, funkcja ewidentnie planszowa
+        #zamiast się męczyć z pełnym DFSem można robić bardzo pałowego BFSa z wykorzystaniem limitu morskich pól posiadanych przez gracza (8)
 
 class Zeus:
     def __init__(self, plansza):
         self.plansza=plansza
+        self.ktora=0
+    def rekrutuj(self, kto):
+        if(self.ktora>=2):
+            raise TooManyRecruitments
+        koszt=0
+        if(self.ktora>0):
+            koszt+=4
+        if(kto.coins<koszt):
+            raise InvalidFunds
+        kto.priests+=1
+        kto.coins-=koszt
+        self.ktora+=1
     def buduj(self, kto, x, y, slot):
         koszt=2
         if(kto.coins<koszt):
@@ -45,7 +73,7 @@ class Poseidon:
     def __init__(self, plansza):
         self.ktora=0
         self.plansza=plansza
-    def rekrutuj(self, kto):
+    def rekrutuj(self, kto, x, y):
         if(self.ktora>=4):
             raise TooManyRecruitments
         koszt=0
@@ -53,7 +81,10 @@ class Poseidon:
             koszt+=self.ktora
         if(kto.coins<koszt):
             raise InvalidFunds
-        kto.tempfleets+=1
+        if(kto.fleetLimit==0):
+            raise TooManyPiecesOfThisType
+        self.plansza.makeFleet(x, y, kto)
+        kto.fleetLimit-=1
         kto.coins-=koszt
         self.ktora+=1
     def buduj(self, kto, x, y, slot):
@@ -61,6 +92,10 @@ class Poseidon:
             raise InvalidFunds
         self.plansza.build(kto, x, y, 4, slot)
         kto.coins-=2
+    def ruch(self, kto, x, y, ile, x1, y1):
+        pass
+        #nastąpiła kompletna zmiana idei, bo stara był frankly fatalna, kod usunięty, ale mam ŁADNY pomysł nie ruszać beze mnie -C
+    
 
 class Athena:
     def __init__(self, plansza):
