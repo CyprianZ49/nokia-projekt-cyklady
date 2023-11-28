@@ -14,11 +14,21 @@ clock = pygame.time.Clock()
 
 
 class Warrior(pygame.sprite.Sprite):
-    def __init__(self,srodek):
+    def __init__(self,srodek,promien):
         super().__init__()
 
         self.image = pygame.image.load("graphics/warrior.png").convert_alpha()
+
+        dozy_promien = promien/math.cos(math.radians(60))
+        maxwidth = 1.4*dozy_promien
+        maxheight = 1.4*promien
+        skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+        
+        self.image = pygame.transform.scale(self.image,(self.image.get_height()*skala,self.image.get_width()*skala))
+
         self.rect = self.image.get_rect(center = srodek)
+
+
 
 
 def draw_hexagon(centre,radius,color):
@@ -70,6 +80,8 @@ def konw(centre,radius,typ):
 def render_board(package):
     odwiedzone = {}
     poczatkowy_srodek,promien = package
+    for warrior in warriors:
+        warrior.kill()
     def crawl(x,y,centre,radius):
         #print(board.pola[x][y]==plansza.Water)
         if (x,y) not in odwiedzone:
@@ -85,7 +97,7 @@ def render_board(package):
                 draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
-                warriors.add(Warrior(centre))
+                warriors.add(Warrior(centre,radius))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius)
@@ -102,7 +114,7 @@ def render_board(package):
                 crawl(x-1,y,konw(centre,radius,5),radius)
 
     crawl(1,1,poczatkowy_srodek,promien)
-    #warriors.draw(screen)
+    warriors.draw(screen)
 
 def generate_to_wh():
     width,height = screen.get_width(),screen.get_height()
