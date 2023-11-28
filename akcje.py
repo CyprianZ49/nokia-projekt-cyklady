@@ -1,5 +1,6 @@
 from bot import Bot
 from plansza import Plansza
+from constants import boardSize
 
 class InvalidFunds(Exception):
     pass
@@ -16,8 +17,38 @@ class TooManyPiecesOfThisType(Exception):
 class InvalidMove(Exception):
     pass
 
-class Battle(Exception):
-    pass
+def Metropolizacja(plansza, kto):
+    k=0
+    for i in range(1, 5):
+        for tile in kto.ownedTiles:
+            if plansza.pola[tile[0]][tile[1]].typ=='capital' and i in plansza.pola[tile[0]][tile[1]].buildings:
+                k+=1
+                break
+    if k==4:
+        kto.send_move(-1, "zbuduj wasc metropolie - z budynkow!\n")
+        odp = list(map(int, kto.get_move()))
+        if len(odp)!=14:
+            raise InvalidMove
+        for i in range(1, 5):
+            tile = plansza.pola[odp[0+(i-1)*3]][odp[1+(i-1)*3]]
+            slot = odp[2+(i-1)*3]
+            if tile.typ!='capital' or tile.owner!=kto or len(tile.buildings<slot) or tile.buildings[slot]!=i:
+                raise InvalidMove
+        if plansza.pola[odp[12]][odp[13]].typ!='capital' or plansza.pola[odp[12]][odp[13]].owner!=kto:
+            raise InvalidMove
+        for i in range(1, 5):
+            tile = plansza.pola[odp[0+(i-1)*3]][odp[1+(i-1)*3]]
+            slot = odp[2+(i-1)*3]
+            tile.buildings[slot]=0
+        plansza.buildMetropolis(kto, odp[12], odp[13])
+    elif kto.philosophers>=4:
+        kto.send_move(-1, "zbuduj wasc metropolie - z filozofow!\n")
+        odp = list(map(int, kto.get_move()))
+        if len(odp)!=2:
+            raise InvalidMove
+        plansza.buildMetropolis(kto, odp[0], odp[1])
+        kto.philosophers-=4
+
 
 class Ares:
     def __init__(self, plansza):

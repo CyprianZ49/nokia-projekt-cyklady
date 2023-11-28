@@ -15,7 +15,7 @@ class Licytacja:
     
     def do_bid(self,i,_,god,value):
         for bot in self.bots:
-            bot.send_move(i,(_,god,value))
+            bot.send_move(bot.name,(_,god,value))
         if god=='ap':
             self.bids[god].append(i)
         else:

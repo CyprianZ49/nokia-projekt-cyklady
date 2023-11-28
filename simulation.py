@@ -14,11 +14,31 @@ def game():
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
     board.changeOwnership(3, 3, players[0])
-    board.changeOwnership(2, 4, players[1])
+    board.changeOwnership(2, 4, players[0])
     shuffle(players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
     while True:
         players = turn(players,gods, board)
+        wygrani = []
+        for player in players:
+            k = 0
+            for tile in player.ownedTiles:
+                if board.pola[tile[0]][tile[1]].typ=='capital' and board.pola[tile[0]][tile[1]].isMetropolis:
+                    k+=1
+            if k>=2:
+                wygrani.append(player)
+        maks = 0
+        for player in wygrani:
+            maks = max(maks, player.coins)
+        wygraniForReal = []
+        for player in wygrani:
+            if player.coins==maks:
+                wygraniForReal.append(player)
+        if len(wygraniForReal)>0:
+            print("rozgrywka zakonczyla się!\nUltymatywny Grek:")
+            for player in wygraniForReal:
+                print(f"{player.name}")
+            break
         print(players)
 
         
@@ -60,6 +80,7 @@ def turn(players, gods, board):
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
                 print_exception(e)
+            Metropolizacja(board, player)
             action = player.get_move()
         print(f'gracz {player.name} pasuje')
     print('koniec tury')

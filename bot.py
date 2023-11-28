@@ -47,20 +47,19 @@ class Bot:
                 f.close()
     def send_move(self,player,move):
         if self.prompt is not None:
-            return self.proc.stdin.write(f"{player} {move}")
+            return self.proc.stdin.write(f"{player} {" ".join(map(str, move))}")
         #for testing only
         else:
-            print(f'ruch gracza {self.name}')
             with open(f"{self.name}.in", "a") as f:
-                print(player, move, file=f)
+                print(player, " ".join(map(str, move)), file=f)
 
     def __del__(self):
         self.proc.kill()
         while self.proc.poll() is None:
             pass
-        if self.prompt is None:
-            remove(f'{self.name}.in')
-            remove(f'{self.name}.out')
+        #if self.prompt is None:
+        #    remove(f'{self.name}.in')
+        #    remove(f'{self.name}.out')
 
 
 if __name__=='__main__':
