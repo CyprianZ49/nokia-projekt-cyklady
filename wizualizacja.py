@@ -22,8 +22,8 @@ class Warrior(pygame.sprite.Sprite):
         self.image = pygame.image.load("graphics/warrior.png").convert_alpha()
 
         dozy_promien = promien/math.cos(math.radians(60))
-        maxwidth = 4*dozy_promien
-        maxheight = 4*promien
+        maxwidth = 1.5*dozy_promien
+        maxheight = 1.5*promien
         skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
         self.image = pygame.transform.scale(self.image,(self.image.get_height()*skala,self.image.get_width()*skala))
