@@ -1,6 +1,7 @@
 from bot import Bot
 from plansza import Plansza
 from constants import boardSize
+import random
 
 class InvalidFunds(Exception):
     pass
@@ -49,6 +50,107 @@ def Metropolizacja(plansza, kto):
         plansza.buildMetropolis(kto, odp[0], odp[1])
         kto.philosophers-=4
 
+def bitwaMorska(plansza, x, y, kto, ile):
+    other=plansza.pola[x][y].owner
+    sila=plansza.pola[x][y].strength
+    for tile in other.ownedTiles:
+        if plansza.pola[tile[0]][tile[1]].typ=='capital' and plansza.isNeightbour(tile[0], tile[1], x, y):
+            if plansza.pola[tile[0]][tile[1]].isMetropolis:
+                sila+=1
+            for i in plansza.pola[tile[0]][tile[1]].buildings:
+                if i==4:
+                    sila+=1
+    k1=random.randint(0, 5)
+    k2=random.randint(0, 5)
+    konwersja = [0, 1, 1, 2, 2, 3]
+    k1=konwersja[k1]
+    k2=konwersja[k2]
+    isOver=False
+    if ile+k1 >= sila+k2:
+        plansza.pola[x][y].strength-=1
+        if plansza.pola[x][y].strength==0 and ile>0:
+            plansza.changeOwnership(x, y, kto)
+            plansza.pola[x][y].strength=ile
+            isOver=True
+    if ile+k1 <= sila+k2:
+        ile-=1
+        if ile==0:
+            isOver=True
+    if isOver:
+        return
+    other.send_move(-1, f"czy wycofujesz z {x, y}")
+    odp1 = list(map(int, other.get_move()))
+    if odp1[0]==1:
+        if not(plansza.isNeightbour(x, y, odp1[1], odp1[2])):
+            raise InvalidMove
+        if plansza.pola[odp1[1]][odp1[2]].owner!=other and plansza.pola[odp1[1]][odp1[2]].owner!=plansza.pusty:
+            raise InvalidMove
+        plansza.changeOwnership(odp1[1], odp1[2], other)
+        plansza.pola[odp1[1]][odp1[2]].strength+=plansza.pola[x][y].strength
+        plansza.changeOwnership(x, y, kto)
+        plansza.pola[x][y].strength=ile
+    else:
+        kto.send_move(-1, f"czy wycofujesz z {x, y}")
+        odp2=list(map(int, kto.get_move()))
+        if odp2[0]==1:
+            if not(plansza.isNeightbour(x, y, odp2[1], odp2[2])):
+                raise InvalidMove
+            if plansza.pola[odp2[1]][odp2[2]].owner!=kto and plansza.pola[odp2[1]][odp2[2]].owner!=plansza.pusty:
+                raise InvalidMove
+            plansza.changeOwnership(odp2[1], odp2[2], kto)
+            plansza.pola[odp2[1]][odp2[2]].strength+=ile
+        else:
+            bitwaMorska(plansza, x, y, kto, ile)
+
+def bitwaWyspowa(plansza, x, y, kto, ile):
+    other=plansza.pola[x][y].owner
+    sila=plansza.pola[x][y].strength
+    if plansza.pola[x][y].isMetropolis:
+        sila+=1
+    for i in plansza.pola[x][y].buildings:
+        if i==3:
+            sila+=1
+    k1=random.randint(0, 5)
+    k2=random.randint(0, 5)
+    konwersja = [0, 1, 1, 2, 2, 3]
+    k1=konwersja[k1]
+    k2=konwersja[k2]
+    isOver=False
+    if ile+k1 >= sila+k2:
+        plansza.pola[x][y].strength-=1
+        if plansza.pola[x][y].strength==0 and ile>0:
+            plansza.changeOwnership(x, y, kto)
+            plansza.pola[x][y].strength=ile
+            isOver=True
+    if ile+k1 <= sila+k2:
+        ile-=1
+        if ile==0:
+            isOver=True
+    if isOver:
+        return
+    other.send_move(-1, f"czy wycofujesz z {x, y}")
+    odp1 = list(map(int, other.get_move()))
+    if odp1[0]==1:
+        if not(plansza.isBridge(x, y, other, odp1[1], odp1[2])):
+            raise InvalidMove
+        if plansza.pola[odp1[1]][odp1[2]].owner!=other and plansza.pola[odp1[1]][odp1[2]].owner!=plansza.pusty:
+            raise InvalidMove
+        plansza.changeOwnership(odp1[1], odp1[2], other)
+        plansza.pola[odp1[1]][odp1[2]].strength+=plansza.pola[x][y].strength
+        plansza.changeOwnership(x, y, kto)
+        plansza.pola[x][y].strength=ile
+    else:
+        kto.send_move(-1, f"czy wycofujesz z {x, y}")
+        odp2=list(map(int, kto.get_move()))
+        if odp2[0]==1:
+            if not(plansza.isBridge(x, y, kto, odp2[1], odp2[2])):
+                raise InvalidMove
+            if plansza.pola[odp2[1]][odp2[2]].owner!=kto and plansza.pola[odp2[1]][odp2[2]].owner!=plansza.pusty:
+                raise InvalidMove
+            plansza.changeOwnership(odp2[1], odp2[2], kto)
+            plansza.pola[odp2[1]][odp2[2]].strength+=ile
+        else:
+            bitwaWyspowa(plansza, x, y, kto, ile)
 
 class Ares:
     def __init__(self, plansza):
@@ -73,10 +175,30 @@ class Ares:
             raise InvalidFunds
         self.plansza.build(kto, x, y, 3, slot)
         kto.coins-=2
-    def move(self, x, y, ile, x1, y1):
-        pass
-        #potrzebna funkcja pomocnicza, czy wyspa a i b są połączone statkami gracza, funkcja ewidentnie planszowa
-        #zamiast się męczyć z pełnym DFSem można robić bardzo pałowego BFSa z wykorzystaniem limitu morskich pól posiadanych przez gracza (8)
+    def move(self, kto, x, y, ile, x1, y1):
+        if self.plansza.pola[x][y].typ!='capital' or self.plansza.pola[x1][y1].typ!='capital' or not(self.plansza.isBridge(x, y, kto, x1, y1)):
+            raise InvalidMove
+        ile = 0
+        for tile in self.plansza.pola[x1][y1].owner.ownedTiles:
+            if self.plansza.pola[tile[0]][tile[1]].typ=='capital':
+                ile+=1
+        metro = 0
+        for tile in kto.ownedTiles:
+            if self.plansza.pola[tile[0]][tile[1]].typ=='capital' and self.plansza.pola[tile[0]][tile[1]].isMetropolis:
+                metro+=1
+        if self.plansza.pola[x][y].owner!=kto or self.plansza.pola[x][y].strength<ile or (ile==1 and not(metro>1) and self.plansza.pola[x1][y1].owner!=self.plansza.pusty):
+            raise InvalidMove
+        if 1>kto.coins:
+            raise InvalidFunds
+        kto.coins-=1
+        self.plansza.pola[x][y].strength-=ile
+        if self.plansza.pola[x][y].strength==0:
+            self.plansza.changeOwnership(x, y, self.plansza.pusty)
+        if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty:
+            self.plansza.changeOwnership(x1, y1, kto)
+            self.plansza.pola[x1][y1].strength+=ile
+        else:
+            bitwaWyspowa(self.plansza, x, y, kto, ile)
 
 class Zeus:
     def __init__(self, plansza):
@@ -104,6 +226,9 @@ class Poseidon:
     def __init__(self, plansza):
         self.ktora=0
         self.plansza=plansza
+        self.lastMovex=0
+        self.lastMovey=0
+        self.ileRuch=0
     def rekrutuj(self, kto, x, y):
         if(self.ktora>=4):
             raise TooManyRecruitments
@@ -118,14 +243,36 @@ class Poseidon:
         kto.fleetLimit-=1
         kto.coins-=koszt
         self.ktora+=1
+        self.ileRuch=10
     def buduj(self, kto, x, y, slot):
         if(kto.coins<2):
             raise InvalidFunds
         self.plansza.build(kto, x, y, 4, slot)
         kto.coins-=2
+        self.ileRuch=10
     def ruch(self, kto, x, y, ile, x1, y1):
-        pass
-        #nastąpiła kompletna zmiana idei, bo stara był frankly fatalna, kod usunięty, ale mam ŁADNY pomysł nie ruszać beze mnie -C
+        if self.plansza.pola[x][y].typ!='water' or self.plansza.pola[x1][y1].typ!='water' or self.plansza.pola[x][y].owner!=kto:
+            raise InvalidMove
+        if not(self.plansza.isNeighbour(x, y, x1, y1)) or self.plansza.pola[x][y].strength<ile:
+            raise InvalidMove
+        koszt = 1
+        if x==self.lastMovex and y==self.lastMovey and self.ileRuch<3:
+            koszt = 0
+        if koszt>kto.coins:
+            raise InvalidFunds
+        kto.coins-=koszt
+        if koszt==1:
+            self.ktora=0
+        self.ktora+=1
+        self.plansza.pola[x][y].strength-=ile
+        if self.plansza.pola[x][y].strength==0:
+            self.plansza.changeOwnership(x, y, self.plansza.pusty)
+        if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty:
+            self.plansza.changeOwnership(x1, y1, kto)
+            self.plansza.pola[x1][y1].strength+=ile
+        else:
+            self.ktora=10
+            bitwaMorska(self.plansza, x, y, kto, ile)
     
 
 class Athena:
@@ -175,5 +322,8 @@ def reset(zeus, atena, ares, poseidon, apollo):
     atena.ktora=0
     ares.ktora=0
     poseidon.ktora=0
+    poseidon.lastMovex=0
+    poseidon.lastMovey=0
+    poseidon.ileRuch=0
     apollo.ktora=0
     apollo.wykonane=set()

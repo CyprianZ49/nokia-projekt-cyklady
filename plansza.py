@@ -207,3 +207,21 @@ class Plansza:
         if self.pola[x][y].owner==self.pusty:
             self.changeOwnership(x, y, kto)
         self.pola[x][y].strength+=1
+    def isBridge(self, x1, y1, kto, x2, y2):
+        if self.pola[x1][y1].typ!='capital' or self.pola[x2][y2]!='capital' or self.pola[x1][y1].owner!=kto:
+            return False
+        connected = []
+        connected.append([x1, y1])
+        for i in range(8):
+            for tile in kto.ownedTiles:
+                if self.pola[tile[0]][tile[1]].typ=='water' and tile not in connected:
+                    for t in connected:
+                        if self.isNeightbour(t[0], t[1], tile[0], tile[1]):
+                            connected.append(tile)
+                            break
+        test = False
+        for t in connected:
+            if self.isNeightbour(t[0], t[1], x2, y2):
+                test = True
+        return test
+        
