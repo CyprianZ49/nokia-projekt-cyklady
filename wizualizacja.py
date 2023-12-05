@@ -154,9 +154,7 @@ def game():
 
         
         screen.fill("light blue")
-        #render_board((910,850),40)#tutaj mądrze trzeba to policzyć
         render_board(generate_to_wh())
-        #print(screen.get_width(),screen.get_height())
     
         pygame.display.update()
         clock.tick(60)
