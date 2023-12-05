@@ -24,7 +24,7 @@ def set_up():
 def game():
     global running
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
-    pusty = Bot(-1, prompt='where') #coś tu jest jakieś takie niefajne
+    pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
     for x in range(13):

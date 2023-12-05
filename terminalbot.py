@@ -11,8 +11,12 @@ def handle_data(s):
         print(data, end='')
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((host, port))
-    Thread(target=handle_data, args=(s,)).start()
-    s.sendall((argv[1]+'\n').encode())
-    while True:
-        s.sendall((input()+'\n').encode())
+    with open(f'testcases/{argv[1]}', 'w') as f:
+        s.connect((host, port))
+        Thread(target=handle_data, args=(s,)).start()
+        s.sendall((argv[1]+'\n').encode())
+        while True:
+            inp=input()
+            f.write(inp+'\n')
+            f.flush()
+            s.sendall((inp+'\n').encode())

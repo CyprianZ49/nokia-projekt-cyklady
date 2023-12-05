@@ -1,5 +1,5 @@
 #graczy w sensie gry nazywami botami
-from subprocess import Popen,PIPE,CREATE_NEW_CONSOLE
+from subprocess import Popen,CREATE_NEW_CONSOLE
 import shlex
 from server import Server
 from constants import host, port
@@ -11,6 +11,8 @@ class Bot:
         self.prompt=prompt
         if prompt is None:
             self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
+        elif prompt != '':
+            self.proc=Popen(shlex.split(f"python botlauncher.py {name} {prompt}"))
 
         self.name=name
         self.coins=0
