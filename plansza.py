@@ -22,7 +22,7 @@ class Water:
         self.value=value
         self.owner=owner
         self.typ='water'
-        self.strength=1
+        self.strength=0
     def changeOwner(self, newOwner):
         self.owner.ownedTiles.remove((self.x, self.y))
         newOwner.ownedTiles.append((self.x, self.y))

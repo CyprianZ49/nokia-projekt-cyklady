@@ -3,6 +3,20 @@ from licytacja import Licytacja
 from akcje import *
 from random import shuffle
 from traceback import print_exception
+import pygame
+import wizualizacja
+
+pygame.init()
+screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
+running = True
+pygame.display.set_caption("Cyklades")
+clock = pygame.time.Clock()
+icon = pygame.image.load('graphics/ikona.ico') 
+pygame.display.set_icon(icon)
+
+def set_up():
+    global warriors
+    warriors = pygame.sprite.Group()
 
 def game():
     players = [Bot(i) for i in range(2)] #zmiana na więcej graczy
@@ -18,6 +32,13 @@ def game():
     shuffle(players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
     while True:
+
+        screen.fill("light blue")
+        wizualizacja.render_board(wizualizacja.generate_to_wh())
+    
+        pygame.display.update()
+        clock.tick(60)
+
         players = turn(players,gods, board)
         wygrani = []
         for player in players:
@@ -89,4 +110,5 @@ def turn(players, gods, board):
     return order
 
 if __name__ == "__main__":
+    set_up()
     game()
