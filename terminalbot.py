@@ -1,29 +1,18 @@
-from sys import argv
+import socket
+from constants import host, port
 from threading import Thread
+from sys import argv
 
 print(f'gracz {argv[1]}')
 
-try:
-    with open(f'{argv[1]}.in', 'x') as f:
-        pass
-except FileExistsError:
-    pass
-
-def print_data():
+def handle_data(s):
     while True:
-        f=open(f'{argv[1]}.in', 'r')
-        d=f.readline().strip().split()
-        rest=f.read()
-        if d!=[]:
-            print(d)
-            f.close()
-            with open(f'{argv[1]}.in', 'w') as f:
-                f.write(rest)
-        f.close()
+        data=s.recv(1).decode()
+        print(data, end='')
 
-Thread(target=print_data).start()
-
-while True:
-    move=input()
-    with open(f"{argv[1]}.out", "a") as f:
-        print(move, file=f)
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((host, port))
+    Thread(target=handle_data, args=(s,)).start()
+    s.sendall((argv[1]+'\n').encode())
+    while True:
+        s.sendall((input()+'\n').encode())
