@@ -212,7 +212,7 @@ class Plansza:
             return False
         connected = []
         connected.append([x1, y1])
-        for i in range(8):
+        for _ in range(8):
             for tile in kto.ownedTiles:
                 if self.pola[tile[0]][tile[1]].typ=='water' and tile not in connected:
                     for t in connected:

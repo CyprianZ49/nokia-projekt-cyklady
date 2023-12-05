@@ -6,7 +6,7 @@ import plansza
 from bot import Bot
 
 pygame.init()
-screen = pygame.display.set_mode((1920/1.15, 1080/1.15),pygame.RESIZABLE)
+screen = pygame.display.set_mode((1920/1.5, 1080/1.5),pygame.RESIZABLE)
 running = True
 pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()

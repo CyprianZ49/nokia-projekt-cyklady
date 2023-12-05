@@ -18,6 +18,8 @@ class TooManyPiecesOfThisType(Exception):
 class InvalidMove(Exception):
     pass
 
+#nie wytestowane rzeczy: bitwy lądowa i morska, ruchy lądowy i morski, rekrutacja tylko częściowo
+
 def Metropolizacja(plansza, kto):
     k=0
     for i in range(1, 5):
