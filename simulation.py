@@ -6,6 +6,7 @@ from traceback import print_exception
 import pygame
 import wizualizacja
 import tkinter as tk
+from przygotowanie import przypiszWarunkiStartowe
 
 pygame.init()
 screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
@@ -20,7 +21,7 @@ pygame.display.set_icon(icon)
 #     warriors = pygame.sprite.Group()
 
 def game():
-    players = [Bot(i) for i in range(2)] #zmiana na więcej graczy
+    players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
     pusty = Bot(-1, prompt='where') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
@@ -28,9 +29,8 @@ def game():
         for y in range(13):
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
-    board.changeOwnership(3, 3, players[0])
-    board.changeOwnership(2, 4, players[0])
     shuffle(players)
+    przypiszWarunkiStartowe(board, players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
     while True:
 
@@ -67,7 +67,6 @@ def game():
 def turn(players, gods, board):
     print('produkcja')
     for kto in players:
-        kto.coins+=9 # test only
         for wys in kto.ownedTiles:
             kto.coins+=board.pola[wys[0]][wys[1]].value
     print('początek licytacji')
