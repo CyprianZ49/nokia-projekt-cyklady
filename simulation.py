@@ -22,7 +22,6 @@ from threading import Thread,Condition
 #     warriors = pygame.sprite.Group()
 
 def game():
-    global running
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
@@ -36,18 +35,7 @@ def game():
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
     th = Thread(target=start_visualization,args=(board,))
     th.start()
-    while running:
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         running = False
-        
-        # print(running)
-        # screen.fill("light blue")
-        # wizualizacja.render_board(wizualizacja.generate_to_wh(screen),board,screen,warriors)
-    
-        # pygame.display.update()
-        # clock.tick(60)
-
+    while True:
         players = turn(players,gods, board)
         wygrani = []
         for player in players:
