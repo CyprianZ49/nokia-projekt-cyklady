@@ -16,9 +16,9 @@ clock = pygame.time.Clock()
 icon = pygame.image.load('graphics/ikona.ico') 
 pygame.display.set_icon(icon)
 
-# def set_up():
-#     global warriors
-#     warriors = pygame.sprite.Group()
+def set_up():
+    global warriors
+    warriors = pygame.sprite.Group()
 
 def game():
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
@@ -35,7 +35,7 @@ def game():
     while True:
 
         screen.fill("light blue")
-        wizualizacja.render_board(wizualizacja.generate_to_wh())
+        wizualizacja.render_board(wizualizacja.generate_to_wh(),board)
     
         pygame.display.update()
         clock.tick(60)
@@ -110,5 +110,7 @@ def turn(players, gods, board):
     return order
 
 if __name__ == "__main__":
-    # set_up()
+    set_up()
     game()
+
+pygame.quit()
