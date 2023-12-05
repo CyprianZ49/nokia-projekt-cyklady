@@ -5,6 +5,7 @@ from random import shuffle
 from traceback import print_exception
 import pygame
 import wizualizacja
+import tkinter as tk
 
 pygame.init()
 screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
