@@ -31,7 +31,7 @@ def game():
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
     shuffle(players)
-    #przypiszWarunkiStartowe(board, players)
+    przypiszWarunkiStartowe(board, players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
     th = Thread(target=start_visualization,args=(board,))
     th.start()
