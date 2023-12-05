@@ -47,7 +47,7 @@ class Bot:
                 f.close()
     def send_move(self,player,move):
         if self.prompt is not None:
-            return self.proc.stdin.write(f"{player} {" ".join(map(str, move))}")
+            return self.proc.stdin.write(f"{player} {' '.join(map(str, move))}")
         #for testing only
         else:
             with open(f"{self.name}.in", "a") as f:
