@@ -33,9 +33,12 @@ def game():
     przypiszWarunkiStartowe(board, players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
     while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                break
 
         screen.fill("light blue")
-        wizualizacja.render_board(wizualizacja.generate_to_wh(),board)
+        wizualizacja.render_board(wizualizacja.generate_to_wh(screen),board,screen)
     
         pygame.display.update()
         clock.tick(60)

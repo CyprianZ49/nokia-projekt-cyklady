@@ -7,13 +7,13 @@ from bot import Bot
 import sys
 import tkinter as tk
 
-pygame.init()
-screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
-running = True
-pygame.display.set_caption("Cyklades")
-clock = pygame.time.Clock()
-icon = pygame.image.load('graphics/ikona.ico') 
-pygame.display.set_icon(icon)
+# pygame.init()
+# # screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
+# running = True
+# pygame.display.set_caption("Cyklades")
+# clock = pygame.time.Clock()
+# icon = pygame.image.load('graphics/ikona.ico') 
+# pygame.display.set_icon(icon)
 
 
 
@@ -35,7 +35,7 @@ class Warrior(pygame.sprite.Sprite):
 
 
 
-def draw_hexagon(centre,radius,color):
+def draw_hexagon(centre,radius,color,screen):
     pygame.draw.polygon(screen,color,[
         (centre[0]-radius*math.tan(math.radians(30)),centre[1]-radius),
         (centre[0]-(radius/math.cos(math.radians(30))),centre[1]),
@@ -81,12 +81,12 @@ def konw(centre,radius,typ):
 
     
 
-def render_board(package,board):
+def render_board(package,board,screen):
     odwiedzone = {}
     poczatkowy_srodek,promien = package
     for warrior in warriors:
         warrior.kill()
-    def crawl(x,y,centre,radius):
+    def crawl(x,y,centre,radius,screen):
         #print(board.pola[x][y]==plansza.Water)
         if (x,y) not in odwiedzone:
             #print(x,y)
@@ -94,35 +94,35 @@ def render_board(package,board):
             if isinstance(board.pola[x][y],plansza.Water):
                 # if (x,y)==(1,1):
                 #     draw_hexagon(centre,radius,"green")      
-                draw_hexagon(centre,radius,"blue")
+                draw_hexagon(centre,radius,"blue",screen)
                 # if board.pola[x][y].strength>0:
                 #     warriors.add(Warrior(centre,radius))
 
             if isinstance(board.pola[x][y],plansza.Island):
-                draw_hexagon(centre,radius,"brown")
+                draw_hexagon(centre,radius,"brown",screen)
             if isinstance(board.pola[x][y],plansza.Capital):
-                draw_hexagon(centre,radius,"gold")
+                draw_hexagon(centre,radius,"gold",screen)
                 # if board.pola[x][y].strength>0:
                 #     warriors.add(Warrior(centre,radius))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
-                crawl(x+1,y+1,konw(centre,radius,1),radius)
+                crawl(x+1,y+1,konw(centre,radius,1),radius,screen)
 
             if x+1<len(board.pola) and y<len(board.pola[x+1]):
-                crawl(x+1,y,konw(centre,radius,2),radius)
+                crawl(x+1,y,konw(centre,radius,2),radius,screen)
 
             if x>=0 and y-1>=0:
-                crawl(x,y-1,konw(centre,radius,3),radius)
+                crawl(x,y-1,konw(centre,radius,3),radius,screen)
             
             if x-1>=0 and y-1>=0:
-                crawl(x-1,y-1,konw(centre,radius,4),radius)
+                crawl(x-1,y-1,konw(centre,radius,4),radius,screen)
             if x-1>=0 and y>=0:
-                crawl(x-1,y,konw(centre,radius,5),radius)
+                crawl(x-1,y,konw(centre,radius,5),radius,screen)
 
-    crawl(1,1,poczatkowy_srodek,promien)
+    crawl(1,1,poczatkowy_srodek,promien,screen)
     warriors.draw(screen)
 
-def generate_to_wh():
+def generate_to_wh(screen):
     width,height = screen.get_width(),screen.get_height()
     drawing_width,drawing_height = width*0.9,height*0.9
     delta_width,delta_height = width-drawing_width,height-drawing_height
@@ -165,7 +165,7 @@ def game():
 # board = plansza.Plansza("xd")
 # board.generateBoard()
 
-# set_up()
+set_up()
 # game()
 
 
