@@ -15,12 +15,14 @@ pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
 icon = pygame.image.load('graphics/ikona.ico') 
 pygame.display.set_icon(icon)
+running = True
 
 def set_up():
     global warriors
     warriors = pygame.sprite.Group()
 
 def game():
+    global running
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
     pusty = Bot(-1, prompt='where') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
@@ -32,13 +34,13 @@ def game():
     shuffle(players)
     przypiszWarunkiStartowe(board, players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
-    while True:
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                break
+                running = False
 
         screen.fill("light blue")
-        wizualizacja.render_board(wizualizacja.generate_to_wh(screen),board,screen)
+        wizualizacja.render_board(wizualizacja.generate_to_wh(screen),board,screen,warriors)
     
         pygame.display.update()
         clock.tick(60)

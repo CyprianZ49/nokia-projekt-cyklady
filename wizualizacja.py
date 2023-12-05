@@ -81,12 +81,12 @@ def konw(centre,radius,typ):
 
     
 
-def render_board(package,board,screen):
+def render_board(package,board,screen,warriors):
     odwiedzone = {}
     poczatkowy_srodek,promien = package
     for warrior in warriors:
         warrior.kill()
-    def crawl(x,y,centre,radius,screen):
+    def crawl(x,y,centre,radius,screen,warriors):
         #print(board.pola[x][y]==plansza.Water)
         if (x,y) not in odwiedzone:
             #print(x,y)
@@ -106,20 +106,20 @@ def render_board(package,board,screen):
                 #     warriors.add(Warrior(centre,radius))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
-                crawl(x+1,y+1,konw(centre,radius,1),radius,screen)
+                crawl(x+1,y+1,konw(centre,radius,1),radius,screen,warriors)
 
             if x+1<len(board.pola) and y<len(board.pola[x+1]):
-                crawl(x+1,y,konw(centre,radius,2),radius,screen)
+                crawl(x+1,y,konw(centre,radius,2),radius,screen,warriors)
 
             if x>=0 and y-1>=0:
-                crawl(x,y-1,konw(centre,radius,3),radius,screen)
+                crawl(x,y-1,konw(centre,radius,3),radius,screen,warriors)
             
             if x-1>=0 and y-1>=0:
-                crawl(x-1,y-1,konw(centre,radius,4),radius,screen)
+                crawl(x-1,y-1,konw(centre,radius,4),radius,screen,warriors)
             if x-1>=0 and y>=0:
-                crawl(x-1,y,konw(centre,radius,5),radius,screen)
+                crawl(x-1,y,konw(centre,radius,5),radius,screen,warriors)
 
-    crawl(1,1,poczatkowy_srodek,promien,screen)
+    crawl(1,1,poczatkowy_srodek,promien,screen,warriors)
     warriors.draw(screen)
 
 def generate_to_wh(screen):
@@ -165,7 +165,7 @@ def game():
 # board = plansza.Plansza("xd")
 # board.generateBoard()
 
-set_up()
+# set_up()
 # game()
 
 
