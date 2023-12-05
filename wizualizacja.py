@@ -4,9 +4,11 @@ import math
 import random
 import plansza
 from bot import Bot
+import sys
+import tkinter as tk
 
 pygame.init()
-screen = pygame.display.set_mode((1920/1.5, 1080/1.5),pygame.RESIZABLE)
+screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
 running = True
 pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
@@ -168,3 +170,4 @@ game()
 
 
 pygame.quit()
+sys.exit()
