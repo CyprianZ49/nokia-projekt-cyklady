@@ -9,18 +9,6 @@ import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
 from threading import Thread,Condition
 
-# pygame.init()
-# screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
-# pygame.display.set_caption("Cyklades")
-# clock = pygame.time.Clock()
-# icon = pygame.image.load('graphics/ikona.ico') 
-# pygame.display.set_icon(icon)
-
-
-# def set_up():
-#     global warriors
-#     warriors = pygame.sprite.Group()
-
 def game():
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
@@ -106,7 +94,5 @@ def turn(players, gods, board):
     return order
 
 if __name__ == "__main__":
-    # set_up()
     game()
 
-# pygame.quit()

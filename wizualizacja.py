@@ -146,7 +146,7 @@ def game(board):
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print("clicked")
+                # print("clicked")
                 running = False
                 # pygame.quit()
 
