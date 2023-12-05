@@ -1,0 +1,47 @@
+from plansza import Plansza
+#temporary twarde warunki pocz na 5 graczy
+def przypiszWarunkiStartowe(board:Plansza, players):
+    board.changeOwnership(1, 1, players[0])
+    board.pola[1][1].strength+=1
+    board.changeOwnership(3, 3, players[0])
+    board.raiseValue(players[0], 3, 3)
+    board.changeOwnership(9, 9, players[0])
+    board.raiseValue(players[0], 9, 9)
+    board.changeOwnership(9, 10, players[0])
+    board.raiseValue(players[0], 9, 10)
+
+    board.changeOwnership(6, 1, players[1])
+    board.raiseValue(players[1], 6, 1)
+    board.changeOwnership(5, 3, players[1])
+    board.raiseValue(players[1], 5, 3)
+    board.changeOwnership(5, 6, players[1])
+    board.raiseValue(players[1], 5, 6)
+    board.changeOwnership(6, 7, players[1])
+    board.raiseValue(players[1], 6, 7)
+
+    board.changeOwnership(8, 3, players[2])
+    board.raiseValue(players[2], 8, 3)
+    board.changeOwnership(9, 5, players[2])
+    board.raiseValue(players[2], 9, 5)
+    board.changeOwnership(3, 6, players[2])
+    board.raiseValue(players[2], 3, 6)
+    board.changeOwnership(3, 7, players[2])
+    board.raiseValue(players[2], 3, 7)
+
+    board.changeOwnership(10, 7, players[3])
+    board.raiseValue(players[3], 10, 7)
+    board.changeOwnership(10, 8, players[3])
+    board.raiseValue(players[3], 10, 8)
+    board.changeOwnership(2, 4, players[3])
+    board.raiseValue(players[3], 2, 4)
+    board.changeOwnership(1, 6, players[3])
+    board.raiseValue(players[3], 1, 6)
+
+    board.changeOwnership(7, 6, players[4])
+    board.raiseValue(players[4], 7, 6)
+    board.changeOwnership(8, 7, players[4])
+    board.raiseValue(players[4], 8, 7)
+    board.changeOwnership(7, 10, players[4])
+    board.raiseValue(players[4], 7, 10)
+    board.changeOwnership(5, 9, players[4])
+    board.raiseValue(players[4], 5, 9)
