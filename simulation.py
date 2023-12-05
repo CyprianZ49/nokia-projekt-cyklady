@@ -3,27 +3,27 @@ from licytacja import Licytacja
 from akcje import *
 from random import shuffle
 from traceback import print_exception
-import pygame
-import wizualizacja
+# import pygame
+from wizualizacja import start_visualization
 import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
+from threading import Thread,Condition
 
-pygame.init()
-screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
-running = True
-pygame.display.set_caption("Cyklades")
-clock = pygame.time.Clock()
-icon = pygame.image.load('graphics/ikona.ico') 
-pygame.display.set_icon(icon)
-running = True
+# pygame.init()
+# screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
+# pygame.display.set_caption("Cyklades")
+# clock = pygame.time.Clock()
+# icon = pygame.image.load('graphics/ikona.ico') 
+# pygame.display.set_icon(icon)
 
-def set_up():
-    global warriors
-    warriors = pygame.sprite.Group()
+
+# def set_up():
+#     global warriors
+#     warriors = pygame.sprite.Group()
 
 def game():
-    global running
-    players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
+    running = True
+    players = [Bot(0)] #zmiana na więcej graczy
     pusty = Bot(-1, prompt='where') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
@@ -32,18 +32,21 @@ def game():
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
     shuffle(players)
-    przypiszWarunkiStartowe(board, players)
+    #przypiszWarunkiStartowe(board, players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
+    th = Thread(target=start_visualization,args=(board,))
+    th.start()
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill("light blue")
-        wizualizacja.render_board(wizualizacja.generate_to_wh(screen),board,screen,warriors)
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         running = False
+        
+        # print(running)
+        # screen.fill("light blue")
+        # wizualizacja.render_board(wizualizacja.generate_to_wh(screen),board,screen,warriors)
     
-        pygame.display.update()
-        clock.tick(60)
+        # pygame.display.update()
+        # clock.tick(60)
 
         players = turn(players,gods, board)
         wygrani = []
@@ -115,7 +118,7 @@ def turn(players, gods, board):
     return order
 
 if __name__ == "__main__":
-    set_up()
+    # set_up()
     game()
 
-pygame.quit()
+# pygame.quit()
