@@ -22,9 +22,9 @@ from threading import Thread,Condition
 #     warriors = pygame.sprite.Group()
 
 def game():
-    running = True
-    players = [Bot(0)] #zmiana na więcej graczy
-    pusty = Bot(-1, prompt='where') #coś tu jest jakieś takie niefajne
+    global running
+    players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
+    pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
     for x in range(13):
