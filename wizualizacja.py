@@ -4,9 +4,11 @@ import math
 import random
 import plansza
 from bot import Bot
+import sys
+import tkinter as tk
 
 pygame.init()
-screen = pygame.display.set_mode((1920/1.5, 1080/1.5),pygame.RESIZABLE)
+screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
 running = True
 pygame.display.set_caption("Cyklades")
 clock = pygame.time.Clock()
@@ -79,7 +81,7 @@ def konw(centre,radius,typ):
 
     
 
-def render_board(package):
+def render_board(package,board):
     odwiedzone = {}
     poczatkowy_srodek,promien = package
     for warrior in warriors:
@@ -90,16 +92,18 @@ def render_board(package):
             #print(x,y)
             odwiedzone[(x,y)]=True
             if isinstance(board.pola[x][y],plansza.Water):
-                if (x,y)==(1,1):
-                    draw_hexagon(centre,radius,"green")
-                else:
-                    draw_hexagon(centre,radius,"blue")
+                # if (x,y)==(1,1):
+                #     draw_hexagon(centre,radius,"green")      
+                draw_hexagon(centre,radius,"blue")
+                # if board.pola[x][y].strength>0:
+                #     warriors.add(Warrior(centre,radius))
 
             if isinstance(board.pola[x][y],plansza.Island):
                 draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
-                warriors.add(Warrior(centre,radius))
+                # if board.pola[x][y].strength>0:
+                #     warriors.add(Warrior(centre,radius))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius)
@@ -152,19 +156,16 @@ def game():
 
         
         screen.fill("light blue")
-        #render_board((910,850),40)#tutaj mądrze trzeba to policzyć
         render_board(generate_to_wh())
-        #print(screen.get_width(),screen.get_height())
     
         pygame.display.update()
         clock.tick(60)
     
 
-board = plansza.Plansza("xd")
-board.generateBoard()
+# board = plansza.Plansza("xd")
+# board.generateBoard()
 
-set_up()
-game()
+# set_up()
+# game()
 
 
-pygame.quit()
