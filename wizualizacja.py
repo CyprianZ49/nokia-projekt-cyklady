@@ -89,15 +89,15 @@ def render_board(package,board):
                 # if (x,y)==(1,1):
                 #     draw_hexagon(centre,radius,"green")      
                 draw_hexagon(centre,radius,"blue")
-                # if board.pola[x][y].strength>0:
-                #     warriors.add(Warrior(centre,radius))
+                if board.pola[x][y].strength>0:
+                    warriors.add(Warrior(centre,radius))
 
             if isinstance(board.pola[x][y],plansza.Island):
                 draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
-                # if board.pola[x][y].strength>0:
-                #     warriors.add(Warrior(centre,radius))
+                if board.pola[x][y].strength>0:
+                    warriors.add(Warrior(centre,radius))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius,board)
