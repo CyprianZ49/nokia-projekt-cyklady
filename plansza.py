@@ -195,7 +195,7 @@ class Plansza:
     def makeFleet(self, x, y, kto):
         if self.pola[x][y].typ!='water':
             raise TryingToBuildOnWater
-        if self.pola[x][y].owner!=kto and self.pola[x][y]!=self.pusty:
+        if self.pola[x][y].owner!=kto and self.pola[x][y].owner!=self.pusty:
             raise AttemptedBuildingOnNotOwnedTile
         test = False
         for tile in kto.ownedTiles:

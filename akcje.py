@@ -70,10 +70,15 @@ def bitwaMorska(plansza, x, y, kto, ile):
     isOver=False
     if ile+k1 >= sila+k2:
         plansza.pola[x][y].strength-=1
-        if plansza.pola[x][y].strength==0 and ile>0:
-            plansza.changeOwnership(x, y, kto)
-            plansza.pola[x][y].strength=ile
+        if plansza.pola[x][y].strength==0:
             isOver=True
+            if ile>0:
+                plansza.changeOwnership(x, y, kto)
+                plansza.pola[x][y].strength=ile
+            else:
+                plansza.changeOwnership(x, y, plansza.pusty)
+                plansza.pola[x][y].strength=0
+                
     if ile+k1 <= sila+k2:
         ile-=1
         if ile==0:
@@ -120,9 +125,10 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     isOver=False
     if ile+k1 >= sila+k2:
         plansza.pola[x][y].strength-=1
-        if plansza.pola[x][y].strength==0 and ile>0:
-            plansza.changeOwnership(x, y, kto)
-            plansza.pola[x][y].strength=ile
+        if plansza.pola[x][y].strength==0:
+            if ile>0:
+                plansza.changeOwnership(x, y, kto)
+                plansza.pola[x][y].strength=ile
             isOver=True
     if ile+k1 <= sila+k2:
         ile-=1
@@ -255,7 +261,7 @@ class Poseidon:
     def ruch(self, kto, x, y, ile, x1, y1):
         if self.plansza.pola[x][y].typ!='water' or self.plansza.pola[x1][y1].typ!='water' or self.plansza.pola[x][y].owner!=kto:
             raise InvalidMove
-        if not(self.plansza.isNeighbour(x, y, x1, y1)) or self.plansza.pola[x][y].strength<ile:
+        if not(self.plansza.isNeightbour(x, y, x1, y1)) or self.plansza.pola[x][y].strength<ile:
             raise InvalidMove
         koszt = 1
         if x==self.lastMovex and y==self.lastMovey and self.ileRuch<3:
@@ -264,16 +270,18 @@ class Poseidon:
             raise InvalidFunds
         kto.coins-=koszt
         if koszt==1:
-            self.ktora=0
-        self.ktora+=1
+            self.ileRuch=0
+        self.ileRuch+=1
         self.plansza.pola[x][y].strength-=ile
+        self.lastMovex=x1
+        self.lastMovey=y1
         if self.plansza.pola[x][y].strength==0:
             self.plansza.changeOwnership(x, y, self.plansza.pusty)
         if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty:
             self.plansza.changeOwnership(x1, y1, kto)
             self.plansza.pola[x1][y1].strength+=ile
         else:
-            self.ktora=10
+            self.ileRuch=10
             bitwaMorska(self.plansza, x, y, kto, ile)
     
 
