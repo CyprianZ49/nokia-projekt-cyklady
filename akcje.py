@@ -183,7 +183,7 @@ class Ares:
             raise InvalidFunds
         self.plansza.build(kto, x, y, 3, slot)
         kto.coins-=2
-    def move(self, kto, x, y, ile, x1, y1):
+    def ruch(self, kto, x, y, ile, x1, y1):
         if self.plansza.pola[x][y].typ!='capital' or self.plansza.pola[x1][y1].typ!='capital' or not(self.plansza.isBridge(x, y, kto, x1, y1)):
             raise InvalidMove
         ile = 0
