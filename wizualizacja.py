@@ -70,6 +70,21 @@ class Ship(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(center = srodek)
 
+class Coin(pygame.sprite.Sprite):
+    def __init__(self,srodek,promien,kt):
+        super().__init__()
+        moneta = "coin_omega" if kt==1 else "coin_theta"
+        self.image = pygame.image.load(f"grafikav2/{moneta}.png").convert_alpha()
+        
+        dozy_promien = promien/math.cos(math.radians(60))
+        maxwidth = 1.4*dozy_promien
+        maxheight = 1.4*promien
+        skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+
+        self.image = pygame.transform.scale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+
+        self.rect = self.image.get_rect(center = srodek)
+
 
 
 
@@ -117,12 +132,13 @@ def konw(centre,radius,typ):
         return konw6(centre,radius)
 
 
-    
+def punkty(centre,promien):
+    dozy_promien = promien/math.cos(math.radians(60))
 
 def render_board(package,board):
     odwiedzone = {}
     poczatkowy_srodek,promien = package
-    for warrior in warriors:
+    for warrior in sprites:
         warrior.kill()
     def crawl(x,y,centre,radius,board):
         #print(board.pola[x][y]==plansza.Water)
@@ -132,14 +148,18 @@ def render_board(package,board):
             if isinstance(board.pola[x][y],plansza.Water): 
                 draw_hexagon(centre,radius,"blue")
                 if board.pola[x][y].strength>0:
-                    warriors.add(Ship(centre,radius,board.pola[x][y].owner.name))
+                    sprites.add(Ship(centre,radius,board.pola[x][y].owner.name))
 
             if isinstance(board.pola[x][y],plansza.Island):
                 draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
                 if board.pola[x][y].strength>0:
-                    warriors.add(Warrior(centre,radius,board.pola[x][y].owner.name))
+                    sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))
+                if board.pola[x][y].value>0:
+                    if (x,y) not in ktory_wyglad_monety:
+                        ktory_wyglad_monety[(x,y)]=random.randint(1,2)
+                    sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius,board)
@@ -156,7 +176,7 @@ def render_board(package,board):
                 crawl(x-1,y,konw(centre,radius,5),radius,board)
 
     crawl(1,1,poczatkowy_srodek,promien,board)
-    warriors.draw(screen)
+    sprites.draw(screen)
 
 def generate_to_wh():
     width,height = screen.get_width(),screen.get_height()
@@ -180,12 +200,14 @@ def generate_to_wh():
 
     
 def set_up(board):
-    global warriors
-    warriors = pygame.sprite.Group()
+    global sprites
+    sprites = pygame.sprite.Group()
     global owners_colors
     owners_colors={}
     global ktory_nr_wolny
     ktory_nr_wolny = 1
+    global ktory_wyglad_monety
+    ktory_wyglad_monety={}
 
 def game(board):
     running = 1
