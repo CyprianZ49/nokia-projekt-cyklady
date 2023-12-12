@@ -35,7 +35,8 @@ def Metropolizacja(plansza, kto):
         for i in range(1, 5):
             tile = plansza.pola[odp[0+(i-1)*3]][odp[1+(i-1)*3]]
             slot = odp[2+(i-1)*3]
-            if tile.typ!='capital' or tile.owner!=kto or len(tile.buildings<slot) or tile.buildings[slot]!=i:
+            kto.send_move(-1, f"{tile.buildings[slot]}")
+            if tile.typ!='capital' or tile.owner!=kto or len(tile.buildings)<slot or tile.buildings[slot]!=i:
                 raise InvalidMove
         if plansza.pola[odp[12]][odp[13]].typ!='capital' or plansza.pola[odp[12]][odp[13]].owner!=kto:
             raise InvalidMove
@@ -45,7 +46,7 @@ def Metropolizacja(plansza, kto):
             tile.buildings[slot]=0
         plansza.buildMetropolis(kto, odp[12], odp[13])
     elif kto.philosophers>=4:
-        kto.send_move(-1, "zbuduj wasc metropolie - z filozofow!\n")
+        kto.send_move(-1, "zbuduj wasc metropolie - z filozofow!")
         odp = list(map(int, kto.get_move()))
         if len(odp)!=2:
             raise InvalidMove
@@ -53,7 +54,9 @@ def Metropolizacja(plansza, kto):
         kto.philosophers-=4
 
 def bitwaMorska(plansza, x, y, kto, ile):
+    kto.send_move(-1, f"atakujesz {x}, {y}")
     other=plansza.pola[x][y].owner
+    other.send_move(-1, f"atakujom cie {x}, {y}")
     sila=plansza.pola[x][y].strength
     for tile in other.ownedTiles:
         if plansza.pola[tile[0]][tile[1]].typ=='capital' and plansza.isNeightbour(tile[0], tile[1], x, y):
@@ -69,7 +72,9 @@ def bitwaMorska(plansza, x, y, kto, ile):
     k2=konwersja[k2]
     isOver=False
     if ile+k1 >= sila+k2:
+        other.send_move(-1, f"straciles solidera")
         plansza.pola[x][y].strength-=1
+        sila-=1
         if plansza.pola[x][y].strength==0:
             isOver=True
             if ile>0:
@@ -80,6 +85,7 @@ def bitwaMorska(plansza, x, y, kto, ile):
                 plansza.pola[x][y].strength=0
                 
     if ile+k1 <= sila+k2:
+        kto.send_move(-1, "straciles solidera")
         ile-=1
         if ile==0:
             isOver=True
@@ -124,6 +130,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     k2=konwersja[k2]
     isOver=False
     if ile+k1 >= sila+k2:
+        other.send_move(-1, f"straciles solidera")
         plansza.pola[x][y].strength-=1
         if plansza.pola[x][y].strength==0:
             if ile>0:
@@ -131,6 +138,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
                 plansza.pola[x][y].strength=ile
             isOver=True
     if ile+k1 <= sila+k2:
+        kto.send_move(-1, "straciles solidera")
         ile-=1
         if ile==0:
             isOver=True
@@ -186,27 +194,28 @@ class Ares:
     def ruch(self, kto, x, y, ile, x1, y1):
         if self.plansza.pola[x][y].typ!='capital' or self.plansza.pola[x1][y1].typ!='capital' or not(self.plansza.isBridge(x, y, kto, x1, y1)):
             raise InvalidMove
-        ile = 0
-        for tile in self.plansza.pola[x1][y1].owner.ownedTiles:
-            if self.plansza.pola[tile[0]][tile[1]].typ=='capital':
-                ile+=1
+        posiadane = 0
+        if self.plansza.pola[x1][y1].owner!=self.plansza.pusty:
+            for tile in self.plansza.pola[x1][y1].owner.ownedTiles:
+                if self.plansza.pola[tile[0]][tile[1]].typ=='capital':
+                    posiadane+=1
+        else:
+            posiadane = 10
         metro = 0
         for tile in kto.ownedTiles:
             if self.plansza.pola[tile[0]][tile[1]].typ=='capital' and self.plansza.pola[tile[0]][tile[1]].isMetropolis:
                 metro+=1
-        if self.plansza.pola[x][y].owner!=kto or self.plansza.pola[x][y].strength<ile or (ile==1 and not(metro>1) and self.plansza.pola[x1][y1].owner!=self.plansza.pusty):
+        if self.plansza.pola[x][y].owner!=kto or self.plansza.pola[x][y].strength<ile or (posiadane==1 and not(metro>1) and self.plansza.pola[x1][y1].owner!=self.plansza.pusty):
             raise InvalidMove
         if 1>kto.coins:
             raise InvalidFunds
         kto.coins-=1
         self.plansza.pola[x][y].strength-=ile
-        if self.plansza.pola[x][y].strength==0:
-            self.plansza.changeOwnership(x, y, self.plansza.pusty)
         if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty:
             self.plansza.changeOwnership(x1, y1, kto)
             self.plansza.pola[x1][y1].strength+=ile
         else:
-            bitwaWyspowa(self.plansza, x, y, kto, ile)
+            bitwaWyspowa(self.plansza, x1, y1, kto, ile)
 
 class Zeus:
     def __init__(self, plansza):
@@ -282,7 +291,7 @@ class Poseidon:
             self.plansza.pola[x1][y1].strength+=ile
         else:
             self.ileRuch=10
-            bitwaMorska(self.plansza, x, y, kto, ile)
+            bitwaMorska(self.plansza, x1, y1, kto, ile)
     
 
 class Athena:

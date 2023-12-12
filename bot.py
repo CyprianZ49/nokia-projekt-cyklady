@@ -41,6 +41,6 @@ class Bot:
     def send_move(self, player,move):
         server.senddata(self.name, f'{player} {move}')
 
-    # def __del__(self):
-    #     if hasattr(self, 'proc'):
-    #         self.proc.kill()
+    def __del__(self):
+        if hasattr(self, 'proc'):
+            self.proc.kill()

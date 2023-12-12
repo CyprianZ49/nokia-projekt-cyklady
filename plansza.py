@@ -179,6 +179,8 @@ class Plansza:
             raise AttemptedBuildingOnNotOwnedTile
         self.pola[x][y].buildMetropolis()
     def raiseValue(self, kto, x, y):
+        if self.pola[x][y].typ!='capital':
+            raise CannotBeOwned
         if self.pola[x][y].owner!=kto:
             raise AttemptedBuildingOnNotOwnedTile
         self.pola[x][y].increaseValue
@@ -208,19 +210,22 @@ class Plansza:
             self.changeOwnership(x, y, kto)
         self.pola[x][y].strength+=1
     def isBridge(self, x1, y1, kto, x2, y2):
-        if self.pola[x1][y1].typ!='capital' or self.pola[x2][y2]!='capital' or self.pola[x1][y1].owner!=kto:
+        if self.pola[x1][y1].typ!='capital' or self.pola[x2][y2].typ!='capital' or self.pola[x1][y1].owner!=kto:
             return False
+        #kto.send_move(-1, "test")
         connected = []
         connected.append([x1, y1])
         for _ in range(8):
             for tile in kto.ownedTiles:
-                if self.pola[tile[0]][tile[1]].typ=='water' and tile not in connected:
+                if self.pola[tile[0]][tile[1]].typ=='water' and [tile[0], tile[1]] not in connected:
+                    #kto.send_move(-1, f"sprawdzamy: {tile[0], tile[1]}")
                     for t in connected:
                         if self.isNeightbour(t[0], t[1], tile[0], tile[1]):
-                            connected.append(tile)
+                            connected.append([tile[0], tile[1]])
                             break
         test = False
         for t in connected:
+            #kto.send_move(-1, f"{t[0], t[1]}")
             if self.isNeightbour(t[0], t[1], x2, y2):
                 test = True
         return test
