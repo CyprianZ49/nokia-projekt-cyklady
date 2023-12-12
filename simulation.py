@@ -3,7 +3,6 @@ from licytacja import Licytacja
 from akcje import *
 from random import shuffle
 from traceback import print_exception
-# import pygame
 from wizualizacja import start_visualization
 import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
@@ -14,6 +13,7 @@ from contextlib import redirect_stdout
 from log import Log
 from random import getstate
 from pickle import dumps
+import copy
 
 def game(players):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
@@ -26,7 +26,7 @@ def game(players):
     #shuffle(players)
     przypiszWarunkiStartowe(board, players)
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
-    th = Thread(target=start_visualization,args=(board,))
+    th = Thread(target=start_visualization,args=(copy.copy(board),))
     th.start()
     while True:
         players = turn(players,gods, board)
