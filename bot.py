@@ -7,7 +7,7 @@ from constants import host, port
 server = Server(host, port)
 
 class Bot:
-    def __init__(self, name, prompt=None):
+    def __init__(self, name, prompt=None, debug=True):
 
         self.name=name
         self.coins=0
@@ -20,7 +20,7 @@ class Bot:
         
         if prompt is None:
             print(self.name)
-            self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
+            self.proc=Popen(shlex.split(f"python terminalbot.py {name} {debug}"), creationflags=CREATE_NEW_CONSOLE)
         elif prompt != '':
             self.proc=Popen(shlex.split(f"python botlauncher.py {name} {prompt}"))
 

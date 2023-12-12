@@ -8,6 +8,8 @@ from wizualizacja import start_visualization
 import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
 from threading import Thread,Condition
+from constants import debug
+import os
 
 def game():
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
@@ -94,5 +96,13 @@ def turn(players, gods, board):
     return order
 
 if __name__ == "__main__":
-    game()
+    if debug:
+        if not os.path.exists('testcases'):
+            n=0
+        else:
+            n=max(map(int,os.listdir('testcases')))+1
+        os.makedirs(f'testcases/{n}')
+        game()
+    else:    
+        game()
 

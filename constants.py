@@ -1,5 +1,5 @@
 boardSize = 13
-
+debug = True
 host = "localhost"
 port = 12345
 

@@ -1,8 +1,9 @@
 import socket
-from constants import host, port
+from constants import host, port, debug
 from threading import Thread
-from sys import argv
+from sys import argv, stdout
 import os
+from traceback import print_exception
 
 print(f'gracz {argv[1]}')
 
@@ -11,15 +12,23 @@ def handle_data(s):
         data=s.recv(1).decode()
         print(data, end='')
 
+def main(f):
+    s.connect((host, port))
+    Thread(target=handle_data, args=(s,)).start()
+    s.sendall((argv[1]+'\n').encode())
+    while True:
+        inp=input()
+        print(inp, file=f, flush=True)
+        s.sendall((inp+'\n').encode())
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    if not os.path.exists('testcase'):
-        os.mkdir('testcase')
-    with open(f'testcase/{argv[1]}', 'w') as f:
-        s.connect((host, port))
-        Thread(target=handle_data, args=(s,)).start()
-        s.sendall((argv[1]+'\n').encode())
+    try:
+        if debug:
+            with open(f"testcases/{max(map(int,os.listdir('testcases')))}/{argv[1]}", 'w') as f:
+                main(f)
+        else:
+            main(stdout)
+    except Exception as e:
+        print_exception(e)
         while True:
-            inp=input()
-            f.write(inp+'\n')
-            f.flush()
-            s.sendall((inp+'\n').encode())
+            pass
