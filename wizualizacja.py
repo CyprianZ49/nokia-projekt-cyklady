@@ -12,17 +12,61 @@ import tkinter as tk
 
 
 class Warrior(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien):
+    def __init__(self,srodek,promien,owner_name):
+        global ktory_nr_wolny
+        global owners_colors
         super().__init__()
 
-        self.image = pygame.image.load("graphics/warrior.png").convert_alpha()
+        if owner_name not in owners_colors:
+            owners_colors[owner_name] = ktory_nr_wolny
+            ktory_nr_wolny+=1
+        
+        if owners_colors[owner_name] == 1:
+            self.image = pygame.image.load("grafikav2/solider_blue.png").convert_alpha()
+        if owners_colors[owner_name] == 2:
+            self.image = pygame.image.load("grafikav2/solider_green.png").convert_alpha()
+        if owners_colors[owner_name] == 3:
+            self.image = pygame.image.load("grafikav2/solider_red.png").convert_alpha()
+        if owners_colors[owner_name] == 4:
+            self.image = pygame.image.load("grafikav2/solider_white.png").convert_alpha()
+        if owners_colors[owner_name] == 5:
+            self.image = pygame.image.load("grafikav2/solider_yellow.png").convert_alpha()
 
         dozy_promien = promien/math.cos(math.radians(60))
-        maxwidth = 1.5*dozy_promien
-        maxheight = 1.5*promien
+        maxwidth = 1.8*dozy_promien
+        maxheight = 1.8*promien
         skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
-        self.image = pygame.transform.scale(self.image,(self.image.get_height()*skala,self.image.get_width()*skala))
+        self.image = pygame.transform.scale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+
+        self.rect = self.image.get_rect(center = srodek)
+class Ship(pygame.sprite.Sprite):
+    def __init__(self,srodek,promien,owner_name):
+        global ktory_nr_wolny
+        global owners_colors
+        super().__init__()
+
+        if owner_name not in owners_colors:
+            owners_colors[owner_name] = ktory_nr_wolny
+            ktory_nr_wolny+=1
+        
+        if owners_colors[owner_name] == 1:
+            self.image = pygame.image.load("grafikav2/fleet_blue.png").convert_alpha()
+        if owners_colors[owner_name] == 2:
+            self.image = pygame.image.load("grafikav2/fleet_green.png").convert_alpha()
+        if owners_colors[owner_name] == 3:
+            self.image = pygame.image.load("grafikav2/fleet_red.png").convert_alpha()
+        if owners_colors[owner_name] == 4:
+            self.image = pygame.image.load("grafikav2/fleet_white.png").convert_alpha()
+        if owners_colors[owner_name] == 5:
+            self.image = pygame.image.load("grafikav2/fleet_yellow.png").convert_alpha()
+
+        dozy_promien = promien/math.cos(math.radians(60))
+        maxwidth = 1.4*dozy_promien
+        maxheight = 1.4*promien
+        skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+
+        self.image = pygame.transform.scale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
 
         self.rect = self.image.get_rect(center = srodek)
 
@@ -85,19 +129,17 @@ def render_board(package,board):
         if (x,y) not in odwiedzone:
             #print(x,y)
             odwiedzone[(x,y)]=True
-            if isinstance(board.pola[x][y],plansza.Water):
-                # if (x,y)==(1,1):
-                #     draw_hexagon(centre,radius,"green")      
+            if isinstance(board.pola[x][y],plansza.Water): 
                 draw_hexagon(centre,radius,"blue")
                 if board.pola[x][y].strength>0:
-                    warriors.add(Warrior(centre,radius))
+                    warriors.add(Ship(centre,radius,board.pola[x][y].owner.name))
 
             if isinstance(board.pola[x][y],plansza.Island):
                 draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
                 if board.pola[x][y].strength>0:
-                    warriors.add(Warrior(centre,radius))
+                    warriors.add(Warrior(centre,radius,board.pola[x][y].owner.name))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius,board)
@@ -137,9 +179,13 @@ def generate_to_wh():
 
 
     
-def set_up():
+def set_up(board):
     global warriors
     warriors = pygame.sprite.Group()
+    global owners_colors
+    owners_colors={}
+    global ktory_nr_wolny
+    ktory_nr_wolny = 1
 
 def game(board):
     running = 1
@@ -169,7 +215,7 @@ def start_visualization(board):
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/ikona.ico') 
     pygame.display.set_icon(icon)
-    set_up()
+    set_up(board)
     # print("xddddd")
     game(board)
 
