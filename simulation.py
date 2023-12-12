@@ -12,9 +12,10 @@ from constants import debug
 import os
 from contextlib import redirect_stdout
 from log import Log
+from random import getstate
+from pickle import dumps
 
-def game():
-    players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
+def game(players):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
@@ -88,7 +89,8 @@ def turn(players, gods, board):
                     f=name_to_f[action[0]]
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
-                print_exception(e)
+                pass
+                # print_exception(e)
             Metropolizacja(board, player)
             action = player.get_move()
         print(f'gracz {player.name} pasuje')
@@ -104,8 +106,12 @@ if __name__ == "__main__":
         else:
             n=max(map(int,os.listdir('testcases')))+1
         os.makedirs(f'testcases/{n}')
-        with redirect_stdout(Log(f'testcases/{n}/out')):
-            game()
+        log = Log(f'testcases/{n}/out')
+        with redirect_stdout(log):
+            print(dumps(getstate()))
+            players = [Bot(i) for i in range(5)]
+            game(players)
     else:    
-        game()
+        players = [Bot(i) for i in range(5)]
+        game(players)
 

@@ -2,12 +2,12 @@
 from subprocess import Popen,CREATE_NEW_CONSOLE
 import shlex
 from server import Server
-from constants import host, port
+from constants import host, port, debug
 
 server = Server(host, port)
 
 class Bot:
-    def __init__(self, name, prompt=None, debug=True):
+    def __init__(self, name, prompt=None):
 
         self.name=name
         self.coins=0
@@ -20,7 +20,7 @@ class Bot:
         
         if prompt is None:
             print(self.name)
-            self.proc=Popen(shlex.split(f"python terminalbot.py {name} {debug}"), creationflags=CREATE_NEW_CONSOLE)
+            self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
         elif prompt != '':
             self.proc=Popen(shlex.split(f"python botlauncher.py {name} {prompt}"))
 
