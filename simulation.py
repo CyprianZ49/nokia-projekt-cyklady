@@ -15,7 +15,7 @@ from random import getstate
 from pickle import dumps
 import copy
 
-def game(players):
+def game(players, visual = True):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
@@ -26,8 +26,9 @@ def game(players):
     #shuffle(players)
     przypiszWarunkiStartowe(board, players, len(players))
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
-    th = Thread(target=start_visualization,args=(copy.copy(board),))
-    th.start()
+    if visual:
+        th = Thread(target=start_visualization,args=(copy.copy(board),))
+        th.start()
     while True:
         players = turn(players,gods, board)
         wygrani = []

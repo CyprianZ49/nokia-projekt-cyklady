@@ -9,7 +9,7 @@ proc = Popen(shlex.split(f'python {" ".join(argv[2:])}'), stdin=PIPE, stdout=PIP
 
 def handle_data(s):
     while True:
-        proc.stdin.write(s.recv(1).decode())
+        proc.stdin.write(s.recv(1))
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((host, port))
