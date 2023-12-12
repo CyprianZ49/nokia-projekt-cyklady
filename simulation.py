@@ -10,6 +10,8 @@ from przygotowanie import przypiszWarunkiStartowe
 from threading import Thread,Condition
 from constants import debug
 import os
+from contextlib import redirect_stdout
+from log import Log
 
 def game():
     players = [Bot(i) for i in range(5)] #zmiana na więcej graczy
@@ -102,7 +104,8 @@ if __name__ == "__main__":
         else:
             n=max(map(int,os.listdir('testcases')))+1
         os.makedirs(f'testcases/{n}')
-        game()
+        with redirect_stdout(Log(f'testcases/{n}/out')):
+            game()
     else:    
         game()
 
