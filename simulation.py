@@ -15,7 +15,7 @@ from random import getstate
 from pickle import dumps
 import copy
 
-def game(players):
+def game(players, visual = True):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
@@ -24,10 +24,11 @@ def game(players):
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
     #shuffle(players)
-    przypiszWarunkiStartowe(board, players)
+    przypiszWarunkiStartowe(board, players, len(players))
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
-    th = Thread(target=start_visualization,args=(copy.copy(board),))
-    th.start()
+    if visual:
+        th = Thread(target=start_visualization,args=(copy.copy(board),))
+        th.start()
     while True:
         players = turn(players,gods, board)
         wygrani = []
@@ -89,8 +90,7 @@ def turn(players, gods, board):
                     f=name_to_f[action[0]]
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
-                pass
-                # print_exception(e)
+                print_exception(e)
             Metropolizacja(board, player)
             action = player.get_move()
         print(f'gracz {player.name} pasuje')
@@ -109,9 +109,9 @@ if __name__ == "__main__":
         log = Log(f'testcases/{n}/out')
         with redirect_stdout(log):
             print(dumps(getstate()))
-            players = [Bot(i) for i in range(5)]
+            players = [Bot(i) for i in range(2)]
             game(players)
     else:    
-        players = [Bot(i) for i in range(5)]
+        players = [Bot(i) for i in range(2)]
         game(players)
 

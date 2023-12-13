@@ -10,7 +10,7 @@ print(f'gracz {argv[1]}')
 def handle_data(s):
     while True:
         data=s.recv(1).decode()
-        print(data, end='')
+        print(data, end='', flush=True)
 
 def main(f):
     s.connect((host, port))
