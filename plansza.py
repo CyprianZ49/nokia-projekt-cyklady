@@ -49,6 +49,11 @@ class Capital:
         self.owner=owner
         self.isMetropolis=False
         self.buildings=[0 for i in range(maxBuildings)]
+        #budynki 0 - plains
+        #budynki 1 - uni
+        #budynki 2 - temple
+        #budynki 3 - fort
+        #budnyki 4 - port
         self.territory=territory
         self.typ='capital'
         self.strength=0
