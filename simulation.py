@@ -14,6 +14,8 @@ from log import Log
 from random import getstate
 from pickle import dumps
 import copy
+import argparse
+from sys import argv
 
 def game(players, visual = True):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
@@ -99,7 +101,18 @@ def turn(players, gods, board):
     order.reverse()
     return order
 
+def init_bots(files):
+    return [Bot(i, p) for i,p in enumerate(files)] if files else [Bot(i) for i in range(2)]
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Launch arena with bots.')
+    parser.add_argument('--bots', nargs='*', dest="files", action="store",
+                        help='file paths to be used for bots', required=False)
+    parser.add_argument('-v', dest="visual", action="store_false",
+                    help='if specified lauches without visuals', required=False)
+    
+    nspc = parser.parse_args(argv[1:])
+
     if debug:
         if not os.path.exists('testcases'):
             n=0
@@ -109,9 +122,7 @@ if __name__ == "__main__":
         log = Log(f'testcases/{n}/out')
         with redirect_stdout(log):
             print(dumps(getstate()))
-            players = [Bot(i) for i in range(2)]
-            game(players)
+            game(init_bots(nspc.files), nspc.visual)
     else:    
-        players = [Bot(i) for i in range(2)]
-        game(players)
+        game(init_bots(nspc.files), nspc.visual)
 
