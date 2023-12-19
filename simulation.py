@@ -1,9 +1,7 @@
-from bot import Bot
 from licytacja import Licytacja
 from akcje import *
 from random import shuffle
 from traceback import print_exception
-from wizualizacja import start_visualization
 import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
 from threading import Thread,Condition
@@ -11,11 +9,13 @@ from constants import debug
 import os
 from contextlib import redirect_stdout
 from log import Log
-from random import getstate
-from pickle import dumps
+from random import getstate, setstate
+from ast import literal_eval
 import copy
 import argparse
 from sys import argv
+from plansza import Plansza
+from bot import Bot
 
 def game(players, visual = True):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
@@ -25,12 +25,17 @@ def game(players, visual = True):
         for y in range(13):
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
-    #shuffle(players)
+    shuffle(players)
     przypiszWarunkiStartowe(board, players, len(players))
     gods = {'ze':Zeus(board),'at':Athena(board),'ap':Apollo(board),'ar':Ares(board),'po':Poseidon(board)}
-    if visual:
+
+
+    if visual: #banish pygame
+        from wizualizacja import start_visualization
         th = Thread(target=start_visualization,args=(copy.copy(board),))
         th.start()
+
+
     while True:
         players = turn(players,gods, board)
         wygrani = []
@@ -49,7 +54,7 @@ def game(players, visual = True):
             if player.coins==maks:
                 wygraniForReal.append(player)
         if len(wygraniForReal)>0:
-            print("rozgrywka zakonczyla się!\nUltymatywny Grek:")
+            print("rozgrywka zakonczyla sie!\nUltymatywny Grek:")
             for player in wygraniForReal:
                 print(f"{player.name}")
             break
@@ -70,7 +75,7 @@ def turn(players, gods, board):
                 for bud in board.pola[wys[0]][wys[1]].buildings:
                     if bud == 2:
                         kto.actionDiscount+=1
-    print('początek licytacji')
+    print('poczatek licytacji')
     lic = Licytacja(players)
     licres=lic.perform()
     print('koniec licytacji')
@@ -88,7 +93,7 @@ def turn(players, gods, board):
                 order.append(players[p[1]])
                 players[p[1]].coins-=max(p[0]-players[p[1]].priests, 1)
 
-    print('początek akcji')
+    print('poczatek akcji')
     name_to_f = {'r':'rekrutuj','b':'buduj','m':'ruch'}
     for player in order:
         action = player.get_move()
@@ -117,21 +122,31 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Launch arena with bots.')
     parser.add_argument('--bots', nargs='*', dest="files", action="store",
                         help='file paths to be used for bots', required=False)
+    parser.add_argument('--rng', dest="rng", action="store",
+                help='file to read rng state from', required=False)
     parser.add_argument('-v', dest="visual", action="store_false",
                     help='if specified lauches without visuals', required=False)
+    parser.add_argument('-d', dest="debug", action="store_false", # should also work for terminal bots
+                help='if set overrides global debug variable and sets it to false', required=False)
     
     nspc = parser.parse_args(argv[1:])
+    # exit(0)
+    
+    if nspc.rng:
+        with open(nspc.rng, 'r') as f:
+            setstate(literal_eval(f.read()))
 
-    if debug:
+    if nspc.debug and debug:
         if not os.path.exists('testcases'):
             n=0
         else:
             n=max(map(int,os.listdir('testcases')))+1
         os.makedirs(f'testcases/{n}')
+
+        with open(f'testcases/{n}/rng', 'w') as f:
+            f.write(str(getstate()))
         log = Log(f'testcases/{n}/out')
         with redirect_stdout(log):
-            print(dumps(getstate()))
             game(init_bots(nspc.files), nspc.visual)
     else:    
         game(init_bots(nspc.files), nspc.visual)
-
