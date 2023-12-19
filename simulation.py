@@ -26,7 +26,7 @@ def game(players, visual = True):
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
     shuffle(players)
-    # print(players)
+    print(players)
     order = [player.name for player in players]
     for player in players:
         player.send_move(-1, player.name) #który gracz
