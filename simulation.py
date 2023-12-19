@@ -61,6 +61,15 @@ def turn(players, gods, board):
     for kto in players:
         for wys in kto.ownedTiles:
             kto.coins+=board.pola[wys[0]][wys[1]].value
+    for kto in players:
+        kto.actionDiscount=0
+        for wys in kto.ownedTiles:
+            if board.pola[wys[0]][wys[1]].typ=='capital':
+                if board.pola[wys[0]][wys[1]].isMetropolis:
+                    kto.actionDiscount+=1
+                for bud in board.pola[wys[0]][wys[1]].buildings:
+                    if bud == 2:
+                        kto.actionDiscount+=1
     print('początek licytacji')
     lic = Licytacja(players)
     licres=lic.perform()

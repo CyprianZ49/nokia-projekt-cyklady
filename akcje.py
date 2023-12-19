@@ -18,6 +18,12 @@ class TooManyPiecesOfThisType(Exception):
 class InvalidMove(Exception):
     pass
 
+class TooMuchSmiting(Exception):
+    pass
+
+class CannotBeSmitten(Exception):
+    pass
+
 #nie wytestowane rzeczy: bitwy lądowa i morska, ruchy lądowy i morski, rekrutacja tylko częściowo
 
 def Metropolizacja(plansza, kto):
@@ -207,9 +213,13 @@ class Ares:
                 metro+=1
         if self.plansza.pola[x][y].owner!=kto or self.plansza.pola[x][y].strength<ile or (posiadane==1 and not(metro>1) and self.plansza.pola[x1][y1].owner!=self.plansza.pusty):
             raise InvalidMove
-        if 1>kto.coins:
+        koszt = 1
+        if kto.actionDiscount>0:
+            kto.actionDiscount-=1
+            koszt = 0
+        if koszt>kto.coins:
             raise InvalidFunds
-        kto.coins-=1
+        kto.coins-=koszt
         self.plansza.pola[x][y].strength-=ile
         if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty:
             self.plansza.changeOwnership(x1, y1, kto)
@@ -221,6 +231,7 @@ class Zeus:
     def __init__(self, plansza):
         self.plansza=plansza
         self.ktora=0
+        self.ktora2=0
     def rekrutuj(self, kto):
         if(self.ktora>=2):
             raise TooManyRecruitments
@@ -238,6 +249,25 @@ class Zeus:
             raise InvalidFunds
         self.plansza.build(kto, x, y, 2, slot)
         kto.coins-=2
+    def ruch(self, kto, x, y):
+        if(self.ktora2>0):
+            raise TooMuchSmiting
+        if(self.plansza[x][y].typ!='capital' and self.plansza[x][y].typ!='water'):
+            raise CannotBeSmitten
+        if(self.plansza[x][y].strength==0):
+            raise CannotBeSmitten
+        koszt=3
+        while koszt>0 and kto.actionDiscount>0:
+            koszt-=1
+            kto.actionDiscount-=1
+        if koszt>kto.coins:
+            raise InvalidFunds
+        kto.coins-=koszt
+        self.ktora2+=1
+        self.plansza[x][y].strength-=1
+        if self.plansza[x][y].strength==0:
+            self.plansz.changeOwnership(x, y, self.pusty)
+
 
 class Poseidon:
     def __init__(self, plansza):
@@ -274,6 +304,9 @@ class Poseidon:
             raise InvalidMove
         koszt = 1
         if x==self.lastMovex and y==self.lastMovey and self.ileRuch<3:
+            koszt = 0
+        if koszt>0 and kto.actionDiscount>0:
+            kto.actionDiscount-=1
             koszt = 0
         if koszt>kto.coins:
             raise InvalidFunds
@@ -338,6 +371,7 @@ class Apollo:
 
 def reset(zeus, atena, ares, poseidon, apollo):
     zeus.ktora=0
+    zeus.ktora2=0
     atena.ktora=0
     ares.ktora=0
     poseidon.ktora=0

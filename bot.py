@@ -18,6 +18,7 @@ class Bot:
         self.priests=0
         self.ownedTiles=[]
         self.prompt=prompt
+        self.actionDiscount=0
         
         if prompt is None:
             self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
