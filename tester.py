@@ -1,9 +1,12 @@
-from random import setstate
-from pickle import loads
 from os import listdir
 import subprocess
 import shlex
 from itertools import zip_longest
+import argparse
+
+parser = argparse.ArgumentParser(description='Testing utility')
+parser.add_argument('-r', nargs='*', dest="files", action="store_true",
+                    help='if set recaculates the correct output for all tests', required=False)
 
 for test in listdir('testcases'):
     botfiles = ' '.join(f'"filebot.py testcases/{test}/{i}"' for i in range(2))
