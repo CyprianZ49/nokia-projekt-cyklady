@@ -1,22 +1,21 @@
-from simulation import game
-from bot import Bot
 from random import setstate
 from pickle import loads
-from contextlib import redirect_stdout
-from log import Log
-from sys import exit
+from os import listdir
+import subprocess
+import shlex
+from itertools import zip_longest
 
-test = '0'
-players = [Bot(i, f'filebot.py "testcases/{test}/{i}"') for i in range(2)]
-with open(f'testcases/{test}/out', 'r', encoding='utf-8') as f:
-    d=f.readline().rstrip()
-    setstate(loads(eval(d)))
-    output = f.read()
-with redirect_stdout(Log('tmp', False)):
-    game(players, False)
-with open('tmp', 'r', encoding='utf-8') as f:
-    for num, lines in enumerate(zip(output.strip().splitlines(), f.read().strip().splitlines())):
-        if lines[0]!=lines[1]:
-            print(f'Błąd w teście {test} w linii {num}')
-            exit(1)
-print('wszystko poprawnie')
+for test in listdir('testcases'):
+    botfiles = ' '.join(f'"filebot.py testcases/{test}/{i}"' for i in range(2))
+    rng_file = f"testcases/{test}/rng"
+    prompt = f"python simulation.py -v -d --bots {botfiles} --rng {rng_file}"
+    proc = subprocess.run(shlex.split(prompt), capture_output=True, encoding="utf-8", check=True)
+
+    with open(f"testcases/{test}/out", 'r') as f:
+        out = proc.stdout
+        data = f.read()
+        for i,(l1,l2) in enumerate(zip_longest(out.split('\n'), data.split('\n')), start=1):
+            if l1!=l2:
+                print(f"blad w linii {i}: {l1!r} {l2!r}")
+
+print('wszystko OK')

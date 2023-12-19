@@ -18,7 +18,8 @@ def main(f):
     s.sendall((argv[1]+'\n').encode())
     while True:
         inp=input()
-        print(inp, file=f, flush=True)
+        if f is not None:
+            print(inp, file=f, flush=True)
         s.sendall((inp+'\n').encode())
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -27,7 +28,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             with open(f"testcases/{max(map(int,os.listdir('testcases')))}/{argv[1]}", 'w') as f:
                 main(f)
         else:
-            main(stdout)
+            main(None)
     except Exception as e:
         print_exception(e)
         while True:

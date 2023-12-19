@@ -1,5 +1,3 @@
-from bot import Bot
-from plansza import Plansza
 from constants import boardSize
 import random
 

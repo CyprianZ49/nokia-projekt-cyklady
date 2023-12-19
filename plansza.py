@@ -1,5 +1,3 @@
-from bot import Bot
-
 class MetropilsAlreadyPresent(Exception):
     pass
 

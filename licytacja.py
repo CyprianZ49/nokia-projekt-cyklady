@@ -1,5 +1,3 @@
-from bot import Bot
-
 class Licytacja:
     def __init__(self, bots):
         self.bots=bots
@@ -35,8 +33,3 @@ class Licytacja:
             _,god,value=self.get_bid(bot)
             self.do_bid(i,_,god,value)
         return self.bids
-            
-if __name__ == "__main__":
-    bots = [Bot(i) for i in range(4)]
-    l = Licytacja(bots)
-    print(l.perform())
