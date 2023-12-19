@@ -6,7 +6,9 @@ import plansza
 from bot import Bot
 import sys
 import tkinter as tk
-
+from OpenGL.GL import *
+from pygame.locals import *
+from OpenGL.GLU import *
 
 
 
@@ -30,26 +32,26 @@ class Warrior(pygame.sprite.Sprite):
             ktory_nr_wolny+=1
         
         if owners_colors[owner_name] == 1:
-            self.image = pygame.image.load("grafikav2/solider_blue.png").convert_alpha()
+            self.image = pygame.image.load("icons/warrior blue.png").convert_alpha()
         if owners_colors[owner_name] == 2:
-            self.image = pygame.image.load("grafikav2/solider_green.png").convert_alpha()
+            self.image = pygame.image.load("icons/warrior green.png").convert_alpha()
         if owners_colors[owner_name] == 3:
-            self.image = pygame.image.load("grafikav2/solider_red.png").convert_alpha()
+            self.image = pygame.image.load("icons/warrior red.png").convert_alpha()
         if owners_colors[owner_name] == 4:
-            self.image = pygame.image.load("grafikav2/solider_white.png").convert_alpha()
+            self.image = pygame.image.load("icons/warrior white.png").convert_alpha()
         if owners_colors[owner_name] == 5:
-            self.image = pygame.image.load("grafikav2/solider_yellow.png").convert_alpha()
+            self.image = pygame.image.load("icons/warrior yellow.png").convert_alpha()
 
         dozy_promien = promien/math.cos(math.radians(60))
         maxwidth = 1.8*dozy_promien
         maxheight = 1.8*promien
         skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
-        self.image = pygame.transform.scale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+        self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
 
         self.rect = self.image.get_rect(center = srodek)
 class Ship(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien,owner_name):
+    def __init__(self,srodek,promien,owner_name,withcoin:bool):
         global ktory_nr_wolny
         global owners_colors
         super().__init__()
@@ -59,24 +61,31 @@ class Ship(pygame.sprite.Sprite):
             ktory_nr_wolny+=1
         
         if owners_colors[owner_name] == 1:
-            self.image = pygame.image.load("grafikav2/fleet_blue.png").convert_alpha()
+            self.image = pygame.image.load("icons/fleet blue.png").convert_alpha()
         if owners_colors[owner_name] == 2:
-            self.image = pygame.image.load("grafikav2/fleet_green.png").convert_alpha()
+            self.image = pygame.image.load("icons/fleet green.png").convert_alpha()
         if owners_colors[owner_name] == 3:
-            self.image = pygame.image.load("grafikav2/fleet_red.png").convert_alpha()
+            self.image = pygame.image.load("icons/fleet red.png").convert_alpha()
         if owners_colors[owner_name] == 4:
-            self.image = pygame.image.load("grafikav2/fleet_white.png").convert_alpha()
+            self.image = pygame.image.load("icons/fleet white.png").convert_alpha()
         if owners_colors[owner_name] == 5:
-            self.image = pygame.image.load("grafikav2/fleet_yellow.png").convert_alpha()
+            self.image = pygame.image.load("icons/fleet yellow.png").convert_alpha()
+        
+        new_srodek = srodek
+        if withcoin:
+            jc = 0.32#jaka czesc 1 - na skraju max, 0 - na srodku
+            dl = promien*jc
+            x = dl/math.tan(math.radians(60))
+            new_srodek = (srodek[0]-x,srodek[1]+dl)
 
         dozy_promien = promien/math.cos(math.radians(60))
         maxwidth = 1.4*dozy_promien
         maxheight = 1.4*promien
         skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
-        self.image = pygame.transform.scale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+        self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
 
-        self.rect = self.image.get_rect(center = srodek)
+        self.rect = self.image.get_rect(center = new_srodek)
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self,srodek,promien,kt):
@@ -85,7 +94,7 @@ class Coin(pygame.sprite.Sprite):
         self.image = pygame.image.load(f"grafikav2/{moneta}.png").convert_alpha()
         
         new_srodek = srodek
-        jc = 0.6
+        jc = 0.6#jaka czesc 1 - na skraju max, 0 - na srodku
         dl = promien*jc
         x = dl/math.tan(math.radians(60))
         new_srodek = (srodek[0]+x,srodek[1]-dl)
@@ -97,7 +106,7 @@ class Coin(pygame.sprite.Sprite):
         maxheight = 0.8*promien
         skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
-        self.image = pygame.transform.scale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+        self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
 
         self.rect = self.image.get_rect(center = new_srodek)
 
@@ -162,7 +171,11 @@ def render_board(package,board):
             if isinstance(board.pola[x][y],plansza.Water): 
                 draw_hexagon(centre,radius,"blue")
                 if board.pola[x][y].strength>0:
-                    sprites.add(Ship(centre,radius,board.pola[x][y].owner.name))
+                    sprites.add(Ship(centre,radius,board.pola[x][y].owner.name,board.pola[x][y].value>0))
+                if board.pola[x][y].value>0:
+                    if (x,y) not in ktory_wyglad_monety:
+                        ktory_wyglad_monety[(x,y)]=random.randint(1,2)
+                    sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
 
             if isinstance(board.pola[x][y],plansza.Island):
                 draw_hexagon(centre,radius,"brown")
@@ -234,9 +247,10 @@ def game(board):
 
         screen.fill("light blue")
         render_board(generate_to_wh(),board)
-    
-        pygame.display.update()
+        
+        pygame.display.flip()
         clock.tick(60)
+    pygame.quit()
     
 
 # board = plansza.Plansza("xd")
@@ -246,6 +260,7 @@ def start_visualization(board):
     pygame.init()
     global screen
     global clock
+    # pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS,3)
     screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
     pygame.display.set_caption("Cyklades")
     clock = pygame.time.Clock()
