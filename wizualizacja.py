@@ -163,6 +163,48 @@ def render_board(package,board):
     poczatkowy_srodek,promien = package
     for warrior in sprites:
         warrior.kill()
+    def draw_island(x,y,budynki,centre,radius):
+        draw_hexagon(centre,radius,"brown")
+
+    def handle_islands(capitalx,capitaly,pola,budynki,centre,radius):
+        if [capitalx,capitaly] in pola:
+            pola.remove([capitalx,capitaly])
+        
+        while 0 in budynki:
+            budynki.remove(0)
+        
+
+
+        for i in range(len(pola)):
+            ile = math.ceil(len(budynki)/len(pola))
+            island_centre = centre
+
+            if pola[i][1] > capitaly:
+                for _ in range(pola[i][1]-capitaly):
+                    island_centre=konw(island_centre,radius,1)
+                pola[i][0]+=pola[i][1]-capitaly
+            if pola[i][0] > capitalx:
+                for _ in range(pola[i][0]-capitalx):
+                    island_centre=konw(island_centre,radius,2)
+            if pola[i][0] < capitalx:
+                for _ in range(capitalx-pola[i][0]):
+                    island_centre=konw(island_centre,radius,5)
+            if pola[i][1] < capitaly:
+                for _ in range(capitaly-pola[i][1]):
+                    island_centre=konw(island_centre,radius,3)
+
+            draw_island(pola[i][0],pola[i][1],budynki[0:ile] if ile!=0 else [],island_centre,radius)
+            for _ in range(ile):
+                budynki.pop(0)
+
+            
+
+
+
+
+        
+        # print(capitalx,capitaly,pola)
+
     def crawl(x,y,centre,radius,board):
         #print(board.pola[x][y]==plansza.Water)
         if (x,y) not in odwiedzone:
@@ -177,10 +219,12 @@ def render_board(package,board):
                         ktory_wyglad_monety[(x,y)]=random.randint(1,2)
                     sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
 
-            if isinstance(board.pola[x][y],plansza.Island):
-                draw_hexagon(centre,radius,"brown")
+            # if isinstance(board.pola[x][y],plansza.Island):
+            #     draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
+                handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius)
+                # print(x,y)
                 if board.pola[x][y].strength>0:
                     sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))
                 if board.pola[x][y].value>0:
