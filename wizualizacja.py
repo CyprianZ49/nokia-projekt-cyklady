@@ -110,6 +110,47 @@ class Coin(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(center = new_srodek)
 
+class University(pygame.sprite.Sprite):
+    def __init__(self,srodek,promien,czy_sam):#0 - rysuj na srodku, 1 - rysuj w lewnym dolnym, 2 - rysuj w prawym gornym
+        super().__init__()
+        self.image = pygame.image.load(f"icons/university.png").convert_alpha()
+        
+        new_srodek = srodek
+        if czy_sam==1:
+            jc = 0.45#jaka czesc 1 - na skraju max, 0 - na srodku
+            dl = promien*jc
+            x = dl/math.tan(math.radians(60))
+            new_srodek = (srodek[0]+x,srodek[1]-dl)
+
+            dozy_promien = promien/math.cos(math.radians(60))
+            maxwidth = dozy_promien*1.07
+            maxheight = promien*1.07
+            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+            # print(maxheight,self.image.get_height())
+        
+        if czy_sam==2:
+            jc = 0.45#jaka czesc 1 - na skraju max, 0 - na srodku
+            dl = promien*jc
+            x = dl/math.tan(math.radians(60))
+            new_srodek = (srodek[0]-x,srodek[1]+dl)
+
+            dozy_promien = promien/math.cos(math.radians(60))
+            maxwidth = dozy_promien*1.07
+            maxheight = promien*1.07
+            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+
+        if czy_sam==0:
+            dozy_promien = promien/math.cos(math.radians(60))
+            maxwidth = dozy_promien*1.75
+            maxheight = promien*1.75
+            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+
+
+
+        self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+
+        self.rect = self.image.get_rect(center = new_srodek)
+
 
 
 
@@ -163,8 +204,20 @@ def render_board(package,board):
     poczatkowy_srodek,promien = package
     for warrior in sprites:
         warrior.kill()
-    def draw_island(x,y,budynki,new_centre,new_radius):
-        draw_hexagon(new_centre,new_radius,"brown")
+    def draw_island(x,y,budynki,centre,radius):
+        draw_hexagon(centre,radius,"brown")
+        if len(budynki)==1:
+            for x in budynki:
+                if x == 1:
+                    sprites.add(University(centre,radius,0))
+        else:
+            ktory_budynek = 1
+            for x in budynki:
+                if x == 1:
+                    sprites.add(University(centre,radius,ktory_budynek))
+                ktory_budynek+=1
+                if ktory_budynek>2:#ten if sluzy do testowania!!!
+                    break
 
     def handle_islands(capitalx,capitaly,pola,budynki,centre,radius):
         if [capitalx,capitaly] in pola:
@@ -225,7 +278,8 @@ def render_board(package,board):
             #     draw_hexagon(centre,radius,"brown")
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold")
-                handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius)
+                if len(board.pola[x][y].territory)>1:
+                    handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius)
                 # print(x,y)
                 if board.pola[x][y].strength>0:
                     sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))

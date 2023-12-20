@@ -48,7 +48,7 @@ class Capital:
         self.value=value
         self.owner=owner
         self.isMetropolis=False
-        self.buildings=[0 for i in range(maxBuildings)]
+        self.buildings=[1,1,1]
         #budynki 0 - plains
         #budynki 1 - uni
         #budynki 2 - temple
