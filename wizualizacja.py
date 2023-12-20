@@ -163,8 +163,8 @@ def render_board(package,board):
     poczatkowy_srodek,promien = package
     for warrior in sprites:
         warrior.kill()
-    def draw_island(x,y,budynki,centre,radius):
-        draw_hexagon(centre,radius,"brown")
+    def draw_island(x,y,budynki,new_centre,new_radius):
+        draw_hexagon(new_centre,new_radius,"brown")
 
     def handle_islands(capitalx,capitaly,pola,budynki,centre,radius):
         if [capitalx,capitaly] in pola:
@@ -178,22 +178,24 @@ def render_board(package,board):
         for i in range(len(pola)):
             ile = math.ceil(len(budynki)/len(pola))
             island_centre = centre
-
-            if pola[i][1] > capitaly:
-                for _ in range(pola[i][1]-capitaly):
+            # print(island_centre)
+            polex,poley=pola[i][0],pola[i][1]
+            if poley > capitaly:
+                for _ in range(poley-capitaly):
                     island_centre=konw(island_centre,radius,1)
-                pola[i][0]+=pola[i][1]-capitaly
-            if pola[i][0] > capitalx:
-                for _ in range(pola[i][0]-capitalx):
+                polex-=poley-capitaly
+            if polex > capitalx:
+                for _ in range(polex-capitalx):
                     island_centre=konw(island_centre,radius,2)
-            if pola[i][0] < capitalx:
-                for _ in range(capitalx-pola[i][0]):
+            if polex < capitalx:
+                for _ in range(capitalx-polex):
                     island_centre=konw(island_centre,radius,5)
-            if pola[i][1] < capitaly:
-                for _ in range(capitaly-pola[i][1]):
+            if poley < capitaly:
+                for _ in range(capitaly-poley):
                     island_centre=konw(island_centre,radius,3)
+            
 
-            draw_island(pola[i][0],pola[i][1],budynki[0:ile] if ile!=0 else [],island_centre,radius)
+            draw_island(polex,poley,budynki[0:ile] if ile!=0 else [],island_centre,radius)
             for _ in range(ile):
                 budynki.pop(0)
 
