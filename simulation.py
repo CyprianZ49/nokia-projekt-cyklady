@@ -36,7 +36,8 @@ def game(players, visual = True):
 
 
     if visual: #banish pygame
-        from wizualizacja import start_visualization
+        import visualization.main
+        from visualization.main import start_visualization
         th = Thread(target=start_visualization,args=(copy.copy(board),))
         th.start()
 
