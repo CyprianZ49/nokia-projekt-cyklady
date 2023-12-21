@@ -15,6 +15,9 @@ from visualization.university import University
 from visualization.draw_and_conv import *
 from visualization.ship import Ship
 from visualization.coin import Coin
+from visualization.temple import Temple
+from visualization.fort import Fort
+from visualization.port import Port
 
 
 def render_board(package,board,screen):
@@ -23,17 +26,33 @@ def render_board(package,board,screen):
     for warrior in sprites:
         warrior.kill()
     def draw_island(x,y,budynki,centre,radius):
+        # print(len(budynki))
         draw_hexagon(centre,radius,"brown",screen)
         if len(budynki)==1:
             for x in budynki:
                 if x == 1:
                     sprites.add(University(centre,radius,0))
+                if x == 2:
+                    sprites.add(Temple(centre,radius,0))
+                if x == 3:
+                    sprites.add(Fort(centre,radius,0))
+                if x == 4:
+                    sprites.add(Port(centre,radius,0))
         else:
             ktory_budynek = 1
             for x in budynki:
                 if x == 1:
                     sprites.add(University(centre,radius,ktory_budynek))
-                ktory_budynek+=1
+                    ktory_budynek+=1
+                if x == 2:
+                    sprites.add(Temple(centre,radius,ktory_budynek))
+                    ktory_budynek+=1
+                if x == 3:
+                    sprites.add(Fort(centre,radius,ktory_budynek))
+                    ktory_budynek+=1
+                if x == 4:
+                    sprites.add(Port(centre,radius,ktory_budynek))
+                    ktory_budynek+=1
                 if ktory_budynek>2:#ten if sluzy do testowania!!!
                     break
 
@@ -47,7 +66,7 @@ def render_board(package,board,screen):
 
 
         for i in range(len(pola)):
-            ile = math.ceil(len(budynki)/len(pola))
+            ile = math.ceil(len(budynki)/(len(pola)-i))
             island_centre = centre
             # print(island_centre)
             polex,poley=pola[i][0],pola[i][1]
@@ -65,7 +84,7 @@ def render_board(package,board,screen):
                 for _ in range(capitaly-poley):
                     island_centre=konw(island_centre,radius,3)
             
-
+            print(len(budynki[0:ile]),len(budynki),len(pola))
             draw_island(polex,poley,budynki[0:ile] if ile!=0 else [],island_centre,radius)
             for _ in range(ile):
                 budynki.pop(0)
