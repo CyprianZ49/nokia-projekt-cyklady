@@ -30,10 +30,22 @@ class Ship(pygame.sprite.Sprite):
             x = dl/math.tan(math.radians(60))
             new_srodek = (srodek[0]-x,srodek[1]+dl)
 
-        dozy_promien = promien/math.cos(math.radians(60))
-        maxwidth = 1.4*dozy_promien
-        maxheight = 1.4*promien
-        skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+            dozy_promien = promien/math.cos(math.radians(60))
+            maxwidth = 1.35*dozy_promien
+            maxheight = 1.35*promien
+            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+        else:
+            jc = 0#jaka czesc 1 - na skraju max, 0 - na srodku
+            dl = promien*jc
+            x = dl/math.tan(math.radians(60))
+            new_srodek = (srodek[0]-x,srodek[1]+dl)
+
+            dozy_promien = promien/math.cos(math.radians(60))
+            maxwidth = 1.75*dozy_promien
+            maxheight = 1.75*promien
+            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+
+
 
         self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
 

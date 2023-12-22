@@ -84,13 +84,52 @@ def render_board(package,board,screen):
                 for _ in range(capitaly-poley):
                     island_centre=konw(island_centre,radius,3)
             
-            print(len(budynki[0:ile]),len(budynki),len(pola))
+            # print(len(budynki[0:ile]),len(budynki),len(pola))
             draw_island(polex,poley,budynki[0:ile] if ile!=0 else [],island_centre,radius)
             for _ in range(ile):
                 budynki.pop(0)
 
             
         # print(capitalx,capitaly,pola)
+    
+    def handle_capital(x,y,pola, budynki,sila,value,centre,radius,imie,czy_solo_stolica):
+        # if sila>0:
+        #     sprites.add(Warrior(centre,radius,imie))
+        while 0 in budynki:
+            budynki.remove(0)
+
+        if value>0:
+            if (x,y) not in ktory_wyglad_monety:
+                ktory_wyglad_monety[(x,y)]=random.randint(1,2)
+            sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
+        
+        print(czy_solo_stolica,value,sila)
+        if czy_solo_stolica:
+            # entity = budynki+['moneta','zolnierz']
+            if len(budynki)==0:
+                if value==0:
+                    if sila>0:
+                        sprites.add(Warrior(centre,radius,imie,0))# solo warrior
+                else:
+                    if sila>0:
+                        sprites.add(Warrior(centre,radius,imie,1))# warrior i moneta
+            else:
+                if value==0:
+                    if sila>0:
+                        sprites.add(Warrior(centre,radius,imie,3))#budynek i warrior, TEN CASE NIGDY NIE  ZACHODZI, A ZOSTAWIAM GO DLA WIDOCZNOSCI
+                else:
+                    if sila>0:
+                        sprites.add(Warrior(centre,radius,imie,2))#budynek, moneta i warrior
+                
+        else:#przypadek w ktorym istnieja inne pola wyspy i na nich sa wszystkie budynki
+            if value==0:
+                if sila>0:
+                    sprites.add(Warrior(centre,radius,imie,0)) # tylko zolnierz
+            else:
+                if sila>0:
+                    sprites.add(Warrior(centre,radius,imie,1))# zolnierz i moneta
+
+        
 
     def crawl(x,y,centre,radius,board):
         #print(board.pola[x][y]==plansza.Water)
@@ -112,13 +151,16 @@ def render_board(package,board,screen):
                 draw_hexagon(centre,radius,"gold",screen)
                 if len(board.pola[x][y].territory)>1:
                     handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius)
+                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,False)
+                else:
+                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,True)
                 # print(x,y)
-                if board.pola[x][y].strength>0:
-                    sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))
-                if board.pola[x][y].value>0:
-                    if (x,y) not in ktory_wyglad_monety:
-                        ktory_wyglad_monety[(x,y)]=random.randint(1,2)
-                    sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
+                # if board.pola[x][y].strength>0:
+                #     sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))
+                # if board.pola[x][y].value>0:
+                #     if (x,y) not in ktory_wyglad_monety:
+                #         ktory_wyglad_monety[(x,y)]=random.randint(1,2)
+                #     sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
             
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
                 crawl(x+1,y+1,konw(centre,radius,1),radius,board)

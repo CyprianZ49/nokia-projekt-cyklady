@@ -48,7 +48,7 @@ class Capital:
         self.value=value
         self.owner=owner
         self.isMetropolis=False
-        self.buildings=[2,1,3,4]
+        self.buildings=[1]
         #budynki 0 - plains
         #budynki 1 - uni
         #budynki 2 - temple
