@@ -16,7 +16,9 @@ import argparse
 from sys import argv
 from plansza import Plansza
 from bot import Bot
-import time
+import signal
+
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def game(players, visual = True):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
@@ -45,7 +47,6 @@ def game(players, visual = True):
 
     while True:
         players = turn(players,gods, board)
-        time.sleep(0.1)
         wygrani = []
         for player in players:
             k = 0
