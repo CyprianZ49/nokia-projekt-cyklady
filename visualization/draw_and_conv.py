@@ -27,6 +27,15 @@ def draw_hexagon(centre,radius,color,screen):
         (centre[0]+(radius/math.cos(math.radians(30))),centre[1]),
         (centre[0]+radius*math.tan(math.radians(30)),centre[1]-radius)],3)
     
+def draw_red_line(centre,radius,screen):
+    pygame.draw.polygon(screen,"orangered2",[
+        (centre[0]-radius*math.tan(math.radians(30)),centre[1]-radius),
+        (centre[0]-(radius/math.cos(math.radians(30))),centre[1]),
+        (centre[0]-radius*math.tan(math.radians(30)),centre[1]+radius),
+        (centre[0]+radius*math.tan(math.radians(30)),centre[1]+radius),
+        (centre[0]+(radius/math.cos(math.radians(30))),centre[1]),
+        (centre[0]+radius*math.tan(math.radians(30)),centre[1]-radius)],4)
+    
 def konw1(centre,radius):#1 na gorze i pozniej wedlug wskazowek zegara
     return (centre[0],centre[1]-2*radius)
 def konw2(centre,radius):
