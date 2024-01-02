@@ -185,7 +185,29 @@ def render_board(package,board,screen):
             if x-1>=0 and y>=0:
                 crawl(x-1,y,konw(centre,radius,5),radius,board)
 
+    def crawl2(x,y,centre,radius,board):
+        if (x,y) not in odwiedzone:
+            odwiedzone[(x,y)]=True
+            if (isinstance(board.pola[x][y],plansza.Water) or isinstance(board.pola[x][y],plansza.Capital)) and board.pola[x][y].fighting:
+                draw_red_line(centre,radius,screen)
+
+            if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
+                crawl2(x+1,y+1,konw(centre,radius,1),radius,board)
+
+            if x+1<len(board.pola) and y<len(board.pola[x+1]):
+                crawl2(x+1,y,konw(centre,radius,2),radius,board)
+
+            if x>=0 and y-1>=0:
+                crawl2(x,y-1,konw(centre,radius,3),radius,board)
+            
+            if x-1>=0 and y-1>=0:
+                crawl2(x-1,y-1,konw(centre,radius,4),radius,board)
+            if x-1>=0 and y>=0:
+                crawl2(x-1,y,konw(centre,radius,5),radius,board)
+
     crawl(1,1,poczatkowy_srodek,promien,board)
+    odwiedzone.clear()
+    crawl2(1,1,poczatkowy_srodek,promien,board)
     sprites.draw(screen)
 
 def generate_to_wh(screen):
