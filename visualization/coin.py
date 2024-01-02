@@ -3,10 +3,14 @@ import pygame
 from visualization.globals import *
 
 class Coin(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien,kt):
+
+    def good_path(self,ktora,ile):
+        return f"{ktora}{ile}"
+
+    def __init__(self,srodek,promien,kt,ile):
         super().__init__()
-        moneta = "coin_omega" if kt==1 else "coin_theta"
-        self.image = pygame.image.load(f"grafikav2/{moneta}.png").convert_alpha()
+        moneta = "co" if kt==1 else "ct"
+        self.image = pygame.image.load(f"icons/{self.good_path(moneta,ile)}.png").convert_alpha()
         
         new_srodek = srodek
         jc = 0.6#jaka czesc 1 - na skraju max, 0 - na srodku

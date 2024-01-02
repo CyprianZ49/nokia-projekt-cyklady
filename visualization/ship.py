@@ -3,7 +3,11 @@ import pygame
 from visualization.globals import *
 
 class Ship(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien,owner_name,withcoin:bool):
+
+    def good_path(self,kolor,liczba):
+        return f"f{kolor}{liczba}"
+
+    def __init__(self,srodek,promien,owner_name,withcoin:bool,sila):
         global ktory_nr_wolny
         global owners_colors
         super().__init__()
@@ -13,15 +17,15 @@ class Ship(pygame.sprite.Sprite):
             ktory_nr_wolny+=1
         
         if owners_colors[owner_name] == 1:
-            self.image = pygame.image.load("icons/fleet blue.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('blue',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 2:
-            self.image = pygame.image.load("icons/fleet green.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('green',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 3:
-            self.image = pygame.image.load("icons/fleet red.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('red',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 4:
-            self.image = pygame.image.load("icons/fleet white.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('white',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 5:
-            self.image = pygame.image.load("icons/fleet yellow.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('yellow',sila)}.png").convert_alpha()
         
         new_srodek = srodek
         if withcoin:

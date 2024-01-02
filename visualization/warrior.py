@@ -3,7 +3,11 @@ import math
 from visualization.globals import *
 
 class Warrior(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien,owner_name,gdzie): #0 - sam, 1 - z moneta, 2 - z moneta i budynkiem                     
+
+    def good_path(self,kolor,liczba):
+        return f"w{kolor}{liczba}"
+
+    def __init__(self,srodek,promien,owner_name,gdzie,sila): #0 - sam, 1 - z moneta, 2 - z moneta i budynkiem                     
         global ktory_nr_wolny                           #srodek     lewy dolny        prawy dolny (ale musi być mniejszy)    
         global owners_colors
         super().__init__()
@@ -13,15 +17,15 @@ class Warrior(pygame.sprite.Sprite):
             ktory_nr_wolny+=1
         
         if owners_colors[owner_name] == 1:
-            self.image = pygame.image.load("icons/warrior blue.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('blue',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 2:
-            self.image = pygame.image.load("icons/warrior green.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('green',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 3:
-            self.image = pygame.image.load("icons/warrior red.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('red',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 4:
-            self.image = pygame.image.load("icons/warrior white.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('white',sila)}.png").convert_alpha()
         if owners_colors[owner_name] == 5:
-            self.image = pygame.image.load("icons/warrior yellow.png").convert_alpha()
+            self.image = pygame.image.load(f"icons/{self.good_path('yellow',sila)}.png").convert_alpha()
         
         if gdzie==0:
             jc = 0#jaka czesc 1 - na skraju max, 0 - na srodku
