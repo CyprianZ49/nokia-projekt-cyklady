@@ -83,6 +83,8 @@ class Plansza:
         self.whereFight = (0, 0)
         self.attackerPower = 0
         self.defenderPower = 0
+        self.attackerColor = 0
+        self.defenderColor = 0
     def generateBoard(self):
         for x in range(13):
             self.pola.append([])
@@ -218,24 +220,29 @@ class Plansza:
         if self.pola[x][y].owner==self.pusty:
             self.changeOwnership(x, y, kto)
         self.pola[x][y].strength+=1
-    def isBridge(self, x1, y1, kto, x2, y2, leaveTrail = False):
+    def isBridge(self, x1, y1, kto, x2, y2, changeFightStatus = False):
         if self.pola[x1][y1].typ!='capital' or self.pola[x2][y2].typ!='capital' or self.pola[x1][y1].owner!=kto:
             return False
         #kto.send_move(-1, "test")
         connected = []
         connected.append([x1, y1])
-        for _ in range(8):
+        previous = []
+        previous.append(-1)
+        i = 0
+        #searching using BNF method
+        while i < len(connected):
             for tile in kto.ownedTiles:
-                if self.pola[tile[0]][tile[1]].typ=='water' and [tile[0], tile[1]] not in connected:
-                    #kto.send_move(-1, f"sprawdzamy: {tile[0], tile[1]}")
-                    for t in connected:
-                        if self.isNeightbour(t[0], t[1], tile[0], tile[1]):
-                            connected.append([tile[0], tile[1]])
-                            break
-        test = False
-        for t in connected:
-            #kto.send_move(-1, f"{t[0], t[1]}")
-            if self.isNeightbour(t[0], t[1], x2, y2):
-                test = True
-        return test
+                if self.pola[tile[0]][tile[1]].typ=='water' and [tile[0], tile[1]] not in connected and self.isNeightbour(connected[i][0], connected[i][1], tile[0], tile[1]):
+                    connected.append([tile[0], tile[1]])
+                    previous.append(i)
+            i += 1
+        for j in range(1, len(connected)):
+            if self.isNeightbour(connected[j][0], connected[j][1], x2, y2):
+                if changeFightStatus:
+                    lok = j
+                    while lok != -1:
+                        self.pola[connected[lok][0]][connected[lok][1]].fighting = not self.pola[connected[lok][0]][connected[lok][1]].fighting
+                        lok = previous[lok]
+                return True
+        return False
         
