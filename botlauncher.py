@@ -4,8 +4,17 @@ from threading import Thread
 import shlex
 from sys import argv
 from subprocess import Popen,PIPE
+import pathlib
 
-proc = Popen(shlex.split(f'python {" ".join(argv[2:])}'), stdin=PIPE, stdout=PIPE)
+file = " ".join(argv[2:])
+file_extension = pathlib.Path(file).suffix
+
+if file_extension == '.py':
+    prompt = f'python {file}'
+else:
+    prompt = file
+
+proc = Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE)
 
 def handle_data(s):
     while True:

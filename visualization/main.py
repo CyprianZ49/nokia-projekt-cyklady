@@ -6,9 +6,9 @@ import plansza
 from bot import Bot
 import sys
 import tkinter as tk
-from OpenGL.GL import *
+# from OpenGL.GL import *
 from pygame.locals import *
-from OpenGL.GLU import *
+# from OpenGL.GLU import *
 from visualization.warrior import Warrior
 from visualization.globals import *
 from visualization.university import University
