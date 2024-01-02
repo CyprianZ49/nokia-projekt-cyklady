@@ -108,14 +108,16 @@ def turn(players, gods, board):
         while action[0]!='p':
             god = p_to_god[player]
             try:
-                if god is gods['ap']:
+                if god is gods['ap'] and action[0]!='l':
                     god.praise(player,*map(int, action[1:]))
                 else:
                     f=name_to_f[action[0]]
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
                 player.send_move(-3, type(e).__name__)
-                print_exception(e)
+                # print_exception(e)
+            else:
+                player.send_move(-5, "ok")
             Metropolizacja(board, player)
             action = player.get_move()
         print(f'gracz {player.name} pasuje')

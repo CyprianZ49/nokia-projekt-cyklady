@@ -14,7 +14,7 @@ if file_extension == '.py':
 else:
     prompt = file
 
-proc = Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE)
+proc = Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE, bufsize=0)
 
 def handle_data(s):
     while True:
