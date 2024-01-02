@@ -18,9 +18,13 @@ from plansza import Plansza
 from bot import Bot
 import signal
 
-signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def game(players, visual = True):
+    def kill(*args):
+        for player in players:
+            player.proc.kill()
+        os.kill(os.getpid(), signal.SIGTERM)
+    signal.signal(signal.SIGINT, kill)
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
