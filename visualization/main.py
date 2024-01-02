@@ -229,18 +229,28 @@ def generate_to_wh(screen):
 
 def game(board,screen):
     running = 1
+    ile = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 # print("clicked")
                 running = False
                 # pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    ile+=1
+                if event.key == pygame.K_LCTRL:
+                    ile+=1
+        if ile == 2:
+            running = False
+
 
         screen.fill("light blue")
         render_board(generate_to_wh(screen),board,screen)
-        
+            
         pygame.display.flip()
         clock.tick(60)
+
     pygame.quit()
     
 
