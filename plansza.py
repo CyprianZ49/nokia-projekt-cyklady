@@ -21,6 +21,7 @@ class Water:
         self.owner=owner
         self.typ='water'
         self.strength=0
+        self.fighting = False
     def changeOwner(self, newOwner):
         self.owner.ownedTiles.remove((self.x, self.y))
         newOwner.ownedTiles.append((self.x, self.y))
@@ -49,6 +50,7 @@ class Capital:
         self.owner=owner
         self.isMetropolis=False
         self.buildings=[1]
+        self.fighting = False
         #budynki 0 - plains
         #budynki 1 - uni
         #budynki 2 - temple
@@ -77,6 +79,10 @@ class Plansza:
     def __init__(self, pusty):
         self.pola=[[]]
         self.pusty=pusty
+        self.isFight = False
+        self.whereFight = (0, 0)
+        self.attackerPower = 0
+        self.defenderPower = 0
     def generateBoard(self):
         for x in range(13):
             self.pola.append([])
@@ -212,7 +218,7 @@ class Plansza:
         if self.pola[x][y].owner==self.pusty:
             self.changeOwnership(x, y, kto)
         self.pola[x][y].strength+=1
-    def isBridge(self, x1, y1, kto, x2, y2):
+    def isBridge(self, x1, y1, kto, x2, y2, leaveTrail = False):
         if self.pola[x1][y1].typ!='capital' or self.pola[x2][y2].typ!='capital' or self.pola[x1][y1].owner!=kto:
             return False
         #kto.send_move(-1, "test")
