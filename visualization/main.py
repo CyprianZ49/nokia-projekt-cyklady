@@ -120,7 +120,16 @@ def render_board(package,board,screen):
                 else:
                     if sila>0:
                         sprites.add(Warrior(centre,radius,imie,2))#budynek, moneta i warrior
-                
+                        if 1 in budynki:
+                            sprites.add(University(centre,radius,3))
+                        if 2 in budynki:
+                            # print("xd")
+                            sprites.add(Temple(centre,radius,3))
+                        if 3 in budynki:
+                            sprites.add(Fort(centre,radius,3))
+                        if 4 in budynki:
+                            sprites.add(Port(centre,radius,3))
+
         else:#przypadek w ktorym istnieja inne pola wyspy i na nich sa wszystkie budynki
             if value==0:
                 if sila>0:

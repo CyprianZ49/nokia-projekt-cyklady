@@ -43,14 +43,14 @@ class Warrior(pygame.sprite.Sprite):
             maxheight = 1.35*promien
             skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
         if gdzie==2:
-            jc = 0#jaka czesc 1 - na skraju max, 0 - na srodku
+            jc = 0.36#jaka czesc 1 - na skraju max, 0 - na srodku
             dl = promien*jc
             x = dl/math.tan(math.radians(60))
-            new_srodek = (srodek[0]-x,srodek[1]+dl)
+            new_srodek = (srodek[0]+x,srodek[1]+dl)
 
             dozy_promien = promien/math.cos(math.radians(60))
-            maxwidth = 1.8*dozy_promien
-            maxheight = 1.8*promien
+            maxwidth = 1.18*dozy_promien
+            maxheight = 1.18*promien
             skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
 

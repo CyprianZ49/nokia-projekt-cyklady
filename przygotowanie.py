@@ -1,6 +1,8 @@
 from plansza import Plansza
 #temporary twarde warunki pocz na 5 graczy
 def przypiszWarunkiStartowe(board, players, ilosc):
+    board.changeOwnership(7, 6, players[0])
+    board.pola[7][6].strength+=1
     if ilosc > 0:
         board.changeOwnership(1, 1, players[0])
         board.pola[1][1].strength+=1

@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Temple(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien,czy_sam):#0 - rysuj na srodku, 1 - rysuj w lewnym dolnym, 2 - rysuj w prawym gornym
+    def __init__(self,srodek,promien,czy_sam):#0 - rysuj na srodku, 1 - rysuj w lewnym dolnym, 2 - rysuj w prawym gornym, 3 - wersja stolicowa
         super().__init__()
         self.image = pygame.image.load(f"icons/temple.png").convert_alpha()
         
@@ -34,6 +34,17 @@ class Temple(pygame.sprite.Sprite):
             dozy_promien = promien/math.cos(math.radians(60))
             maxwidth = dozy_promien*1.75
             maxheight = promien*1.75
+            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+        
+        if czy_sam==3:
+            # print("xd")
+            jc = 0.6#jaka czesc 1 - na skraju max, 0 - na srodku
+            dozy_promien = promien/math.sin(math.radians(60))
+            x = dozy_promien*jc
+            new_srodek = (srodek[0]-x,srodek[1])
+
+            maxwidth = dozy_promien*0.8
+            maxheight = promien*0.8
             skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
 
