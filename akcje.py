@@ -63,6 +63,8 @@ def bitwaMorska(plansza, x, y, kto, ile):
     kto.send_move(-1, f"atakujesz {x}, {y}")
     other=plansza.pola[x][y].owner
     other.send_move(-1, f"atakujom cie {x}, {y}")
+    plansza.attackerColor = kto
+    plansza.defenderColor = other
     sila=plansza.pola[x][y].strength
     for tile in other.ownedTiles:
         if plansza.pola[tile[0]][tile[1]].typ=='capital' and plansza.isNeightbour(tile[0], tile[1], x, y):
@@ -126,6 +128,8 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     plansza.defenderPower = plansza.pola[x][y].strength
     other=plansza.pola[x][y].owner
     sila=plansza.pola[x][y].strength
+    plansza.attackerColor = kto
+    plansza.defenderColor = other
     if plansza.pola[x][y].isMetropolis:
         sila+=1
     for i in plansza.pola[x][y].buildings:
@@ -231,7 +235,9 @@ class Ares:
             self.plansza.whereFight = (x1, y1)
             self.plansza.pola[x][y].fighting = True
             self.plansza.pola[x1][y1].fighting = True
+            self.plansza.isBridge(x, y, kto, x1, y1, True)
             bitwaWyspowa(self.plansza, x1, y1, kto, ile)
+            self.plansza.isBridge(x, y, kto, x1, y1, True)
             self.plansza.pola[x][y].fighting = False
             self.plansza.pola[x1][y1].fighting = False
             self.plansza.isFight = False
