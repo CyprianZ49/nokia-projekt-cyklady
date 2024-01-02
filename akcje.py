@@ -58,6 +58,8 @@ def Metropolizacja(plansza, kto):
         kto.philosophers-=4
 
 def bitwaMorska(plansza, x, y, kto, ile):
+    plansza.attackerPower = ile
+    plansza.defenderPower = plansza.pola[x][y].strength
     kto.send_move(-1, f"atakujesz {x}, {y}")
     other=plansza.pola[x][y].owner
     other.send_move(-1, f"atakujom cie {x}, {y}")
@@ -120,6 +122,8 @@ def bitwaMorska(plansza, x, y, kto, ile):
             bitwaMorska(plansza, x, y, kto, ile)
 
 def bitwaWyspowa(plansza, x, y, kto, ile):
+    plansza.attackerPower = ile
+    plansza.defenderPower = plansza.pola[x][y].strength
     other=plansza.pola[x][y].owner
     sila=plansza.pola[x][y].strength
     if plansza.pola[x][y].isMetropolis:
@@ -223,7 +227,14 @@ class Ares:
             self.plansza.changeOwnership(x1, y1, kto)
             self.plansza.pola[x1][y1].strength+=ile
         else:
+            self.plansza.isFight = True
+            self.plansza.whereFight = (x1, y1)
+            self.plansza.pola[x][y].fighting = True
+            self.plansza.pola[x1][y1].fighting = True
             bitwaWyspowa(self.plansza, x1, y1, kto, ile)
+            self.plansza.pola[x][y].fighting = False
+            self.plansza.pola[x1][y1].fighting = False
+            self.plansza.isFight = False
 
 class Zeus:
     def __init__(self, plansza):
@@ -322,7 +333,14 @@ class Poseidon:
             self.plansza.pola[x1][y1].strength+=ile
         else:
             self.ileRuch=10
+            self.plansza.isFight = True
+            self.plansza.whereFight = (x1, y1)
+            self.plansza.pola[x][y].fighting = True
+            self.plansza.pola[x1][y1].fighting = True
             bitwaMorska(self.plansza, x1, y1, kto, ile)
+            self.plansza.pola[x][y].fighting = False
+            self.plansza.pola[x1][y1].fighting = False
+            self.plansza.isFight = False
     
 
 class Athena:
