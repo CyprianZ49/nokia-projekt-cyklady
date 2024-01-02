@@ -28,9 +28,13 @@ class Licytacja:
         else:
             if self.bids[god][1]!=-1:
                 outb=self.bids[god][1]
-                _,ngod,nvalue=self.get_bid(self.bots[outb])
-                if god==ngod:
-                    raise InvalidMoveError
+                ok=0
+                while not ok:
+                    _,ngod,nvalue=self.get_bid(self.bots[outb])
+                    if god==ngod:
+                        self.bots[outb].send_move(-3, "AlreadyBetError")
+                    else:
+                        ok=1
                 self.bids[god]=(value,i)
                 self.do_bid(outb,_,ngod,nvalue)
             else:

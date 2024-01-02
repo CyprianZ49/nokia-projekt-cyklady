@@ -47,6 +47,7 @@ class Bot:
     def send_move(self, player, move):
         if not isinstance(move, str) and isinstance(move, Iterable):
             move = " ".join(map(str,move))
+        print(self.name, player, move)
         server.senddata(self.name, f'{player} {move}')
 
     def __del__(self):

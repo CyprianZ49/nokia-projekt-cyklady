@@ -32,7 +32,7 @@ def Metropolizacja(plansza, kto):
                 k+=1
                 break
     if k==4:
-        kto.send_move(-1, "zbuduj wasc metropolie - z budynkow!\n")
+        kto.send_move(-7, "zbuduj_wasc_metropolie_-_z budynkow!\n")
         odp = list(map(int, kto.get_move()))
         if len(odp)!=14:
             raise InvalidMove
@@ -50,7 +50,7 @@ def Metropolizacja(plansza, kto):
             tile.buildings[slot]=0
         plansza.buildMetropolis(kto, odp[12], odp[13])
     elif kto.philosophers>=4:
-        kto.send_move(-1, "zbuduj wasc metropolie - z filozofow!")
+        kto.send_move(-7, "zbuduj_wasc_metropolie_-_z_filozofow!")
         odp = list(map(int, kto.get_move()))
         if len(odp)!=2:
             raise InvalidMove

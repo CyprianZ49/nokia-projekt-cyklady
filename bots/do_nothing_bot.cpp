@@ -1,3 +1,5 @@
+// Bets for apollo and instanty passes each turn.
+
 #include <bits/stdc++.h>
 
 using namespace std;
