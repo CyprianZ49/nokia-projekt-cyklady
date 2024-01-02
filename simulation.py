@@ -114,6 +114,7 @@ def turn(players, gods, board):
                     f=name_to_f[action[0]]
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
+                player.send_move(-3, type(e).__name__)
                 print_exception(e)
             Metropolizacja(board, player)
             action = player.get_move()

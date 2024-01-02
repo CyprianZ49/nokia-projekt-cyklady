@@ -4,6 +4,7 @@ import shlex
 from typing import Any
 from server import Server
 from constants import host, port, debug
+from typing import Iterable
 
 server = Server(host, port)
 
@@ -42,7 +43,9 @@ class Bot:
     def __repr__(self):
         return f'Bot({self.name})'
 
-    def send_move(self, player,move):
+    def send_move(self, player, move):
+        if not isinstance(move, str) and isinstance(move, Iterable):
+            move = " ".join(map(str,move))
         server.senddata(self.name, f'{player} {move}')
 
     def __del__(self):

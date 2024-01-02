@@ -103,7 +103,7 @@ def render_board(package,board,screen):
                 ktory_wyglad_monety[(x,y)]=random.randint(1,2)
             sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
         
-        print(czy_solo_stolica,value,sila)
+        # print(czy_solo_stolica,value,sila)
         if czy_solo_stolica:
             # entity = budynki+['moneta','zolnierz']
             if len(budynki)==0:
