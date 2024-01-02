@@ -10,11 +10,14 @@ class Licytacja:
         while not ok:
             try:
                 op,god,value=bot.get_move()
+                print(op,god,value)
                 value = int(value)
                 if op!='l' or god not in self.bids or (god!='ap' and (value>bot.coins or self.bids[god][0]>=value)):
                     raise InvalidMoveError
             except Exception as e:
                 bot.send_move(-3, type(e).__name__)
+            else:
+                ok = 1
         return op,god,value
     
     def do_bid(self,i,_,god,value):

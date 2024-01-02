@@ -33,6 +33,7 @@ class Bot:
     def __ne__(self, other):
         return self.name!=other.name
     def get_move(self):
+        self.send_move(-4, "your_turn")
         print(f'ruch {self.name}')
         while not server.data[self.name]:
             pass
