@@ -109,6 +109,7 @@ def turn(players, gods, board):
     print('poczatek akcji')
     name_to_f = {'r':'rekrutuj','b':'buduj','m':'ruch'}
     for player in order:
+        board.turn = player
         action = player.get_move()
         while action[0]!='p':
             god = p_to_god[player]

@@ -85,6 +85,7 @@ class Plansza:
         self.defenderPower = 0
         self.attackerColor = 0
         self.defenderColor = 0
+        self.turn = pusty
     def generateBoard(self):
         for x in range(13):
             self.pola.append([])
