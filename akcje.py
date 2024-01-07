@@ -99,8 +99,10 @@ def bitwaMorska(plansza, x, y, kto, ile):
             isOver=True
     if isOver:
         return
+    plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
     odp1 = list(map(int, other.get_move()))
+    plansza.mayReatreat = plansza.pusty
     if odp1[0]==1:
         if not(plansza.isNeightbour(x, y, odp1[1], odp1[2])):
             raise InvalidMove
@@ -111,8 +113,10 @@ def bitwaMorska(plansza, x, y, kto, ile):
         plansza.changeOwnership(x, y, kto)
         plansza.pola[x][y].strength=ile
     else:
+        plansza.mayReatreat = kto
         kto.send_move(-1, f"czy wycofujesz z {x, y}")
         odp2=list(map(int, kto.get_move()))
+        plansza.mayReatreat = plansza.pusty
         if odp2[0]==1:
             if not(plansza.isNeightbour(x, y, odp2[1], odp2[2])):
                 raise InvalidMove
@@ -156,8 +160,10 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
             isOver=True
     if isOver:
         return
+    plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
     odp1 = list(map(int, other.get_move()))
+    plansza.mayReatreat = plansza.pusty
     if odp1[0]==1:
         if not(plansza.isBridge(x, y, other, odp1[1], odp1[2])):
             raise InvalidMove
@@ -168,8 +174,10 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
         plansza.changeOwnership(x, y, kto)
         plansza.pola[x][y].strength=ile
     else:
+        plansza.mayReatreat = kto
         kto.send_move(-1, f"czy wycofujesz z {x, y}")
         odp2=list(map(int, kto.get_move()))
+        plansza.mayReatreat = plansza.pusty
         if odp2[0]==1:
             if not(plansza.isBridge(x, y, kto, odp2[1], odp2[2])):
                 raise InvalidMove
