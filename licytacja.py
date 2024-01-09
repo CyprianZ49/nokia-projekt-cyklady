@@ -11,7 +11,7 @@ class Licytacja:
         
     def get_bid(self, bot):
         legal_moves = self.get_legal_moves(bot)
-        bot.send_move(-1, "|".join(legal_moves))
+        bot.send_move(-2, "|".join(legal_moves))
         l = bot.get_move()
         if " ".join(l) not in legal_moves:
             bot.send_move(-1, "Invalid_move")
@@ -60,5 +60,4 @@ class Licytacja:
             for v in range(min_v, bot.coins+bot.priests+1):
                 legal_moves.append(f'l {self.last_god} {v}')
         legal_moves.append('l ap 1')
-        print(legal_moves)
         return legal_moves
