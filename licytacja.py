@@ -38,6 +38,7 @@ class Licytacja:
                 self.do_bid(outb,_,ngod,nvalue)
             else:
                 self.bids[god]=(value,i)
+        self.bots[i].god = god
         self.outbet = False
 
     def perform(self):

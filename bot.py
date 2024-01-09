@@ -23,6 +23,7 @@ class Bot:
         self.actionDiscount=0
         self.isBuildingMetropolis = False
         self.isFighting = False
+        self.god = None
         
         if prompt is None:
             self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
