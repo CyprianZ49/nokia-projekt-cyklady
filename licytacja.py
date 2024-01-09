@@ -1,15 +1,17 @@
 class InvalidMoveError(Exception):
     pass
 
+
 class Licytacja:
     def __init__(self, bots):
         self.bots=bots
         self.bids={'ze':(0,-1),'ar':(0,-1),'po':(0,-1),'at':(0,-1),'ap':[]}
         self.last_god='ze'
         self.outbet = False
-
+        
     def get_bid(self, bot):
         legal_moves = self.get_legal_moves(bot)
+        bot.send_move(-1, "|".join(legal_moves))
         l = bot.get_move()
         if " ".join(l) not in legal_moves:
             bot.send_move(-1, "Invalid_move")
