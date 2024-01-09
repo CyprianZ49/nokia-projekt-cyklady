@@ -12,12 +12,11 @@ void do_move()
     vector<string> all_moves;
     string moves;
     getline(cin,moves);
+    moves+='|';
     unsigned int l=0;
     while(l<moves.size())
     {
         int r=moves.find("|", l);
-        if(r==-1)
-            break;
         all_moves.push_back(moves.substr(l,r-l));
         l=r+1;
     }
