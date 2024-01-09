@@ -1,11 +1,14 @@
 #graczy w sensie gry nazywami botami
-from subprocess import Popen,CREATE_NEW_CONSOLE
 import shlex
 from typing import Any
 from server import Server
 from constants import host, port, move_delay
 from typing import Iterable
 import time
+import platform
+from subprocess import Popen
+if platform.system() == 'Windows':
+    from subprocess import CREATE_NEW_CONSOLE
 
 server = Server(host, port)
 
@@ -26,7 +29,10 @@ class Bot:
         self.god = None
         
         if prompt is None:
-            self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
+            if platform.system() == 'Windows':
+                self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
+            else:
+                self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), shell=True)
         elif prompt != '':
             self.proc=Popen(shlex.split(f"python botlauncher.py {name} {prompt}"))
 
