@@ -1,3 +1,5 @@
+import time
+
 class MetropilsAlreadyPresent(Exception):
     pass
 
@@ -49,7 +51,7 @@ class Capital:
         self.value=value
         self.owner=owner
         self.isMetropolis=False
-        self.buildings=[1]
+        self.buildings=[0 for i in range(maxBuildings)]
         self.fighting = False
         #budynki 0 - plains
         #budynki 1 - uni
@@ -70,6 +72,8 @@ class Capital:
             raise MetropilsAlreadyPresent
         self.isMetropolis=True
         self.buildings=self.buildings[:-2]
+        # print(self)
+        # time.sleep(10)
     def changeOwner(self, newOwner):
         self.owner.ownedTiles.remove((self.x, self.y))
         newOwner.ownedTiles.append((self.x, self.y))
