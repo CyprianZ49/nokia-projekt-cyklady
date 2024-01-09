@@ -11,13 +11,11 @@ from pygame.locals import *
 # from OpenGL.GLU import *
 from visualization.warrior import Warrior
 from visualization.globals import *
-from visualization.university import University
 from visualization.draw_and_conv import *
 from visualization.ship import Ship
 from visualization.coin import Coin
-from visualization.temple import Temple
-from visualization.fort import Fort
-from visualization.port import Port
+from visualization.structures import Structure
+import copy
 
 
 def render_board(package,board,screen):
@@ -30,33 +28,20 @@ def render_board(package,board,screen):
         draw_hexagon(centre,radius,"brown",screen)
         if len(budynki)==1:
             for x in budynki:
-                if x == 1:
-                    sprites.add(University(centre,radius,0))
-                if x == 2:
-                    sprites.add(Temple(centre,radius,0))
-                if x == 3:
-                    sprites.add(Fort(centre,radius,0))
-                if x == 4:
-                    sprites.add(Port(centre,radius,0))
+                sprites.add(Structure(x,centre,radius,0))
         else:
             ktory_budynek = 1
             for x in budynki:
-                if x == 1:
-                    sprites.add(University(centre,radius,ktory_budynek))
-                    ktory_budynek+=1
-                if x == 2:
-                    sprites.add(Temple(centre,radius,ktory_budynek))
-                    ktory_budynek+=1
-                if x == 3:
-                    sprites.add(Fort(centre,radius,ktory_budynek))
-                    ktory_budynek+=1
-                if x == 4:
-                    sprites.add(Port(centre,radius,ktory_budynek))
-                    ktory_budynek+=1
+                sprites.add(Structure(x,centre,radius,ktory_budynek))
+                ktory_budynek+=1
+
                 if ktory_budynek>2:#ten if sluzy do testowania!!!
                     break
 
-    def handle_islands(capitalx,capitaly,pola,budynki,centre,radius):
+    def handle_islands(capitalx,capitaly,pola,budynki,centre,radius,iM):
+        if iM:
+            budynki.append(5)
+
         if [capitalx,capitaly] in pola:
             pola.remove([capitalx,capitaly])
         
@@ -92,7 +77,9 @@ def render_board(package,board,screen):
             
         # print(capitalx,capitaly,pola)
     
-    def handle_capital(x,y,pola, budynki,sila,value,centre,radius,imie,czy_solo_stolica):
+    def handle_capital(x,y,pola, budynki,sila,value,centre,radius,imie,czy_solo_stolica,iM):
+        if iM:
+            budynki.append(5)
         # if sila>0:
         #     sprites.add(Warrior(centre,radius,imie))
         while 0 in budynki:
@@ -121,14 +108,14 @@ def render_board(package,board,screen):
                     if sila>0:
                         sprites.add(Warrior(centre,radius,imie,2,sila))#budynek, moneta i warrior
                         if 1 in budynki:
-                            sprites.add(University(centre,radius,3))
+                            sprites.add(Structure(1,centre,radius,3))
                         if 2 in budynki:
                             # print("xd")
-                            sprites.add(Temple(centre,radius,3))
+                            sprites.add(Structure(2,centre,radius,3))
                         if 3 in budynki:
-                            sprites.add(Fort(centre,radius,3))
+                            sprites.add(Structure(3,centre,radius,3))
                         if 4 in budynki:
-                            sprites.add(Port(centre,radius,3))
+                            sprites.add(Structure(4,centre,radius,3))
 
         else:#przypadek w ktorym istnieja inne pola wyspy i na nich sa wszystkie budynki
             if value==0:
@@ -159,10 +146,10 @@ def render_board(package,board,screen):
             if isinstance(board.pola[x][y],plansza.Capital):
                 draw_hexagon(centre,radius,"gold",screen)
                 if len(board.pola[x][y].territory)>1:
-                    handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius)
-                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,False)
+                    handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius,board.pola[x][y].isMetropolis)
+                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,False,board.pola[x][y].isMetropolis)
                 else:
-                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,True)
+                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,True,board.pola[x][y].isMetropolis)
                 # print(x,y)
                 # if board.pola[x][y].strength>0:
                 #     sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))
@@ -233,9 +220,7 @@ def game(board,screen):
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                # print("clicked")
                 running = False
-                # pygame.quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
                     ile+=1
@@ -244,6 +229,7 @@ def game(board,screen):
         if ile == 2:
             running = False
 
+        # set_up(board)
 
         screen.fill("light blue")
         render_board(generate_to_wh(screen),board,screen)
@@ -252,7 +238,14 @@ def game(board,screen):
         clock.tick(60)
 
     pygame.quit()
-    
+
+
+# def set_up(board):
+#     for x in range(len(board.pola)):
+#         for y in range(len(board.pola[x])):
+#             if isinstance(board.pola[x][y],plansza.Capital):
+#                 if board.pola[x][y].isMetropolis:
+#                     board.pola[x][y].buildings.append(5)
 
 def start_visualization(board):
     global clock
@@ -263,5 +256,4 @@ def start_visualization(board):
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/ikona.ico') 
     pygame.display.set_icon(icon)
-    # set_up(board)
     game(board,screen)

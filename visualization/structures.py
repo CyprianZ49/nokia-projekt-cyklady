@@ -1,11 +1,20 @@
 import pygame
 import math
-# from visualization.globals import *
 
-class University(pygame.sprite.Sprite):
-    def __init__(self,srodek,promien,czy_sam):#0 - rysuj na srodku, 1 - rysuj w lewnym dolnym, 2 - rysuj w prawym gornym, 3 - wersja stolicowa
+class Structure(pygame.sprite.Sprite):
+    def __init__(self,structure_type,srodek,promien,czy_sam):#0 - rysuj na srodku, 1 - rysuj w lewnym dolnym, 2 - rysuj w prawym gornym, 3 - wersja stolicowa
         super().__init__()
-        self.image = pygame.image.load(f"icons/university.png").convert_alpha()
+        if structure_type == 1:
+            self.image = pygame.image.load(f"icons/university.png").convert_alpha()
+        if structure_type == 2:
+            self.image = pygame.image.load(f"icons/temple.png").convert_alpha()
+        if structure_type == 3:
+            self.image = pygame.image.load(f"icons/fortress.png").convert_alpha()
+        if structure_type == 4:
+            self.image = pygame.image.load(f"icons/port.png").convert_alpha()
+        if structure_type == 5:
+            self.image = pygame.image.load(f"icons/metropolis.png").convert_alpha()
+            
         
         new_srodek = srodek
         if czy_sam==1:
