@@ -3,7 +3,7 @@ from subprocess import Popen,CREATE_NEW_CONSOLE
 import shlex
 from typing import Any
 from server import Server
-from constants import host, port, debug
+from constants import host, port, move_delay
 from typing import Iterable
 import time
 
@@ -36,8 +36,7 @@ class Bot:
     def __ne__(self, other):
         return self.name!=other.name
     def get_move(self):
-        time.sleep(0.5)
-        self.send_move(-4, "your_turn")
+        time.sleep(move_delay)
         print(f'ruch {self.name}')
         while not server.data[self.name]:
             pass
