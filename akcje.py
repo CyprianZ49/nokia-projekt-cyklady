@@ -1,4 +1,5 @@
 from constants import boardSize
+from legalMoves import *
 import random
 
 class InvalidFunds(Exception):
@@ -22,6 +23,9 @@ class TooMuchSmiting(Exception):
 class CannotBeSmitten(Exception):
     pass
 
+class InvalidMoveError(Exception):
+    pass
+
 #nie wytestowane rzeczy: bitwy lądowa i morska, ruchy lądowy i morski, rekrutacja tylko częściowo
 
 def Metropolizacja(plansza, kto):
@@ -33,7 +37,12 @@ def Metropolizacja(plansza, kto):
                 break
     if k==4:
         kto.send_move(-7, "zbuduj_wasc_metropolie_-_z budynkow!\n")
-        odp = list(map(int, kto.get_move()))
+        kto.isBuildingMetropolis = True
+        legal = getLegalMoves(plansza, kto)
+        move = kto.get_move()
+        odp = list(map(int, move))
+        if " ".join(move) not in legal:
+            raise InvalidMoveError
         if len(odp)!=14:
             raise InvalidMove
         for i in range(1, 5):
@@ -49,13 +58,20 @@ def Metropolizacja(plansza, kto):
             slot = odp[2+(i-1)*3]
             tile.buildings[slot]=0
         plansza.buildMetropolis(kto, odp[12], odp[13])
+        kto.isBuildingMetropolis = False
     elif kto.philosophers>=4:
         kto.send_move(-7, "zbuduj_wasc_metropolie_-_z_filozofow!")
-        odp = list(map(int, kto.get_move()))
+        kto.isBuildingMetropolis = True
+        legal = getLegalMoves(plansza, kto)
+        move = kto.get_move()
+        odp = list(map(int, move))
+        if " ".join(move) not in legal:
+            raise InvalidMoveError
         if len(odp)!=2:
             raise InvalidMove
         plansza.buildMetropolis(kto, odp[0], odp[1])
         kto.philosophers-=4
+        kto.isBuildingMetropolis = False
 
 def bitwaMorska(plansza, x, y, kto, ile):
     plansza.attackerPower = ile
@@ -101,7 +117,11 @@ def bitwaMorska(plansza, x, y, kto, ile):
         return
     plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
-    odp1 = list(map(int, other.get_move()))
+    legal = getLegalMoves(plansza, other)
+    move = other.get_move()
+    odp1 = list(map(int, move))
+    if " ".join(move) not in legal:
+        raise InvalidMoveError
     plansza.mayReatreat = plansza.pusty
     if odp1[0]==1:
         if not(plansza.isNeightbour(x, y, odp1[1], odp1[2])):
@@ -115,7 +135,11 @@ def bitwaMorska(plansza, x, y, kto, ile):
     else:
         plansza.mayReatreat = kto
         kto.send_move(-1, f"czy wycofujesz z {x, y}")
-        odp2=list(map(int, kto.get_move()))
+        legal = getLegalMoves(plansza, kto)
+        move = kto.get_move()
+        odp2 = list(map(int, move))
+        if " ".join not in legal:
+            raise InvalidMoveError
         plansza.mayReatreat = plansza.pusty
         if odp2[0]==1:
             if not(plansza.isNeightbour(x, y, odp2[1], odp2[2])):
@@ -162,7 +186,11 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
         return
     plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
-    odp1 = list(map(int, other.get_move()))
+    legal = getLegalMoves(plansza, other)
+    move = other.get_move()
+    odp1 = list(map(int, move))
+    if " ".join(move) not in legal:
+        raise InvalidMoveError
     plansza.mayReatreat = plansza.pusty
     if odp1[0]==1:
         if not(plansza.isBridge(x, y, other, odp1[1], odp1[2])):
@@ -176,7 +204,11 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     else:
         plansza.mayReatreat = kto
         kto.send_move(-1, f"czy wycofujesz z {x, y}")
-        odp2=list(map(int, kto.get_move()))
+        legal = getLegalMoves(plansza, kto)
+        move = kto.get_move()
+        odp2 = list(map(int, move))
+        if " ".join(move) not in legal:
+            raise InvalidMoveError
         plansza.mayReatreat = plansza.pusty
         if odp2[0]==1:
             if not(plansza.isBridge(x, y, kto, odp2[1], odp2[2])):
@@ -275,9 +307,9 @@ class Zeus:
     def ruch(self, kto, x, y):
         if(self.ktora2>0):
             raise TooMuchSmiting
-        if(self.plansza[x][y].typ!='capital' and self.plansza[x][y].typ!='water'):
+        if(self.plansza.pola[x][y].typ!='capital' and self.plansza.pola[x][y].typ!='water'):
             raise CannotBeSmitten
-        if(self.plansza[x][y].strength==0):
+        if(self.plansza.pola[x][y].strength==0):
             raise CannotBeSmitten
         koszt=3
         while koszt>0 and kto.actionDiscount>0:
@@ -287,9 +319,9 @@ class Zeus:
             raise InvalidFunds
         kto.coins-=koszt
         self.ktora2+=1
-        self.plansza[x][y].strength-=1
-        if self.plansza[x][y].strength==0:
-            self.plansz.changeOwnership(x, y, self.pusty)
+        self.plansza.pola[x][y].strength-=1
+        if self.plansza.pola[x][y].strength==0 and self.plansza.pola[x][y].typ=='water':
+            self.plansza.changeOwnership(x, y, self.pusty)
 
 
 class Poseidon:

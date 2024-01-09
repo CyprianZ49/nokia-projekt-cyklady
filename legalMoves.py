@@ -12,16 +12,12 @@ def getIslands(board, who):
             island += 1
     return island
 
-def getLegalMoves(board, who, gods):
-    ze = gods['ze']
-    at = gods['at']
-    po = gods['po']
-    ar = gods['ar']
-    ap = gods['ap']
+def getLegalMoves(board, who, gods = None):
     god = who.god
     legalMoves = []
     if board.isFight:
         if board.mayReatreat != who:
+            who.send_move(-2, "|".join(legalMoves))
             return legalMoves
         legalMoves.append(f"0")
         if board.pola[board.whereFight[0]][board.whereFight[1]].typ == 'water':
@@ -35,6 +31,7 @@ def getLegalMoves(board, who, gods):
                     if board.pola[x][y].typ == 'capital' and board.isBridge(board.whereFight[0], board.whereFight[1], who, x, y) and (board.pola[x][y].owner == board.pusty or board.pola[x][y].owner == who):
                         legalMoves.append(f"1 {x} {y}")
     if board.turn != who: #checking if it's this players turn
+        who.send_move(-2, "|".join(legalMoves))
         return legalMoves
     if who.isBuildingMetropolis:
         if who.philosophers == 4: #building Metropolis using philosophers
@@ -58,8 +55,14 @@ def getLegalMoves(board, who, gods):
                         for b3 in validBuildings[3]:
                             for b4 in validBuildings[4]:
                                 legalMoves.append(f"{b1[0]} {b1[1]} {b1[2]} {b2[0]} {b2[1]} {b2[2]} {b3[0]} {b3[1]} {b3[2]} {b4[0]} {b4[1]} {b4[2]} {targetIsland[0]} {targetIsland[1]}")
-
+        who.send_move(-2, "|".join(legalMoves))
+        return legalMoves
     #specific gods
+    ze = gods['ze']
+    at = gods['at']
+    po = gods['po']
+    ar = gods['ar']
+    ap = gods['ap']
     legalMoves.append(f"p")
     if god == "at":
         #build
@@ -156,10 +159,8 @@ def getLegalMoves(board, who, gods):
                                         legalMoves.append(f"m {tile[0]} {tile[1]} {i} {x} {y}")
     if god == 'ap':
         if who not in ap.wykonane:
-            if ap.ktora == 0:
-                for tile in who.ownedTiles:
-                    if board.pola[tile[0]][tile[1]].typ == 'capital':
-                        legalMoves.append(f"x {tile[0]} {tile[1]}")
-            else:
-                legalMoves.append(f"x")
+            for tile in who.ownedTiles:
+                if board.pola[tile[0]][tile[1]].typ == 'capital':
+                    legalMoves.append(f"x {tile[0]} {tile[1]}")
+    who.send_move(-2, "|".join(legalMoves))
     return legalMoves

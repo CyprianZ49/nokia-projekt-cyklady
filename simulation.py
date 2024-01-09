@@ -110,8 +110,13 @@ def turn(players, gods, board):
     name_to_f = {'r':'rekrutuj','b':'buduj','m':'ruch'}
     for player in order:
         board.turn = player
-        print(getLegalMoves(board, player, gods))
+        legal = getLegalMoves(board, player, gods)
         action = player.get_move()
+        move =  " ".join(action)
+        print(move)
+        print(legal)
+        if move not in legal:
+            raise InvalidMoveError
         while action[0]!='p':
             god = p_to_god[player]
             try:
@@ -122,11 +127,17 @@ def turn(players, gods, board):
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
                 player.send_move(-3, type(e).__name__)
-                # print_exception(e)
+                print_exception(e)
             else:
                 player.send_move(-5, "ok")
             Metropolizacja(board, player)
+            legal = getLegalMoves(board, player, gods)
             action = player.get_move()
+            move =  " ".join(action)
+            print(move)
+            print(legal)
+            if move not in legal:
+                raise InvalidMoveError
         print(f'gracz {player.name} pasuje')
     print('koniec tury')
     reset(*gods.values())
