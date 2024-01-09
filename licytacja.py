@@ -50,11 +50,11 @@ class Licytacja:
         min_values={g:(v[0]+1) for g,v in self.bids.items() if g not in (self.last_god, 'ap')}
         legal_moves=[]
         for g,min_v in min_values.items():
-            for v in range(min_v, bot.coins+1):
+            for v in range(min_v, bot.coins+bot.priests+1):
                 legal_moves.append(f'l {g} {v}')
         if not self.outbet:
             min_v=self.bids[self.last_god][0]+1
-            for v in range(min_v, bot.coins+1):
+            for v in range(min_v, bot.coins+bot.priests+1):
                 legal_moves.append(f'l {self.last_god} {v}')
         legal_moves.append('l ap 1')
         print(legal_moves)
