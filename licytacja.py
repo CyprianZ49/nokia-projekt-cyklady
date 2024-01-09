@@ -12,13 +12,13 @@ class Licytacja:
         legal_moves = self.get_legal_moves(bot)
         l = bot.get_move()
         if " ".join(l) not in legal_moves:
-            bot.send(-1, "Invalid_move")
+            bot.send_move(-1, "Invalid_move")
             raise InvalidMoveError
         op,god,value=l
         try:
             value = int(value)
         except ValueError as e:
-            bot.send(-1, "Invalid_move")
+            bot.send_move(-1, "Invalid_move")
             raise InvalidMoveError.with_traceback(e)
         print(op,god,value)
         self.last_god = god
@@ -32,9 +32,9 @@ class Licytacja:
         else:
             if self.bids[god][1]!=-1:
                 outb=self.bids[god][1]
-                _,ngod,nvalue=self.get_bid(self.bots[outb])
-                self.bids[god]=(value,i)
                 self.outbet = True
+                self.bids[god]=(value,i)
+                _,ngod,nvalue=self.get_bid(self.bots[outb])
                 self.do_bid(outb,_,ngod,nvalue)
             else:
                 self.bids[god]=(value,i)
