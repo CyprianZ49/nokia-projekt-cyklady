@@ -17,7 +17,7 @@ from sys import argv
 from plansza import Plansza
 from bot import Bot
 import signal
-
+from legalMoves import *
 
 def game(players, visual = True):
     def kill(*args):
@@ -110,6 +110,7 @@ def turn(players, gods, board):
     name_to_f = {'r':'rekrutuj','b':'buduj','m':'ruch'}
     for player in order:
         board.turn = player
+        print(getLegalMoves(board, player, gods))
         action = player.get_move()
         while action[0]!='p':
             god = p_to_god[player]

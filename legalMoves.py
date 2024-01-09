@@ -12,7 +12,13 @@ def getIslands(board, who):
             island += 1
     return island
 
-def getLegalMoves(board, who, god, at, ze, po, ar, ap):
+def getLegalMoves(board, who, gods):
+    ze = gods['ze']
+    at = gods['at']
+    po = gods['po']
+    ar = gods['ar']
+    ap = gods['ap']
+    god = who.god
     legalMoves = []
     if board.isFight:
         if board.mayReatreat != who:
@@ -85,7 +91,7 @@ def getLegalMoves(board, who, god, at, ze, po, ar, ap):
         if who.coins + who.actionDiscount >= 3:
             for x in range(13):
                 for y in range(13):
-                    if (board.pola[x][y].typ == 'capital' or board.pola[x][y].typ == 'water') and board.pola[x][y].strength > 0:
+                    if (board.pola[x][y].typ == 'capital' or board.pola[x][y].typ == 'water') and board.pola[x][y].strength > 0 and board.pola[x][y].owner != who:
                         legalMoves.append(f"m {x} {y}")
     if god == 'po':
         #build
