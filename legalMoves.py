@@ -106,10 +106,14 @@ def getLegalMoves(board, who, gods = None):
                     for i in range(0, len(board.pola[tile[0]][tile[1]].buildings)):
                         legalMoves.append(f"b {tile[0]} {tile[1]} {i}")
         #recruit
+        fleets = 0
+        for tile in who.ownedTiles:
+            if board.pola[tile[0]][tile[1]].typ == 'water':
+                fleets += board.pola[tile[0]][tile[1]].strength
         koszt = 0
         if po.ktora > 0:
             koszt += po.ktora
-        if po.ktora < 4 and who.coins >= koszt:
+        if po.ktora < 4 and who.coins >= koszt and fleets < 8:
             for x in range(13):
                 for y in range(13):
                     if board.pola[x][y].typ == 'water' and (board.pola[x][y].owner == who or board.pola[x][y].owner == board.pusty):
@@ -139,10 +143,14 @@ def getLegalMoves(board, who, gods = None):
                     for i in range(0, len(board.pola[tile[0]][tile[1]].buildings)):
                         legalMoves.append(f"b {tile[0]} {tile[1]} {i}")
         #recruit
+        soliders = 0
+        for tile in who.ownedTiles:
+            if board.pola[tile[0]][tile[1]].typ == 'capital':
+                soliders += board.pola[tile[0]][tile[1]].strength
         koszt = 0
         if ar.ktora > 0:
             koszt += ar.ktora + 1
-        if po.ktora < 4 and who.coins >= koszt:
+        if po.ktora < 4 and who.coins >= koszt and soliders < 8:
             for tile in who.ownedTiles:
                 if board.pola[tile[0]][tile[1]].typ == 'capital':
                     legalMoves.append(f"r {tile[0]} {tile[1]}")

@@ -124,6 +124,7 @@ def turn(players, gods, board):
             except Exception as e:
                 player.send_move(-3, type(e).__name__)
                 print_exception(e)
+                raise
             else:
                 player.send_move(-5, "ok")
             Metropolizacja(board, player)

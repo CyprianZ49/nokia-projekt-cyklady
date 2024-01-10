@@ -232,11 +232,8 @@ class Ares:
             koszt+=self.ktora+1
         if(kto.coins<koszt):
             raise InvalidFunds
-        if(kto.soliderLimit==0):
-            raise TooManyPiecesOfThisType
         self.plansza.makeSolider(x, y, kto)
         kto.coins-=koszt
-        kto.soliderLimit-=1
         self.ktora+=1
     def buduj(self, kto, x, y, slot):
         if(kto.coins<2):
@@ -321,7 +318,7 @@ class Zeus:
         self.ktora2+=1
         self.plansza.pola[x][y].strength-=1
         if self.plansza.pola[x][y].strength==0 and self.plansza.pola[x][y].typ=='water':
-            self.plansza.changeOwnership(x, y, self.pusty)
+            self.plansza.changeOwnership(x, y, self.plansza.pusty)
 
 
 class Poseidon:
@@ -339,10 +336,7 @@ class Poseidon:
             koszt+=self.ktora
         if(kto.coins<koszt):
             raise InvalidFunds
-        if(kto.fleetLimit==0):
-            raise TooManyPiecesOfThisType
         self.plansza.makeFleet(x, y, kto)
-        kto.fleetLimit-=1
         kto.coins-=koszt
         self.ktora+=1
         self.ileRuch=10
