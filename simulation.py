@@ -145,11 +145,14 @@ def turn(players, gods, board):
 def init_bots(files):
     return [Bot(i, p) for i,p in enumerate(files)] if files else [Bot(i) for i in range(2)]
 
-def kill(*args):
+def terminate(*args):
     for player in players:
-        player.proc.kill()
+        try:
+            os.kill(player.proc.pid, signal.SIGINT)
+        except PermissionError:
+            pass
     os.kill(os.getpid(), signal.SIGTERM)
-signal.signal(signal.SIGINT, kill)
+signal.signal(signal.SIGINT, terminate)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Launch arena with bots.')
@@ -189,4 +192,4 @@ if __name__ == "__main__":
     except BaseException as e:
         print_exception(e)
     finally:
-        kill()
+        terminate()

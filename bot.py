@@ -8,7 +8,7 @@ import time
 import platform
 from subprocess import Popen
 if platform.system() == 'Windows':
-    from subprocess import CREATE_NEW_CONSOLE
+    from subprocess import CREATE_NEW_CONSOLE, CREATE_NEW_PROCESS_GROUP
 
 server = Server(host, port)
 
@@ -30,7 +30,7 @@ class Bot:
         
         if prompt is None:
             if platform.system() == 'Windows':
-                self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE)
+                self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE|CREATE_NEW_PROCESS_GROUP)
             else:
                 self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), shell=True)
         elif prompt != '':

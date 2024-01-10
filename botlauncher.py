@@ -5,6 +5,14 @@ import shlex
 from sys import argv
 from subprocess import Popen,PIPE
 import pathlib
+import signal
+import os
+
+def terminate(*args):
+    proc.terminate()
+    os.kill(os.getpid(), signal.SIGTERM)
+
+signal.signal(signal.SIGINT, terminate)
 
 file = " ".join(argv[2:])
 file_extension = pathlib.Path(file).suffix
@@ -20,9 +28,12 @@ def handle_data(s):
     while True:
         proc.stdin.write(s.recv(1))
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((host, port))
-    Thread(target=handle_data, args=(s,)).start()
-    s.sendall((argv[1]+'\n').encode())
-    while True:
-        s.send(proc.stdout.read(1))
+try:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        Thread(target=handle_data, args=(s,)).start()
+        s.sendall((argv[1]+'\n').encode())
+        while True:
+            s.send(proc.stdout.read(1))
+finally:
+    terminate()
