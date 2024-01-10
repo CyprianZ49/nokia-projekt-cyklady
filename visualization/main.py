@@ -125,76 +125,93 @@ def render_board(package,board,screen):
                 if sila>0:
                     sprites.add(Warrior(centre,radius,imie,1,sila))# zolnierz i moneta
 
+    def handle_fight(centre,radius,ap,dp,ac,dc): #a - atacker, d - defender, c - color, p - power
+        x = centre[0]
+        y = centre[1]
+        wysokosc_prostokata = 1.3*radius
+        szerokosc_prosokata = 2.5*radius
+        pygame.draw.polygon(screen,(184,14,48),[
+            (x-szerokosc_prosokata/2,y-radius-wysokosc_prostokata),
+            (x-szerokosc_prosokata/2,y-radius),
+            (x+szerokosc_prosokata/2,y-radius),
+            (x+szerokosc_prosokata/2,y-radius-wysokosc_prostokata),
+        ])
+        pygame.draw.polygon(screen,"black",[
+            (x-szerokosc_prosokata/2,y-radius-wysokosc_prostokata),
+            (x-szerokosc_prosokata/2,y-radius),
+            (x+szerokosc_prosokata/2,y-radius),
+            (x+szerokosc_prosokata/2,y-radius-wysokosc_prostokata),
+        ],3)
+
+        sr = ((x-szerokosc_prosokata/2+x+szerokosc_prosokata/2)/2,(y-radius-wysokosc_prostokata+y-radius)/2)
+        jaka_czesc = 1 #jaka czesc odleglosci z srodka prostokata do boku
+        sr1 = (sr[0]+jaka_czesc*(szerokosc_prosokata/2),sr[1])
+        sr2 = (sr[0]-jaka_czesc*(szerokosc_prosokata/2),sr[1])
+
+        # sprites.add(Ship(sr1,radius,imie))
+
+
         
+    
+    def update1(x,y,centre,radius,board):
+        if isinstance(board.pola[x][y],plansza.Water): 
+            draw_hexagon(centre,radius,"blue",screen)
+            if board.pola[x][y].strength>0:
+                sprites.add(Ship(centre,radius,board.pola[x][y].owner.name,board.pola[x][y].value>0,board.pola[x][y].strength,False))
+            if board.pola[x][y].value>0:
+                if (x,y) not in ktory_wyglad_monety:
+                    ktory_wyglad_monety[(x,y)]=random.randint(1,2)
+                sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)],board.pola[x][y].value))
 
-    def crawl(x,y,centre,radius,board):
-        #print(board.pola[x][y]==plansza.Water)
-        if (x,y) not in odwiedzone:
-            #print(x,y)
-            odwiedzone[(x,y)]=True
-            if isinstance(board.pola[x][y],plansza.Water): 
-                draw_hexagon(centre,radius,"blue",screen)
-                if board.pola[x][y].strength>0:
-                    sprites.add(Ship(centre,radius,board.pola[x][y].owner.name,board.pola[x][y].value>0,board.pola[x][y].strength))
-                if board.pola[x][y].value>0:
-                    if (x,y) not in ktory_wyglad_monety:
-                        ktory_wyglad_monety[(x,y)]=random.randint(1,2)
-                    sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)],board.pola[x][y].value))
-
-            # if isinstance(board.pola[x][y],plansza.Island):
-            #     draw_hexagon(centre,radius,"brown")
-            if isinstance(board.pola[x][y],plansza.Capital):
-                draw_hexagon(centre,radius,"gold",screen)
-                if len(board.pola[x][y].territory)>1:
-                    handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius,board.pola[x][y].isMetropolis)
-                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,False,board.pola[x][y].isMetropolis)
-                else:
-                    handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,True,board.pola[x][y].isMetropolis)
-                # print(x,y)
-                # if board.pola[x][y].strength>0:
-                #     sprites.add(Warrior(centre,radius,board.pola[x][y].owner.name))
-                # if board.pola[x][y].value>0:
-                #     if (x,y) not in ktory_wyglad_monety:
-                #         ktory_wyglad_monety[(x,y)]=random.randint(1,2)
-                #     sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)]))
-            
-            if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
-                crawl(x+1,y+1,konw(centre,radius,1),radius,board)
-
-            if x+1<len(board.pola) and y<len(board.pola[x+1]):
-                crawl(x+1,y,konw(centre,radius,2),radius,board)
-
-            if x>=0 and y-1>=0:
-                crawl(x,y-1,konw(centre,radius,3),radius,board)
-            
-            if x-1>=0 and y-1>=0:
-                crawl(x-1,y-1,konw(centre,radius,4),radius,board)
-            if x-1>=0 and y>=0:
-                crawl(x-1,y,konw(centre,radius,5),radius,board)
-
-    def crawl2(x,y,centre,radius,board):
+        if isinstance(board.pola[x][y],plansza.Capital):
+            draw_hexagon(centre,radius,"gold",screen)
+            if len(board.pola[x][y].territory)>1:
+                handle_islands(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),centre,radius,board.pola[x][y].isMetropolis)
+                handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,False,board.pola[x][y].isMetropolis)
+            else:
+                handle_capital(x,y,board.pola[x][y].territory.copy(),board.pola[x][y].buildings.copy(),board.pola[x][y].strength,board.pola[x][y].value,centre,radius,board.pola[x][y].owner.name,True,board.pola[x][y].isMetropolis)
+    
+    def update2(x,y,centre,radius,board):
+        if (isinstance(board.pola[x][y],plansza.Water) or isinstance(board.pola[x][y],plansza.Capital)) and board.pola[x][y].fighting:
+            draw_red_line(centre,radius,screen)
+    
+    def update3(x,y,centre,radius,board):
+        if board.isFight and board.whereFight == (x,y):
+            handle_fight(centre,radius,board.attackerPower,board.defenderPower,board.attackerColor,board.defenderColor)
+    
+    def crawl(x,y,centre,radius,board,func):
         if (x,y) not in odwiedzone:
             odwiedzone[(x,y)]=True
-            if (isinstance(board.pola[x][y],plansza.Water) or isinstance(board.pola[x][y],plansza.Capital)) and board.pola[x][y].fighting:
-                draw_red_line(centre,radius,screen)
+            
+            func(x,y,centre,radius,board)
 
             if x+1<len(board.pola) and y+1<len(board.pola[x+1]):
-                crawl2(x+1,y+1,konw(centre,radius,1),radius,board)
+                crawl(x+1,y+1,konw(centre,radius,1),radius,board,func)
 
             if x+1<len(board.pola) and y<len(board.pola[x+1]):
-                crawl2(x+1,y,konw(centre,radius,2),radius,board)
+                crawl(x+1,y,konw(centre,radius,2),radius,board,func)
 
             if x>=0 and y-1>=0:
-                crawl2(x,y-1,konw(centre,radius,3),radius,board)
+                crawl(x,y-1,konw(centre,radius,3),radius,board,func)
             
             if x-1>=0 and y-1>=0:
-                crawl2(x-1,y-1,konw(centre,radius,4),radius,board)
+                crawl(x-1,y-1,konw(centre,radius,4),radius,board,func)
             if x-1>=0 and y>=0:
-                crawl2(x-1,y,konw(centre,radius,5),radius,board)
+                crawl(x-1,y,konw(centre,radius,5),radius,board,func)
+    
+    def crawles():
+        crawl(1,1,poczatkowy_srodek,promien,board,update1)
+        odwiedzone.clear()
+        crawl(1,1,poczatkowy_srodek,promien,board,update2)
+        odwiedzone.clear()
+        crawl(1,1,poczatkowy_srodek,promien,board,update3)
 
-    crawl(1,1,poczatkowy_srodek,promien,board)
-    odwiedzone.clear()
-    crawl2(1,1,poczatkowy_srodek,promien,board)
+
+    # crawl1(1,1,poczatkowy_srodek,promien,board)
+    # odwiedzone.clear()
+    # crawl2(1,1,poczatkowy_srodek,promien,board)
+    crawles()
+    
     sprites.draw(screen)
 
 def generate_to_wh(screen):

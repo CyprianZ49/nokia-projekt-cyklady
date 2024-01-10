@@ -7,7 +7,7 @@ class Ship(pygame.sprite.Sprite):
     def good_path(self,kolor,liczba):
         return f"f{kolor}{liczba}"
 
-    def __init__(self,srodek,promien,owner_name,withcoin:bool,sila):
+    def __init__(self,srodek,promien,owner_name,withcoin:bool,sila,isFight):
         global ktory_nr_wolny
         global owners_colors
         super().__init__()

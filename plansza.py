@@ -83,8 +83,8 @@ class Plansza:
     def __init__(self, pusty):
         self.pola=[[]]
         self.pusty=pusty
-        self.isFight = False
-        self.whereFight = (0, 0)
+        self.isFight = True
+        self.whereFight = (3, 3)
         self.attackerPower = 0
         self.defenderPower = 0
         self.attackerColor = 0
