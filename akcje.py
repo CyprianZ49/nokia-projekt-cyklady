@@ -98,22 +98,22 @@ def bitwaMorska(plansza, x, y, kto, ile):
     if ile+k1 >= sila+k2:
         other.send_move(-1, f"straciles solidera")
         plansza.pola[x][y].strength-=1
-        sila-=1
         if plansza.pola[x][y].strength==0:
             isOver=True
-            if ile>0:
-                plansza.changeOwnership(x, y, kto)
-                plansza.pola[x][y].strength=ile
-            else:
-                plansza.changeOwnership(x, y, plansza.pusty)
-                plansza.pola[x][y].strength=0
                 
     if ile+k1 <= sila+k2:
         kto.send_move(-1, "straciles solidera")
         ile-=1
         if ile==0:
             isOver=True
+
     if isOver:
+        if plansza.pola[x][y].strength == 0:
+            if ile > 0:
+                plansza.changeOwnership(x, y, kto)
+                plansza.pola[x][y].strength = ile
+            else:
+                plansza.changeOwnership(x, y, plansza.pusty)
         return
     plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
@@ -169,21 +169,26 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     k1=konwersja[k1]
     k2=konwersja[k2]
     isOver=False
+
     if ile+k1 >= sila+k2:
         other.send_move(-1, f"straciles solidera")
         plansza.pola[x][y].strength-=1
         if plansza.pola[x][y].strength==0:
-            if ile>0:
-                plansza.changeOwnership(x, y, kto)
-                plansza.pola[x][y].strength=ile
             isOver=True
+                
     if ile+k1 <= sila+k2:
         kto.send_move(-1, "straciles solidera")
         ile-=1
         if ile==0:
             isOver=True
+
     if isOver:
+        if plansza.pola[x][y].strength == 0:
+            if ile > 0:
+                plansza.changeOwnership(x, y, kto)
+                plansza.pola[x][y].strength = ile
         return
+    
     plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
     legal = getLegalMoves(plansza, other)
