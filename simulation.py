@@ -123,6 +123,7 @@ def turn(players, gods, board):
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
                 player.send_move(-3, type(e).__name__)
+                print(god, move)
                 print_exception(e)
                 raise
             else:
