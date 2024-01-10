@@ -25,6 +25,7 @@ void do_move()
 
 int main()
 {
+    srand(time(0));
     while(true)
         do_move();
 }
