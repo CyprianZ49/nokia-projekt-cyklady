@@ -148,8 +148,8 @@ def render_board(package,board,screen):
         sr1 = (sr[0]+jaka_czesc*(szerokosc_prosokata/2),sr[1])
         sr2 = (sr[0]-jaka_czesc*(szerokosc_prosokata/2),sr[1])
 
-        sprites.add(Ship(sr1,radius,ac,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
-        sprites.add(Ship(sr2,radius,dc,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
+        sprites.add(Ship(sr1,radius,ac.name,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
+        sprites.add(Ship(sr2,radius,dc.name,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
 
 
         
