@@ -123,8 +123,8 @@ def turn(players, gods, board):
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
                 player.send_move(-3, type(e).__name__)
-                print(god, move)
-                print_exception(e)
+                print(god, move, player.god)
+                # print_exception(e)
                 raise
             else:
                 player.send_move(-5, "ok")
@@ -182,9 +182,10 @@ if __name__ == "__main__":
     try:
         with redirect_stdout(stdout if not nspc.debug or not debug else log):
             players = init_bots(nspc.files)
+            print(len(players))
             game(players, nspc.visual)
-            while True:
-                pass
+            # while True:
+            #     pass
     except BaseException as e:
         print_exception(e)
     finally:

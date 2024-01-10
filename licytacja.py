@@ -24,6 +24,7 @@ class Licytacja:
             raise InvalidMoveError.with_traceback(e)
         print(op,god,value)
         self.last_god = god
+        bot.god = god
         return op,god,value
     
     def do_bid(self,i,_,god,value):
@@ -40,7 +41,6 @@ class Licytacja:
                 self.do_bid(outb,_,ngod,nvalue)
             else:
                 self.bids[god]=(value,i)
-        self.bots[i].god = god
         self.outbet = False
 
     def perform(self):
