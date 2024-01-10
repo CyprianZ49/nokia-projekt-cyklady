@@ -16,7 +16,7 @@ class Bot:
     def __init__(self, name, prompt=None):
 
         self.name=name
-        self.coins= 100
+        self.coins= 0
         self.soliderLimit=8
         self.fleetLimit=8
         self.philosophers=0

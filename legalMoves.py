@@ -93,7 +93,7 @@ def getLegalMoves(board, who, gods = None):
         if ze.ktora < 2 and who.coins >= koszt:
             legalMoves.append(f"r")
         #smite
-        if who.coins + who.actionDiscount >= 3:
+        if who.coins + who.actionDiscount >= 3 and ze.ktora2 < 1:
             for x in range(13):
                 for y in range(13):
                     if (board.pola[x][y].typ == 'capital' or board.pola[x][y].typ == 'water') and board.pola[x][y].strength > 0 and board.pola[x][y].owner != who:
@@ -150,7 +150,7 @@ def getLegalMoves(board, who, gods = None):
         koszt = 0
         if ar.ktora > 0:
             koszt += ar.ktora + 1
-        if po.ktora < 4 and who.coins >= koszt and soliders < 8:
+        if ar.ktora < 4 and who.coins >= koszt and soliders < 8:
             for tile in who.ownedTiles:
                 if board.pola[tile[0]][tile[1]].typ == 'capital':
                     legalMoves.append(f"r {tile[0]} {tile[1]}")
