@@ -144,11 +144,12 @@ def render_board(package,board,screen):
         ],3)
 
         sr = ((x-szerokosc_prosokata/2+x+szerokosc_prosokata/2)/2,(y-radius-wysokosc_prostokata+y-radius)/2)
-        jaka_czesc = 1 #jaka czesc odleglosci z srodka prostokata do boku
+        jaka_czesc = 0.5 #jaka czesc odleglosci z srodka prostokata do boku, 1 - na maksa w prawo, 0 - srodek
         sr1 = (sr[0]+jaka_czesc*(szerokosc_prosokata/2),sr[1])
         sr2 = (sr[0]-jaka_czesc*(szerokosc_prosokata/2),sr[1])
 
-        # sprites.add(Ship(sr1,radius,imie))
+        sprites.add(Ship(sr1,radius,ac,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
+        sprites.add(Ship(sr2,radius,dc,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
 
 
         
@@ -157,7 +158,7 @@ def render_board(package,board,screen):
         if isinstance(board.pola[x][y],plansza.Water): 
             draw_hexagon(centre,radius,"blue",screen)
             if board.pola[x][y].strength>0:
-                sprites.add(Ship(centre,radius,board.pola[x][y].owner.name,board.pola[x][y].value>0,board.pola[x][y].strength,False))
+                sprites.add(Ship(centre,radius,board.pola[x][y].owner.name,board.pola[x][y].value>0,board.pola[x][y].strength,False,0,0))
             if board.pola[x][y].value>0:
                 if (x,y) not in ktory_wyglad_monety:
                     ktory_wyglad_monety[(x,y)]=random.randint(1,2)
