@@ -1,4 +1,4 @@
-// Tries to recruit philosophers if possible, otherwise bets for apollo.
+// Does a random legal move
 
 #include <bits/stdc++.h>
 
