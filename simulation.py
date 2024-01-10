@@ -5,6 +5,7 @@ from traceback import print_exception
 import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
 from threading import Thread,Condition
+from traceback import print_exc
 from constants import debug
 import os
 from contextlib import redirect_stdout
@@ -13,18 +14,13 @@ from random import getstate, setstate
 from ast import literal_eval
 import copy
 import argparse
-from sys import argv
+from sys import argv, stdout
 from plansza import Plansza
 from bot import Bot
 import signal
 from legalMoves import *
 
 def game(players, visual = True):
-    def kill(*args):
-        for player in players:
-            player.proc.kill()
-        os.kill(os.getpid(), signal.SIGTERM)
-    signal.signal(signal.SIGINT, kill)
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
     board = Plansza(pusty)
     board.generateBoard()
@@ -147,6 +143,12 @@ def turn(players, gods, board):
 def init_bots(files):
     return [Bot(i, p) for i,p in enumerate(files)] if files else [Bot(i) for i in range(2)]
 
+def kill(*args):
+    for player in players:
+        player.proc.kill()
+    os.kill(os.getpid(), signal.SIGTERM)
+signal.signal(signal.SIGINT, kill)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Launch arena with bots.')
     parser.add_argument('--bots', nargs='*', dest="files", action="store",
@@ -175,7 +177,13 @@ if __name__ == "__main__":
         with open(f'testcases/{n}/rng', 'w') as f:
             f.write(str(getstate()))
         log = Log(f'testcases/{n}/out')
-        with redirect_stdout(log):
-            game(init_bots(nspc.files), nspc.visual)
-    else:    
-        game(init_bots(nspc.files), nspc.visual)
+    try:
+        with redirect_stdout(stdout if not nspc.debug or not debug else log):
+            players = init_bots(nspc.files)
+            game(players, nspc.visual)
+            while True:
+                pass
+    except BaseException as e:
+        print_exception(e)
+    finally:
+        kill()
