@@ -30,6 +30,8 @@ def getLegalMoves(board, who, gods = None):
                 for y in range(13):
                     if board.pola[x][y].typ == 'capital' and board.isBridge(board.whereFight[0], board.whereFight[1], who, x, y) and (board.pola[x][y].owner == board.pusty or board.pola[x][y].owner == who):
                         legalMoves.append(f"1 {x} {y}")
+        who.send_move(-2, "|".join(legalMoves))
+        return legalMoves
     if board.turn != who: #checking if it's this players turn
         who.send_move(-2, "|".join(legalMoves))
         return legalMoves

@@ -138,7 +138,7 @@ def bitwaMorska(plansza, x, y, kto, ile):
         legal = getLegalMoves(plansza, kto)
         move = kto.get_move()
         odp2 = list(map(int, move))
-        if " ".join not in legal:
+        if " ".join(move) not in legal:
             raise InvalidMoveError
         plansza.mayReatreat = plansza.pusty
         if odp2[0]==1:
