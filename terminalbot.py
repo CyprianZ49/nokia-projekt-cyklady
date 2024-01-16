@@ -1,5 +1,5 @@
 import socket
-from constants import host, port, debug
+from constants import host, port
 from threading import Thread
 from sys import argv, stdout
 import os
@@ -24,7 +24,7 @@ def main(f):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     try:
-        if debug:
+        if argv[2] == 'True':
             with open(f"testcases/{max(map(int,os.listdir('testcases')))}/{argv[1]}", 'w') as f:
                 main(f)
         else:

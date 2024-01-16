@@ -13,7 +13,7 @@ if platform.system() == 'Windows':
 server = Server(host, port)
 
 class Bot:
-    def __init__(self, name, prompt=None):
+    def __init__(self, name, prompt=None, log=False):
 
         self.name=name
         self.coins= 0
@@ -30,11 +30,14 @@ class Bot:
         
         if prompt is None:
             if platform.system() == 'Windows':
-                self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), creationflags=CREATE_NEW_CONSOLE|CREATE_NEW_PROCESS_GROUP)
+                self.proc=Popen(shlex.split(f"python terminalbot.py {name} {log}"), creationflags=CREATE_NEW_CONSOLE|CREATE_NEW_PROCESS_GROUP)
             else:
-                self.proc=Popen(shlex.split(f"python terminalbot.py {name}"), shell=True)
+                self.proc=Popen(shlex.split(f"python terminalbot.py {name} {log}"), shell=True)
         elif prompt != '':
-            self.proc=Popen(shlex.split(f"python botlauncher.py {name} {prompt}"))
+            if platform.system() == 'Windows':
+                self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"))
+            else:
+                self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"))
 
     def __hash__(self):
         return hash(self.name)

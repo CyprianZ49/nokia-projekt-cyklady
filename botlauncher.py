@@ -9,12 +9,13 @@ import signal
 import os
 
 def terminate(*args):
+    print('killing')
     proc.terminate()
     os.kill(os.getpid(), signal.SIGTERM)
 
 signal.signal(signal.SIGINT, terminate)
 
-file = " ".join(argv[2:])
+file = " ".join(argv[3:])
 file_extension = pathlib.Path(file).suffix
 
 if file_extension == '.py':
@@ -33,7 +34,11 @@ try:
         s.connect((host, port))
         Thread(target=handle_data, args=(s,)).start()
         s.sendall((argv[1]+'\n').encode())
-        while True:
-            s.send(proc.stdout.read(1))
+        with open(f"testcases/{max(map(int,os.listdir('testcases')))}/{argv[1]}", 'wb') as f:
+            while True:
+                data = proc.stdout.read(1)
+                s.send(data)
+                f.write(data)
+                f.flush()
 finally:
     terminate()

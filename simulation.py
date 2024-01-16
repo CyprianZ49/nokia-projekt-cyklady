@@ -6,7 +6,6 @@ import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
 from threading import Thread,Condition
 from traceback import print_exc
-from constants import debug
 import os
 from contextlib import redirect_stdout
 from log import Log
@@ -142,8 +141,8 @@ def turn(players, gods, board):
     order.reverse()
     return order
 
-def init_bots(files):
-    return [Bot(i, p) for i,p in enumerate(files)] if files else [Bot(i) for i in range(2)]
+def init_bots(files, log):
+    return [Bot(i, p, log) for i,p in enumerate(files)] if files else [Bot(i, None, log) for i in range(2)]
 
 def terminate(*args):
     for player in players:
@@ -162,10 +161,10 @@ if __name__ == "__main__":
                 help='file to read rng state from', required=False)
     parser.add_argument('--rng2', dest="rng2", action="store",
             help='file to read rng state from', required=False)
+    parser.add_argument('--log', dest="log", action="store_true",
+            help='specifies that output should be stored as a log', required=False)
     parser.add_argument('-v', dest="visual", action="store_false",
                     help='if specified lauches without visuals', required=False)
-    parser.add_argument('-d', dest="debug", action="store_false", # should also work for terminal bots
-                help='if set overrides global debug variable and sets it to false', required=False)
     
     nspc = parser.parse_args(argv[1:])
     # exit(0)
@@ -176,7 +175,7 @@ if __name__ == "__main__":
         with open(nspc.rng, 'r') as f:
             setstate(literal_eval(f.read()))
 
-    if nspc.debug and debug:
+    if nspc.log:
         if not os.path.exists('testcases'):
             n=0
         else:
@@ -187,8 +186,8 @@ if __name__ == "__main__":
             f.write(str(getstate()))
         log = Log(f'testcases/{n}/out')
     try:
-        with redirect_stdout(stdout if not nspc.debug or not debug else log):
-            players = init_bots(nspc.files)
+        with redirect_stdout(log if nspc.log else stdout):
+            players = init_bots(nspc.files, nspc.log)
             print(len(players))
             game(players, nspc.visual)
             # while True:
