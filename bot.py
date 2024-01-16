@@ -28,16 +28,13 @@ class Bot:
         self.isFighting = False
         self.god = None
         
-        if prompt is None:
+        if prompt is None or prompt in ('t', 'terminal'):
             if platform.system() == 'Windows':
                 self.proc=Popen(shlex.split(f"python terminalbot.py {name} {log}"), creationflags=CREATE_NEW_CONSOLE|CREATE_NEW_PROCESS_GROUP)
             else:
                 self.proc=Popen(shlex.split(f"python terminalbot.py {name} {log}"), shell=True)
         elif prompt != '':
-            if platform.system() == 'Windows':
-                self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"))
-            else:
-                self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"))
+            self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"))
 
     def __hash__(self):
         return hash(self.name)

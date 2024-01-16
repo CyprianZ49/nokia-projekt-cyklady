@@ -9,7 +9,6 @@ import signal
 import os
 
 def terminate(*args):
-    print('killing')
     proc.terminate()
     os.kill(os.getpid(), signal.SIGTERM)
 
@@ -27,18 +26,28 @@ proc = Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE, bufsize=0)
 
 def handle_data(s):
     while True:
-        proc.stdin.write(s.recv(1))
+        try:
+            proc.stdin.write(s.recv(1))
+        except (ConnectionResetError, ConnectionAbortedError):
+            break
 
 try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
         Thread(target=handle_data, args=(s,)).start()
         s.sendall((argv[1]+'\n').encode())
-        with open(f"testcases/{max(map(int,os.listdir('testcases')))}/{argv[1]}", 'wb') as f:
+        if argv[2]=='True':
+            with open(f"testcases/{max(map(int,os.listdir('testcases')))}/{argv[1]}", 'wb') as f:
+                while True:
+                    data = proc.stdout.read(1)
+                    s.send(data)
+                    f.write(data)
+                    f.flush()
+        else:
             while True:
                 data = proc.stdout.read(1)
                 s.send(data)
-                f.write(data)
-                f.flush()
+except BaseException:
+    pass
 finally:
     terminate()
