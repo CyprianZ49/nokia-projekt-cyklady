@@ -1,6 +1,6 @@
 from constants import boardSize
 from legalMoves import *
-import random
+from custom_rand import random
 
 class InvalidFunds(Exception):
     pass

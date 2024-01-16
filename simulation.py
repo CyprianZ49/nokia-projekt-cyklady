@@ -1,6 +1,6 @@
 from licytacja import Licytacja
 from akcje import *
-from random import shuffle
+from custom_rand import random
 from traceback import print_exception
 import tkinter as tk
 from przygotowanie import przypiszWarunkiStartowe
@@ -28,7 +28,7 @@ def game(players, visual = True):
         for y in range(13):
             if board.pola[x][y].typ=='capital' or board.pola[x][y].typ=='water':
                 pusty.ownedTiles.append((x, y))
-    shuffle(players)
+    random.shuffle(players)
     print(players)
     order = [player.name for player in players]
     for player in players:
@@ -160,6 +160,8 @@ if __name__ == "__main__":
                         help='file paths to be used for bots', required=False)
     parser.add_argument('--rng', dest="rng", action="store",
                 help='file to read rng state from', required=False)
+    parser.add_argument('--rng2', dest="rng2", action="store",
+            help='file to read rng state from', required=False)
     parser.add_argument('-v', dest="visual", action="store_false",
                     help='if specified lauches without visuals', required=False)
     parser.add_argument('-d', dest="debug", action="store_false", # should also work for terminal bots
@@ -168,6 +170,8 @@ if __name__ == "__main__":
     nspc = parser.parse_args(argv[1:])
     # exit(0)
     
+    random.load(nspc.rng2)
+
     if nspc.rng:
         with open(nspc.rng, 'r') as f:
             setstate(literal_eval(f.read()))
