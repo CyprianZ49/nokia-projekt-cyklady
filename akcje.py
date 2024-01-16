@@ -36,7 +36,7 @@ def Metropolizacja(plansza, kto):
                 k+=1
                 break
     if k==4:
-        kto.send_move(-7, "zbuduj_wasc_metropolie_-_z budynkow!\n")
+        kto.send_move(-7, "buildings")
         kto.isBuildingMetropolis = True
         legal = getLegalMoves(plansza, kto)
         move = kto.get_move()
@@ -60,7 +60,7 @@ def Metropolizacja(plansza, kto):
         plansza.buildMetropolis(kto, odp[12], odp[13])
         kto.isBuildingMetropolis = False
     elif kto.philosophers>=4:
-        kto.send_move(-7, "zbuduj_wasc_metropolie_-_z_filozofow!")
+        kto.send_move(-7, "philosophers")
         kto.isBuildingMetropolis = True
         legal = getLegalMoves(plansza, kto)
         move = kto.get_move()
