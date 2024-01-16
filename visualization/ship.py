@@ -8,13 +8,18 @@ class Ship(pygame.sprite.Sprite):
         return f"f{kolor}{liczba}"
 
     def __init__(self,srodek,promien,owner_name,withcoin:bool,sila,isFight,rec_width,rec_height):
+        lock.acquire()
         global ktory_nr_wolny
         global owners_colors
         super().__init__()
 
         if owner_name not in owners_colors:
-            owners_colors[owner_name] = ktory_nr_wolny
-            ktory_nr_wolny+=1
+            owners_colors[owner_name] = ktory_nr_wolny[0]
+            # print(ktory_nr_wolny)
+            # with open('xd.txt','a') as f:
+            #     f.write(f"{owner_name, owners_colors}\n")
+            ktory_nr_wolny[0]+=1
+        lock.release()
         
         if owners_colors[owner_name] == 1:
             self.image = pygame.image.load(f"icons/{self.good_path('blue',sila)}.png").convert_alpha()

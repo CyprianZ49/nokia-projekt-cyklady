@@ -2,19 +2,25 @@ import pygame
 import math
 from visualization.globals import *
 
+
 class Warrior(pygame.sprite.Sprite):
 
     def good_path(self,kolor,liczba):
         return f"w{kolor}{liczba}"
 
     def __init__(self,srodek,promien,owner_name,gdzie,sila): #0 - sam, 1 - z moneta, 2 - z moneta i budynkiem                     
+        lock.acquire()
         global ktory_nr_wolny                           #srodek     lewy dolny        prawy dolny (ale musi być mniejszy)    
         global owners_colors
         super().__init__()
 
         if owner_name not in owners_colors:
-            owners_colors[owner_name] = ktory_nr_wolny
-            ktory_nr_wolny+=1
+            owners_colors[owner_name] = ktory_nr_wolny[0]
+            # with open('xd.txt','a') as f:
+            #     f.write(f"{owner_name, owners_colors}\n")
+            # print(ktory_nr_wolny)
+            ktory_nr_wolny[0]+=1
+        lock.release()
         
         if owners_colors[owner_name] == 1:
             self.image = pygame.image.load(f"icons/{self.good_path('blue',sila)}.png").convert_alpha()
