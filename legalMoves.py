@@ -47,8 +47,7 @@ def getLegalMoves(board, who, gods = None):
                 validBuildings.append([])
             for tile in who.ownedTiles:
                 if board.pola[tile[0]][tile[1]].typ == 'capital':
-                    if board.pola[tile[0]][tile[1]].isMetropolis == False:
-                        validIsalnds.append(tile)
+                    validIsalnds.append(tile)
                     for i in range(0, len(board.pola[tile[0]][tile[1]].buildings)):
                         validBuildings[board.pola[tile[0]][tile[1]].buildings[i]].append((tile[0], tile[1], i))
             for targetIsland in validIsalnds:
