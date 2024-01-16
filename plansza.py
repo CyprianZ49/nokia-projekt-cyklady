@@ -68,10 +68,9 @@ class Capital:
             raise InvalidBuildingSlot
         self.buildings[slot]=building
     def buildMetropolis(self):
-        if self.isMetropolis:
-            raise MetropilsAlreadyPresent
+        if not self.isMetropolis:
+            self.buildings=self.buildings[:-2]
         self.isMetropolis=True
-        self.buildings=self.buildings[:-2]
         # print(self)
         # time.sleep(10)
     def changeOwner(self, newOwner):
