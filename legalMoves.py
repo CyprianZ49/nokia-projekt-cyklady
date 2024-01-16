@@ -38,7 +38,7 @@ def getLegalMoves(board, who, gods = None):
     if who.isBuildingMetropolis:
         if who.philosophers == 4: #building Metropolis using philosophers
             for tile in who.ownedTiles:
-                if board.pola[tile[0]][tile[1]].typ == 'capital' and board.pola[tile[0]][tile[1]].isMetropolis == False:
+                if board.pola[tile[0]][tile[1]].typ == 'capital':
                     legalMoves.append(f"{tile[0]} {tile[1]}")
         else: #building Metropolis using buildings
             validIsalnds = []

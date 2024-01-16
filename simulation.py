@@ -147,7 +147,10 @@ def init_bots(files, log):
 def terminate(*args):
     for player in players:
         try:
-            os.kill(player.proc.pid, signal.CTRL_C_EVENT)
+            if player.terminal:
+                os.kill(player.proc.pid, signal.SIGTERM)
+            else:
+                os.kill(player.proc.pid, signal.CTRL_C_EVENT)
         except PermissionError:
             pass
     os.kill(os.getpid(), signal.SIGTERM)

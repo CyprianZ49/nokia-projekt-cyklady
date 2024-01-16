@@ -27,8 +27,9 @@ class Bot:
         self.isBuildingMetropolis = False
         self.isFighting = False
         self.god = None
-        
+        self.terminal = False
         if prompt is None or prompt in ('t', 'terminal'):
+            self.terminal = True
             if platform.system() == 'Windows':
                 self.proc=Popen(shlex.split(f"python terminalbot.py {name} {log}"), creationflags=CREATE_NEW_CONSOLE|CREATE_NEW_PROCESS_GROUP)
             else:
