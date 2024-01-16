@@ -249,7 +249,7 @@ class Ares:
         for tile in kto.ownedTiles:
             if self.plansza.pola[tile[0]][tile[1]].typ=='capital' and self.plansza.pola[tile[0]][tile[1]].isMetropolis:
                 metro+=1
-        if self.plansza.pola[x][y].owner!=kto or self.plansza.pola[x][y].strength<ile or (posiadane==1 and not(metro>1) and self.plansza.pola[x1][y1].owner!=self.plansza.pusty):
+        if self.plansza.pola[x][y].owner!=kto or self.plansza.pola[x][y].strength<ile or (posiadane==1 and not(metro>0) and self.plansza.pola[x1][y1].owner!=self.plansza.pusty):
             raise InvalidMove
         koszt = 1
         if kto.actionDiscount>0:
@@ -259,7 +259,7 @@ class Ares:
             raise InvalidFunds
         kto.coins-=koszt
         self.plansza.pola[x][y].strength-=ile
-        if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty:
+        if self.plansza.pola[x1][y1].owner==kto or self.plansza.pola[x1][y1].owner==self.plansza.pusty or self.plansza.pola[x1][y1].strength == 0:
             self.plansza.changeOwnership(x1, y1, kto)
             self.plansza.pola[x1][y1].strength+=ile
         else:

@@ -28,7 +28,7 @@ def getLegalMoves(board, who, gods = None):
         else:
             for x in range(13):
                 for y in range(13):
-                    if board.pola[x][y].typ == 'capital' and board.isBridge(board.whereFight[0], board.whereFight[1], who, x, y) and (board.pola[x][y].owner == board.pusty or board.pola[x][y].owner == who):
+                    if board.pola[x][y].typ == 'capital' and board.isBridge(board.whereFight[0], board.whereFight[1], who, x, y) and board.pola[x][y].owner == who:
                         legalMoves.append(f"1 {x} {y}")
         who.send_move(-2, "|".join(legalMoves))
         return legalMoves
@@ -164,7 +164,7 @@ def getLegalMoves(board, who, gods = None):
                             if board.pola[x][y].typ == 'capital' and (x, y) != tile and board.isBridge(tile[0], tile[1], who, x, y):
                                 enemy = board.pola[x][y].owner
                                 enemyIsalnds = getIslands(board, enemy)
-                                if enemy == who or metro > 1 or enemyIsalnds > 1:
+                                if enemy == who or metro > 0 or enemyIsalnds > 1:
                                     for i in range(1, board.pola[tile[0]][tile[1]].strength + 1):
                                         legalMoves.append(f"m {tile[0]} {tile[1]} {i} {x} {y}")
     if god == 'ap':
