@@ -273,7 +273,7 @@ def start_visualization(board):
     global clock
     pygame.init()
     # pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS,3)
-    screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-80),pygame.RESIZABLE)
+    screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-65),pygame.RESIZABLE)
     pygame.display.set_caption("Cyklades")
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/ikona.ico') 
