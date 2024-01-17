@@ -15,7 +15,7 @@ b <x> <y>    -    build on tile (x,y)
 x <a> <b>    -    after betting for Apollo gain 1 gold and if you were the first person to bid on him increase the income of tile (a,b).
 <x> <y> (when building metropolis from philosophers) build metropolis on tile (x,y)
 <x1> <y1> <s1> ... <x5> <y5> <s5> <x> <y> (when building metropolis from philosophers) build metropolis on tile (x,y)
-by deleting building in slots s1,s2,...,s5 of correspondnig tiles (x1,y1),(x2,y2),...,(x5,y5).
+by deleting building in slots s1,s2,...,s5 of corresponding tiles (x1,y1),(x2,y2),...,(x5,y5).
 
 
 Data recieved by a bot is in the following format:
