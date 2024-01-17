@@ -1,6 +1,8 @@
 Coordinates:
 (1,1) - the bottom-most tile
-# finish description
+(x+1,y) - tile sightly above and to the left of (x,y)
+(x,y+1) - tile sightly above and to the right of (x,y)
+(x+1,y+1) - tile directly above (x,y)
 
 Moves are in the following format:
 l <g> <n>   -    bids n coins for god g, where g are the first 2 letters of god's name in lower case e.g. Zeus -> ze.
@@ -11,7 +13,9 @@ b <x> <y>    -    build on tile (x,y)
 0    -    do not retreat from battle
 1 <x> <y>    -    retreat from battle to (x,y)
 x <a> <b>    -    after betting for Apollo gain 1 gold and if you were the first person to bid on him increase the income of tile (a,b).
-# add metropolis building move
+<x> <y> (when building metropolis from philosophers) build metropolis on tile (x,y)
+<x1> <y1> <s1> ... <x5> <y5> <s5> <x> <y> (when building metropolis from philosophers) build metropolis on tile (x,y)
+by deleting building in slots s1,s2,...,s5 of correspondnig tiles (x1,y1),(x2,y2),...,(x5,y5).
 
 
 Data recieved by a bot is in the following format:
