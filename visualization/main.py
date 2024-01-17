@@ -96,17 +96,17 @@ def render_board(package,board,screen):
             if len(budynki)==0:
                 if value==0:
                     if sila>0:
-                        sprites.add(Warrior(centre,radius,imie,0,sila))# solo warrior
+                        sprites.add(Warrior(centre,radius,imie,0,sila,False,0,0))# solo warrior
                 else:
                     if sila>0:
-                        sprites.add(Warrior(centre,radius,imie,1,sila))# warrior i moneta
+                        sprites.add(Warrior(centre,radius,imie,1,sila,False,0,0))# warrior i moneta
             else:
                 if value==0:
                     if sila>0:
-                        sprites.add(Warrior(centre,radius,imie,3,sila))#budynek i warrior, TEN CASE NIGDY NIE  ZACHODZI, A ZOSTAWIAM GO DLA WIDOCZNOSCI
+                        sprites.add(Warrior(centre,radius,imie,3,sila,False,0,0))#budynek i warrior, TEN CASE NIGDY NIE  ZACHODZI, A ZOSTAWIAM GO DLA WIDOCZNOSCI
                 else:
                     if sila>0:
-                        sprites.add(Warrior(centre,radius,imie,2,sila))#budynek, moneta i warrior
+                        sprites.add(Warrior(centre,radius,imie,2,sila,False,0,0))#budynek, moneta i warrior
                         if 1 in budynki:
                             sprites.add(Structure(1,centre,radius,3))
                         if 2 in budynki:
@@ -120,12 +120,12 @@ def render_board(package,board,screen):
         else:#przypadek w ktorym istnieja inne pola wyspy i na nich sa wszystkie budynki
             if value==0:
                 if sila>0:
-                    sprites.add(Warrior(centre,radius,imie,0,sila)) # tylko zolnierz
+                    sprites.add(Warrior(centre,radius,imie,0,sila,False,0,0)) # tylko zolnierz
             else:
                 if sila>0:
-                    sprites.add(Warrior(centre,radius,imie,1,sila))# zolnierz i moneta
+                    sprites.add(Warrior(centre,radius,imie,1,sila,False,0,0))# zolnierz i moneta
 
-    def handle_fight(centre,radius,ap,dp,ac,dc): #a - atacker, d - defender, c - color, p - power
+    def handle_fight(centre,radius,ap,dp,ac,dc,czy_pole_wodne): #a - atacker, d - defender, c - color, p - power
         x = centre[0]
         y = centre[1]
         wysokosc_prostokata = 1.3*radius
@@ -148,8 +148,12 @@ def render_board(package,board,screen):
         sr1 = (sr[0]+jaka_czesc*(szerokosc_prosokata/2),sr[1])
         sr2 = (sr[0]-jaka_czesc*(szerokosc_prosokata/2),sr[1])
 
-        sprites.add(Ship(sr1,radius,ac.name,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
-        sprites.add(Ship(sr2,radius,dc.name,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
+        if czy_pole_wodne:
+            sprites.add(Ship(sr1,radius,ac,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
+            sprites.add(Ship(sr2,radius,dc,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
+        else:
+            sprites.add(Warrior(sr1,radius,ac,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
+            sprites.add(Warrior(sr2,radius,dc,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
 
 
         
@@ -178,7 +182,7 @@ def render_board(package,board,screen):
     
     def update3(x,y,centre,radius,board):
         if board.isFight and board.whereFight == (x,y):
-            handle_fight(centre,radius,board.attackerPower,board.defenderPower,board.attackerColor,board.defenderColor)
+            handle_fight(centre,radius,board.attackerPower,board.defenderPower,board.attackerColor,board.defenderColor,True if isinstance(board.pola[x][y],plansza.Water) else False)
     
     def crawl(x,y,centre,radius,board,func):
         if (x,y) not in odwiedzone:

@@ -8,7 +8,7 @@ class Warrior(pygame.sprite.Sprite):
     def good_path(self,kolor,liczba):
         return f"w{kolor}{liczba}"
 
-    def __init__(self,srodek,promien,owner_name,gdzie,sila): #0 - sam, 1 - z moneta, 2 - z moneta i budynkiem                     
+    def __init__(self,srodek,promien,owner_name,gdzie,sila,isFight,rec_width,rec_height): #0 - sam, 1 - z moneta, 2 - z moneta i budynkiem                     
         lock.acquire()
         global ktory_nr_wolny                           #srodek     lewy dolny        prawy dolny (ale musi być mniejszy)    
         global owners_colors
@@ -33,37 +33,45 @@ class Warrior(pygame.sprite.Sprite):
         if owners_colors[owner_name] == 5:
             self.image = pygame.image.load(f"icons/{self.good_path('yellow',sila)}.png").convert_alpha()
         
-        if gdzie==0:
-            jc = 0#jaka czesc 1 - na skraju max, 0 - na srodku
-            dl = promien*jc
-            x = dl/math.tan(math.radians(60))
-            new_srodek = (srodek[0]-x,srodek[1]+dl)
-            dozy_promien = promien/math.cos(math.radians(60))
-            maxwidth = dozy_promien*1.75
-            maxheight = promien*1.75
-            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
-        if gdzie==1:
-            jc = 0.32#jaka czesc 1 - na skraju max, 0 - na srodku
-            dl = promien*jc
-            x = dl/math.tan(math.radians(60))
-            new_srodek = (srodek[0]-x,srodek[1]+dl)
-
-            dozy_promien = promien/math.cos(math.radians(60))
-            maxwidth = 1.35*dozy_promien
-            maxheight = 1.35*promien
-            skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
-        if gdzie==2:
-            jc = 0.36#jaka czesc 1 - na skraju max, 0 - na srodku
-            dl = promien*jc
-            x = dl/math.tan(math.radians(60))
-            new_srodek = (srodek[0]+x,srodek[1]+dl)
-
-            dozy_promien = promien/math.cos(math.radians(60))
-            maxwidth = 1.18*dozy_promien
-            maxheight = 1.18*promien
+        if isFight:
+            maxwidth = rec_width/2
+            maxheight = 0.9*rec_height
             skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
 
+            self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+            self.rect = self.image.get_rect(center = srodek)
+        else:
+            if gdzie==0:
+                jc = 0#jaka czesc 1 - na skraju max, 0 - na srodku
+                dl = promien*jc
+                x = dl/math.tan(math.radians(60))
+                new_srodek = (srodek[0]-x,srodek[1]+dl)
+                dozy_promien = promien/math.cos(math.radians(60))
+                maxwidth = dozy_promien*1.75
+                maxheight = promien*1.75
+                skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+            if gdzie==1:
+                jc = 0.32#jaka czesc 1 - na skraju max, 0 - na srodku
+                dl = promien*jc
+                x = dl/math.tan(math.radians(60))
+                new_srodek = (srodek[0]-x,srodek[1]+dl)
 
-        self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+                dozy_promien = promien/math.cos(math.radians(60))
+                maxwidth = 1.35*dozy_promien
+                maxheight = 1.35*promien
+                skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+            if gdzie==2:
+                jc = 0.36#jaka czesc 1 - na skraju max, 0 - na srodku
+                dl = promien*jc
+                x = dl/math.tan(math.radians(60))
+                new_srodek = (srodek[0]+x,srodek[1]+dl)
 
-        self.rect = self.image.get_rect(center = new_srodek)
+                dozy_promien = promien/math.cos(math.radians(60))
+                maxwidth = 1.18*dozy_promien
+                maxheight = 1.18*promien
+                skala = min(maxheight/self.image.get_height(),maxwidth/self.image.get_width())
+
+
+            self.image = pygame.transform.smoothscale(self.image,(self.image.get_width()*skala,self.image.get_height()*skala))
+
+            self.rect = self.image.get_rect(center = new_srodek)
