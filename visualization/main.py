@@ -149,11 +149,11 @@ def render_board(package,board,screen):
         sr2 = (sr[0]-jaka_czesc*(szerokosc_prosokata/2),sr[1])
 
         if czy_pole_wodne:
-            sprites.add(Ship(sr1,radius,ac,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
-            sprites.add(Ship(sr2,radius,dc,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
+            sprites.add(Ship(sr1,radius,ac.name,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
+            sprites.add(Ship(sr2,radius,dc.name,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
         else:
-            sprites.add(Warrior(sr1,radius,ac,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
-            sprites.add(Warrior(sr2,radius,dc,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
+            sprites.add(Warrior(sr1,radius,ac.name,0,ap,True,szerokosc_prosokata,wysokosc_prostokata))
+            sprites.add(Warrior(sr2,radius,dc.name,0,dp,True,szerokosc_prosokata,wysokosc_prostokata))
 
 
         

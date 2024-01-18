@@ -2,7 +2,7 @@ boardSize = 13
 debug = False
 host = "localhost"
 port = 12345
-move_delay = 0
+move_delay = 0.09
 
 #budynki 0 - plains
 #budynki 1 - uni
