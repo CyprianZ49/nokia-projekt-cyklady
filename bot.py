@@ -28,6 +28,9 @@ class Bot:
         self.isFighting = False
         self.god = None
         self.terminal = False
+        self.skipping = False
+        self.error_count = 0
+
         if prompt is None or prompt in ('t', 'terminal'):
             self.terminal = True
             if platform.system() == 'Windows':
@@ -60,6 +63,15 @@ class Bot:
             move = " ".join(map(str,move))
         print(f'sending to {self.name}:', player, move)
         server.senddata(self.name, f'{player} {move}')
+
+    def increment_errors(self):
+        print(f'Bot {self.name} has made an illegal move.')
+        self.error_count+=1
+        if self.error_count>=3:
+            print("Error count is now 3. Turns will be skipped.")
+            self.skipping = True
+            # if hasattr(self, 'proc'):
+            #     self.proc.kill()
 
     def __del__(self):
         if hasattr(self, 'proc'):
