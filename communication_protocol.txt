@@ -4,23 +4,33 @@ Coordinates:
 (x,y+1) - tile sightly above and to the right of (x,y)
 (x+1,y+1) - tile directly above (x,y)
 
+
+Abbreviations for gods' names:
+Zeus -> ze
+Poseidon -> po
+Ares -> ar
+Athena -> at
+Apollo -> ap
+
+
 Moves are in the following format:
-l <g> <n>   -    bids n coins for god g, where g are the first 2 letters of god's name in lower case e.g. Zeus -> ze.
-p    -    pass(end your turn)
-r <x> <y>    -    recruit a unit on tile (x,y)
-m <x> <y> <n> <x2> <y2>    -    move n units from tile (x,y) to tile (x2, y2)
-b <x> <y>    -    build on tile (x,y)
-0    -    do not retreat from battle
-1 <x> <y>    -    retreat from battle to (x,y)
-x <a> <b>    -    after betting for Apollo gain 1 gold and if you were the first person to bid on him increase the income of tile (a,b).
-<x> <y> (when building metropolis from philosophers) build metropolis on tile (x,y)
+l <g> <n>   -    bid n coins for god g.
+p    -    pass (end your turn).
+r <x> <y>    -    recruit a unit on tile (x,y).
+m <x> <y> (after bidding for Zeus)   -    smite tile (x, y) (remove 1 unit from that tile).
+m <x> <y> <n> <x2> <y2> (after bidding for Poseidon or Ares)    -    move n units from tile (x,y) to tile (x2, y2).
+b <x> <y>    -    build on tile (x,y).
+0    -    do not retreat from battle.
+1 <x> <y>    -    retreat from battle to (x,y).
+x <a> <b>    -    after bidding for Apollo gain 1 gold and if you were the first person to bid on him increase the income of tile (a,b).
+<x> <y> (when building metropolis from philosophers) build metropolis on tile (x,y).
 <x1> <y1> <s1> ... <x5> <y5> <s5> <x> <y> (when building metropolis from buildings) build metropolis on tile (x,y)
 by deleting building in slots s1,s2,...,s5 of corresponding tiles (x1,y1),(x2,y2),...,(x5,y5).
 
 
 Data recieved by a bot is in the following format:
 Each line starts with an integer n.
-If n is not negative the rest of the line is the move made by nth bot e.g. "2 l at 1" - bot 2 bid 1 coint for athena.
+If n is not negative the rest of the line is the move made by nth bot e.g. "2 l at 1" - bot 2 bid 1 coint for Athena.
 If n = -2, then it is the bot's turn to play.
 The rest of the line is a list of legal move separated by | e.g. "-2 1 1 1|0" - you can continue battle or retreat to (1,1).
 If n = -3, then the bot performed an invalid move.
