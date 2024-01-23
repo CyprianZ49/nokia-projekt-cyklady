@@ -260,7 +260,7 @@ def game(board,screen):
 
         screen.fill("light blue")
         render_board(generate_to_wh(screen),board,screen)
-        render_players(generete_wh_players(sreen))
+        # render_players(generete_wh_players(sreen))
             
         pygame.display.flip()
         clock.tick(60)
