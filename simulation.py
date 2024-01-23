@@ -18,6 +18,7 @@ from plansza import Plansza
 from bot import Bot
 import signal
 from legalMoves import *
+import platform
 
 def game(players, visual = True):
     pusty = Bot(-1, prompt='') #coś tu jest jakieś takie niefajne
@@ -162,13 +163,17 @@ def init_bots(files, log):
 def terminate(*args):
     for player in players:
         try:
-            if player.terminal:
-                os.kill(player.proc.pid, signal.SIGTERM)
+            if platform.system() == 'Windows':
+                if player.terminal:
+                    os.kill(player.proc.pid, signal.SIGTERM)
+                else:
+                    os.kill(player.proc.pid, signal.CTRL_C_EVENT)
             else:
-                os.kill(player.proc.pid, signal.CTRL_C_EVENT)
+                os.kill(player.proc.pid, signal.SIGKILL)
         except PermissionError:
             pass
     os.kill(os.getpid(), signal.SIGTERM)
+    
 signal.signal(signal.SIGINT, terminate)
 
 if __name__ == "__main__":
