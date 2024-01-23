@@ -64,7 +64,7 @@ def game(players, visual = True):
             if player.coins==maks:
                 wygraniForReal.append(player)
         if len(wygraniForReal)>0:
-            print("rozgrywka zakonczyla sie!\nUltymatywny Grek:")
+            print("The game has ended!\nThe winner(s) is/are:")
             for player in wygraniForReal:
                 print(f"{player.name}")
             break
@@ -72,7 +72,7 @@ def game(players, visual = True):
 
         
 def turn(players, gods, board):
-    print('produkcja')
+    print('production')
     for kto in players:
         for wys in kto.ownedTiles:
             kto.coins+=board.pola[wys[0]][wys[1]].value
@@ -85,10 +85,10 @@ def turn(players, gods, board):
                 for bud in board.pola[wys[0]][wys[1]].buildings:
                     if bud == 2:
                         kto.actionDiscount+=1
-    print('poczatek licytacji')
+    print('bidding phase begins')
     lic = Licytacja(players)
     licres=lic.perform()
-    print('koniec licytacji')
+    print('bidding phase ends')
     print(licres)
     order=[]
     p_to_god={}
@@ -103,7 +103,7 @@ def turn(players, gods, board):
                 order.append(players[p[1]])
                 players[p[1]].coins-=max(p[0]-players[p[1]].priests, 1)
 
-    print('poczatek akcji')
+    print('action phase begins')
     name_to_f = {'r':'rekrutuj','b':'buduj','m':'ruch'}
     for player in order:
         board.turn = player
@@ -152,7 +152,7 @@ def turn(players, gods, board):
             if move not in legal:
                 raise InvalidMoveError
         print(f'gracz {player.name} pasuje')
-    print('koniec tury')
+    print('turn ends')
     reset(*gods.values())
     order.reverse()
     return order
