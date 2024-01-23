@@ -221,14 +221,15 @@ def render_board(package,board,screen):
 
 def generate_to_wh(screen):
     width,height = screen.get_width(),screen.get_height()
-    drawing_width,drawing_height = width*0.9,height*0.9
+    procent_ekranu_na_plansze = 0.9
+    drawing_width,drawing_height = width*procent_ekranu_na_plansze,height*procent_ekranu_na_plansze
     delta_width,delta_height = width-drawing_width,height-drawing_height
-    dozy_promien = 1/math.cos(math.radians(60))
+    dozy_promien = 1/math.sin(math.radians(60))
     ile_w_gore = 21
     ile_w_dol = 1
     ile_w_lewo = 8*dozy_promien
     ile_w_prawo = 8*dozy_promien
-    pr = min(drawing_height/22,drawing_width/(16*dozy_promien))
+    pr = min(drawing_height/22,drawing_width*math.sin(math.radians(60))/(17))
 
     y = height/2+10*pr
     x = width/2
@@ -239,6 +240,8 @@ def generete_wh_players(screen):
     drawing_width,drawing_height = width*0.9,height*0.9
 
     return drawing_width,drawing_height
+
+# def render_players
 
 
 def game(board,screen):
@@ -260,7 +263,7 @@ def game(board,screen):
 
         screen.fill("light blue")
         render_board(generate_to_wh(screen),board,screen)
-        # render_players(generete_wh_players(sreen))
+        # render_players(screen)
             
         pygame.display.flip()
         clock.tick(60)
