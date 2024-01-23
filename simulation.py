@@ -30,6 +30,7 @@ def game(players, visual = True):
     random.shuffle(players)
     print(players)
     order = [player.name for player in players]
+
     for player in players:
         player.send_move(-1, player.name) #który gracz
         player.send_move(-1,order) #kolejność
@@ -106,12 +107,22 @@ def turn(players, gods, board):
     for player in order:
         board.turn = player
         legal = getLegalMoves(board, player, gods)
-        action = player.get_move()
+        if player.skipping:
+            action = ["p"]
+        else:
+            action = player.get_move()
         move =  " ".join(action)
         print(move)
         print(legal)
-        if move not in legal:
-            raise InvalidMoveError
+        while move not in legal:
+            player.increment_errors()
+            player.send_move(-3, "InvalidMoveError")
+            if player.skipping:
+                action = ["p"]
+            else:
+                action = player.get_move()
+            move =  " ".join(action)
+            
         while action[0]!='p':
             god = p_to_god[player]
             try:
@@ -121,6 +132,7 @@ def turn(players, gods, board):
                     f=name_to_f[action[0]]
                     getattr(god, f)(player,*map(int, action[1:]))
             except Exception as e:
+                player.increment_errors()
                 player.send_move(-3, type(e).__name__)
                 print(god, move, player.god)
                 # print_exception(e)
@@ -129,7 +141,10 @@ def turn(players, gods, board):
                 player.send_move(-5, "ok")
             Metropolizacja(board, player)
             legal = getLegalMoves(board, player, gods)
-            action = player.get_move()
+            if player.skipping:
+                action = ["p"]
+            else:
+                action = player.get_move()
             move =  " ".join(action)
             print(move)
             print(legal)

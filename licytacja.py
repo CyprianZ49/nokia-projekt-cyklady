@@ -1,26 +1,34 @@
 class InvalidMoveError(Exception):
     pass
 
-
 class Licytacja:
     def __init__(self, bots):
         self.bots=bots
         self.bids={'ze':(0,-1),'ar':(0,-1),'po':(0,-1),'at':(0,-1),'ap':[]}
         self.last_god='ze'
-        self.outbet = False
+        self.outbid = False
         
     def get_bid(self, bot):
         legal_moves = self.get_legal_moves(bot)
         bot.send_move(-2, "|".join(legal_moves))
-        l = bot.get_move()
-        if " ".join(l) not in legal_moves:
-            bot.send_move(-1, "Invalid_move")
-            raise InvalidMoveError
+        if bot.skipping:
+            l = ["l", "ap", "1"]
+        else:
+            l = bot.get_move()
+        while " ".join(l) not in legal_moves:
+            bot.send_move(-3, "InvalidMoveError")
+            bot.increment_errors()
+            if bot.skipping:
+                l = ["l", "ap", "1"]
+            else:
+                l = bot.get_move()
+
         op,god,value=l
         try:
             value = int(value)
         except ValueError as e:
-            bot.send_move(-1, "Invalid_move")
+            bot.send_move(-3, "InvalidMoveError")
+            bot.increment_errors()
             raise InvalidMoveError.with_traceback(e)
         print(op,god,value)
         self.last_god = god
@@ -35,13 +43,13 @@ class Licytacja:
         else:
             if self.bids[god][1]!=-1:
                 outb=self.bids[god][1]
-                self.outbet = True
+                self.outbid = True
                 self.bids[god]=(value,i)
                 _,ngod,nvalue=self.get_bid(self.bots[outb])
                 self.do_bid(outb,_,ngod,nvalue)
             else:
                 self.bids[god]=(value,i)
-        self.outbet = False
+        self.outbid = False
 
     def perform(self):
         for i,bot in enumerate(self.bots):
@@ -55,7 +63,7 @@ class Licytacja:
         for g,min_v in min_values.items():
             for v in range(min_v, bot.coins+bot.priests+1):
                 legal_moves.append(f'l {g} {v}')
-        if not self.outbet:
+        if not self.outbid:
             min_v=self.bids[self.last_god][0]+1
             for v in range(min_v, bot.coins+bot.priests+1):
                 legal_moves.append(f'l {self.last_god} {v}')

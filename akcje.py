@@ -28,7 +28,14 @@ class InvalidMoveError(Exception):
 
 #nie wytestowane rzeczy: bitwy lądowa i morska, ruchy lądowy i morski, rekrutacja tylko częściowo
 
+def get_battle_move(bot):
+    if bot.skipping:
+        return ["0"]
+    return bot.get_move()
+
 def Metropolizacja(plansza, kto):
+    if kto.skipping:
+        return
     k=0
     for i in range(1, 5):
         for tile in kto.ownedTiles:
@@ -114,7 +121,7 @@ def bitwaMorska(plansza, x, y, kto, ile):
     plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
     legal = getLegalMoves(plansza, other)
-    move = other.get_move()
+    move = get_battle_move(other)
     odp1 = list(map(int, move))
     if " ".join(move) not in legal:
         raise InvalidMoveError
@@ -132,7 +139,7 @@ def bitwaMorska(plansza, x, y, kto, ile):
         plansza.mayReatreat = kto
         kto.send_move(-1, f"czy wycofujesz z {x, y}")
         legal = getLegalMoves(plansza, kto)
-        move = kto.get_move()
+        move = get_battle_move(kto)
         odp2 = list(map(int, move))
         if " ".join(move) not in legal:
             raise InvalidMoveError
@@ -182,7 +189,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     plansza.mayReatreat = other
     other.send_move(-1, f"czy wycofujesz z {x, y}")
     legal = getLegalMoves(plansza, other)
-    move = other.get_move()
+    move = get_battle_move(other)
     odp1 = list(map(int, move))
     if " ".join(move) not in legal:
         raise InvalidMoveError
@@ -200,7 +207,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
         plansza.mayReatreat = kto
         kto.send_move(-1, f"czy wycofujesz z {x, y}")
         legal = getLegalMoves(plansza, kto)
-        move = kto.get_move()
+        move = get_battle_move(kto)
         odp2 = list(map(int, move))
         if " ".join(move) not in legal:
             raise InvalidMoveError
