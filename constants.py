@@ -3,6 +3,7 @@ debug = False
 host = "localhost"
 port = 12345
 move_delay = 0.09
+timeout = 1
 
 #budynki 0 - plains
 #budynki 1 - uni

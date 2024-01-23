@@ -2,7 +2,7 @@
 import shlex
 from typing import Any
 from server import Server
-from constants import host, port, move_delay
+from constants import host, port, move_delay, timeout
 from typing import Iterable
 import time
 import platform
@@ -46,11 +46,18 @@ class Bot:
         return self.name==other.name
     def __ne__(self, other):
         return self.name!=other.name
+    
     def get_move(self):
         time.sleep(move_delay)
         print(f'ruch {self.name}')
+
+        time_until = time.time()+timeout
         while not server.data[self.name]:
-            pass
+            if not self.terminal and time.time()>time_until: #human players do not have a time limit
+                self.skipping = True
+                print(f'Bot {self.name} has exceeded the time limit.')
+                return ["invalid"] #trick to make things work
+
         ret=server.data[self.name].pop(0).split()
         print(f"ruch to {ret}")
         return ret
@@ -65,6 +72,8 @@ class Bot:
         server.senddata(self.name, f'{player} {move}')
 
     def increment_errors(self):
+        if self.skipping:
+            return
         print(f'Bot {self.name} has made an illegal move.')
         self.error_count+=1
         if self.error_count>=3:
