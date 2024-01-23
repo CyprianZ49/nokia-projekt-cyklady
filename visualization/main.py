@@ -235,16 +235,57 @@ def generate_to_wh(screen):
     x = width/2
     return ((x,y),pr)
 
-def generete_wh_players(screen):
+def generete_w_players(screen):
     width,height = screen.get_width(),screen.get_height()
-    drawing_width,drawing_height = width*0.9,height*0.9
+    procent_ekranu_na_plansze = 0.9
+    drawing_width,drawing_height = width*procent_ekranu_na_plansze,height*procent_ekranu_na_plansze
+    delta_width,delta_height = width-drawing_width,height-drawing_height
+    dozy_promien = 1/math.sin(math.radians(60))
+    ile_w_gore = 21
+    ile_w_dol = 1
+    ile_w_lewo = 8*dozy_promien
+    ile_w_prawo = 8*dozy_promien
+    pr = min(drawing_height/22,drawing_width*math.sin(math.radians(60))/(17))
 
-    return drawing_width,drawing_height
-
-# def render_players
+    res=pr*dozy_promien*17
 
 
-def game(board,screen):
+    return (width-res)/2
+
+def render_gracz(ld,pg,screen,bot_name):#ld - lewy dolny punkt pola, pg - prawy górny rog pola (x,y)
+    pygame.draw.polygon(screen,"black",[
+        ld,
+        (pg[0],ld[1]),
+        pg,
+        (ld[0],pg[1])
+    ],3)
+
+def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[Bot]):
+    odl_miedzy_polami_graczy = (0.15*wysokosc_prostokata)/4
+    odl_miedzy_bokami = 0.075*szerekosc_prostokata
+    wysokosc_pola_gracza = (wysokosc_prostokata-4*odl_miedzy_polami_graczy)/3
+    szerokosc_pola_gracza = szerekosc_prostokata-2*odl_miedzy_bokami
+
+    liczba_graczy = len(players)
+    ld = [odl_miedzy_bokami,odl_miedzy_polami_graczy+wysokosc_pola_gracza]
+    pg = [szerekosc_prostokata-odl_miedzy_bokami,odl_miedzy_polami_graczy]
+    for i in range(3):
+        render_gracz(ld.copy(),pg.copy(),screen,"xd")
+        ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
+        pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
+
+    ld = [screen.get_width()-odl_miedzy_bokami,odl_miedzy_polami_graczy+wysokosc_pola_gracza]
+    pg = [screen.get_width()-(szerekosc_prostokata-odl_miedzy_bokami),odl_miedzy_polami_graczy]
+
+    for i in range(3):
+        render_gracz(ld.copy(),pg.copy(),screen,"xd")
+        ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
+        pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
+
+
+
+
+def game(board,screen,players):
     running = 1
     ile = 0
     while running:
@@ -263,7 +304,7 @@ def game(board,screen):
 
         screen.fill("light blue")
         render_board(generate_to_wh(screen),board,screen)
-        # render_players(screen)
+        render_players(generete_w_players(screen),screen.get_height(),screen,players)
             
         pygame.display.flip()
         clock.tick(60)
@@ -278,7 +319,7 @@ def game(board,screen):
 #                 if board.pola[x][y].isMetropolis:
 #                     board.pola[x][y].buildings.append(5)
 
-def start_visualization(board):
+def start_visualization(board,players):
     global clock
     pygame.init()
     # pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS,3)
@@ -287,4 +328,4 @@ def start_visualization(board):
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/ikona.ico') 
     pygame.display.set_icon(icon)
-    game(board,screen)
+    game(board,screen,players)

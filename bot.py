@@ -13,7 +13,7 @@ if platform.system() == 'Windows':
 server = Server(host, port)
 
 class Bot:
-    def __init__(self, name, prompt=None, log=False):
+    def __init__(self, name:int, prompt=None, log=False):
 
         self.name=name
         self.coins= 0
