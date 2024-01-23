@@ -3,10 +3,11 @@ from constants import host, port
 from threading import Thread
 import shlex
 from sys import argv
-from subprocess import Popen,PIPE
+import subprocess
 import pathlib
 import signal
 import os
+import platform
 
 def terminate(*args):
     proc.terminate()
@@ -22,7 +23,13 @@ if file_extension == '.py':
 else:
     prompt = file
 
-proc = Popen(shlex.split(prompt), stdin=PIPE, stdout=PIPE, bufsize=0)
+
+if platform.system() == 'Windows':
+    proc = subprocess.Popen(shlex.split(prompt), stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, bufsize=0, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+else:
+    proc = subprocess.Popen(shlex.split(prompt), stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, bufsize=0, start_new_session=True)
 
 def handle_data(s):
     while True:
