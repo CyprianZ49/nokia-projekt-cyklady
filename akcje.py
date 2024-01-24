@@ -118,6 +118,8 @@ def seaBattle(plansza, x, y, kto, ile):
             plansza.pola[x][y].strength = ile
         if plansza.pola[x][y].strength == 0:
             plansza.changeOwnership(x, y, plansza.pusty)
+        kto.send_move(-9, "over")
+        other.send_move(-9, "over")
         return
 
     plansza.mayReatreat = other
@@ -137,6 +139,8 @@ def seaBattle(plansza, x, y, kto, ile):
         plansza.pola[odp1[1]][odp1[2]].strength+=plansza.pola[x][y].strength
         plansza.changeOwnership(x, y, kto)
         plansza.pola[x][y].strength=ile
+        kto.send_move(-9, "over")
+        other.send_move(-9, "over")
     else:
         plansza.mayReatreat = kto
         kto.send_move(-11, "retreat?")
@@ -153,6 +157,8 @@ def seaBattle(plansza, x, y, kto, ile):
                 raise InvalidMove
             plansza.changeOwnership(odp2[1], odp2[2], kto)
             plansza.pola[odp2[1]][odp2[2]].strength+=ile
+            kto.send_move(-9, "over")
+            other.send_move(-9, "over")
         else:
             seaBattle(plansza, x, y, kto, ile)
 
@@ -190,6 +196,8 @@ def islandBattle(plansza, x, y, kto, ile):
         if ile > 0:
             plansza.changeOwnership(x, y, kto)
             plansza.pola[x][y].strength = ile
+        kto.send_move(-9, "over")
+        other.send_move(-9, "over")
         return
     
     plansza.mayReatreat = other
@@ -209,6 +217,8 @@ def islandBattle(plansza, x, y, kto, ile):
         plansza.pola[odp1[1]][odp1[2]].strength+=plansza.pola[x][y].strength
         plansza.changeOwnership(x, y, kto)
         plansza.pola[x][y].strength=ile
+        kto.send_move(-9, "over")
+        other.send_move(-9, "over")
     else:
         plansza.mayReatreat = kto
         kto.send_move(-11, "retreat?")
@@ -225,6 +235,8 @@ def islandBattle(plansza, x, y, kto, ile):
                 raise InvalidMove
             plansza.changeOwnership(odp2[1], odp2[2], kto)
             plansza.pola[odp2[1]][odp2[2]].strength+=ile
+            kto.send_move(-9, "over")
+            other.send_move(-9, "over")
         else:
             islandBattle(plansza, x, y, kto, ile)
 

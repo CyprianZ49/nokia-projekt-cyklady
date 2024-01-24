@@ -39,7 +39,7 @@ If n = -5, then the last move performed was legal, the rest of the line is "ok".
 If n = -7, then you have to build a metropolis.
 The rest of the line is either "buildings" (if you had 4 distinct building types) or "philosophers" (if you had 4 philosophers).
 If n = -8, then the bot is entering battle. The rest of the line is either "defending (x,y)" or "attacking (x,y)" where (x,y) are the coordinates of the battle.
-If n = -9 then the bot is exiting battle. the rest of the line is either "won" or "lost".
+If n = -9 then the bot is exiting battle. the rest of the line is "over"
 If n = -10 then the bot receives info about which side lost a troop in battle. The rest of the line is either "friendly" or "enemy".
 If n = -11 then the bot is asked to make a choice whether to retreat from battle the rest of the line is "retreat?"
 
