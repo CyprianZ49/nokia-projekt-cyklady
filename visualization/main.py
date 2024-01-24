@@ -259,6 +259,12 @@ def render_gracz(ld,pg,screen,bot_name):#ld - lewy dolny punkt pola, pg - prawy 
         pg,
         (ld[0],pg[1])
     ],3)
+    font = pygame.font.Font(None, 36)
+    text = str(bot_name)
+    text_surface = font.render(text, True, (0,0,255))
+    text_rect = text_surface.get_rect()
+    text_rect.midtop=((ld[0]+pg[0])/2,pg[1])
+    screen.blit(text_surface,text_rect)
 
 def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[Bot]):
     odl_miedzy_polami_graczy = (0.15*wysokosc_prostokata)/4
@@ -269,8 +275,8 @@ def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[
     liczba_graczy = len(players)
     ld = [odl_miedzy_bokami,odl_miedzy_polami_graczy+wysokosc_pola_gracza]
     pg = [szerekosc_prostokata-odl_miedzy_bokami,odl_miedzy_polami_graczy]
-    for i in range(3):
-        render_gracz(ld.copy(),pg.copy(),screen,"xd")
+    for i in range(min(3,liczba_graczy)):
+        render_gracz(ld.copy(),pg.copy(),screen,players[i])
         ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
         pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
 
@@ -278,7 +284,7 @@ def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[
     pg = [screen.get_width()-(szerekosc_prostokata-odl_miedzy_bokami),odl_miedzy_polami_graczy]
 
     for i in range(3):
-        render_gracz(ld.copy(),pg.copy(),screen,"xd")
+        render_gracz(ld.copy(),pg.copy(),screen,"Imię dla niepoznaki")
         ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
         pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
 
