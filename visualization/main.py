@@ -1,11 +1,14 @@
 from typing import Any
 import pygame
+import tkinter as tk
+
+
+
 import math
 import random
 import plansza
 from bot import Bot
 import sys
-import tkinter as tk
 # from OpenGL.GL import *
 from pygame.locals import *
 # from OpenGL.GLU import *
@@ -88,7 +91,7 @@ def render_board(package,board,screen):
         if value>0:
             if (x,y) not in ktory_wyglad_monety:
                 ktory_wyglad_monety[(x,y)]=random.randint(1,2)
-            sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)],value))
+            sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)],value,"plansza"))
         
         # print(czy_solo_stolica,value,sila)
         if czy_solo_stolica:
@@ -166,7 +169,7 @@ def render_board(package,board,screen):
             if board.pola[x][y].value>0:
                 if (x,y) not in ktory_wyglad_monety:
                     ktory_wyglad_monety[(x,y)]=random.randint(1,2)
-                sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)],board.pola[x][y].value))
+                sprites.add(Coin(centre,radius,ktory_wyglad_monety[(x,y)],board.pola[x][y].value,"plansza"))
 
         if isinstance(board.pola[x][y],plansza.Capital):
             draw_hexagon(centre,radius,"gold",screen)
@@ -252,19 +255,44 @@ def generete_w_players(screen):
 
     return (width-res)/2
 
-def render_gracz(ld,pg,screen,bot_name):#ld - lewy dolny punkt pola, pg - prawy górny rog pola (x,y)
+
+def render_column_of_coins(ld,pg,ilosc_monet,screen):
+    width,height = pg[0]-ld[0],ld[1]-pg[1]
+    # print(pg,ld)
+    wielkosc_monety = min(0.95*height,width/10)
+    centre = [ld[0]+wielkosc_monety/2,(pg[1]+ld[1])/2]
+    for _ in range(ilosc_monet):
+        sprites.add(Coin(centre,wielkosc_monety,1,0,"gracze"))
+        centre[0]+=wielkosc_monety
+
+
+def render_coins(ld,pg,ilosc_monet,screen):
+    if ilosc_monet <= 10:
+        # print(ilosc_monet)
+        # print((ld[0],(ld[1]+pg[1])/2),pg)
+        render_column_of_coins((ld[0],(ld[1]+pg[1])/2),pg,ilosc_monet,screen)
+    else:
+        render_column_of_coins((ld[0],(ld[1]+pg[1])/2),pg,10,screen)
+        render_column_of_coins(ld,(pg[0],(ld[1]+pg[1])/2),ilosc_monet-10,screen)
+
+def render_gracz(ld,pg,screen,bot_name,ilosc_monet):#ld - lewy dolny punkt pola, pg - prawy górny rog pola (x,y)
+    width,height = pg[0]-ld[0],ld[1]-pg[1]
+
     pygame.draw.polygon(screen,"black",[
         ld,
         (pg[0],ld[1]),
         pg,
         (ld[0],pg[1])
     ],3)
-    font = pygame.font.Font(None, 36)
+    # print(int(height/3))
+    font = pygame.font.Font(None, int(height/6))
     text = str(bot_name)
     text_surface = font.render(text, True, (0,0,255))
     text_rect = text_surface.get_rect()
     text_rect.midtop=((ld[0]+pg[0])/2,pg[1])
     screen.blit(text_surface,text_rect)
+
+    render_coins((ld[0],pg[1]+height/2),(pg[0],pg[1]+height/6),ilosc_monet,screen)
 
 def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[Bot]):
     odl_miedzy_polami_graczy = (0.15*wysokosc_prostokata)/4
@@ -275,18 +303,20 @@ def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[
     liczba_graczy = len(players)
     ld = [odl_miedzy_bokami,odl_miedzy_polami_graczy+wysokosc_pola_gracza]
     pg = [szerekosc_prostokata-odl_miedzy_bokami,odl_miedzy_polami_graczy]
-    for i in range(min(3,liczba_graczy)):
-        render_gracz(ld.copy(),pg.copy(),screen,players[i])
+    for i in range(liczba_graczy):
+        render_gracz(ld.copy(),pg.copy(),screen,players[i].name,players[i].coins)
         ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
         pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
 
-    ld = [screen.get_width()-odl_miedzy_bokami,odl_miedzy_polami_graczy+wysokosc_pola_gracza]
-    pg = [screen.get_width()-(szerekosc_prostokata-odl_miedzy_bokami),odl_miedzy_polami_graczy]
+    ld = [screen.get_width()-(szerekosc_prostokata-odl_miedzy_bokami),odl_miedzy_polami_graczy+wysokosc_pola_gracza]
+    pg = [screen.get_width()-odl_miedzy_bokami,odl_miedzy_polami_graczy]
 
-    for i in range(3):
-        render_gracz(ld.copy(),pg.copy(),screen,"Imię dla niepoznaki")
+    for i in range(liczba_graczy-3):
+        render_gracz(ld.copy(),pg.copy(),screen,players[3+i].name,players[i].coins)
         ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
         pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
+    
+    sprites.draw(screen)
 
 
 
@@ -311,6 +341,8 @@ def game(board,screen,players):
         screen.fill("light blue")
         render_board(generate_to_wh(screen),board,screen)
         render_players(generete_w_players(screen),screen.get_height(),screen,players)
+        for warrior in sprites:
+            warrior.kill()
             
         pygame.display.flip()
         clock.tick(60)
@@ -326,10 +358,10 @@ def game(board,screen,players):
 #                     board.pola[x][y].buildings.append(5)
 
 def start_visualization(board,players):
-    global clock
     pygame.init()
-    # pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS,3)
+    global clock
     screen = pygame.display.set_mode((tk.Tk().winfo_screenwidth(),tk.Tk().winfo_screenheight()-65),pygame.RESIZABLE)
+    # pygame.display.gl_set_attribute(pygame.GL_MULTISAMPLEBUFFERS,3)
     pygame.display.set_caption("Cyklades")
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/ikona.ico') 
