@@ -83,9 +83,9 @@ def Metropolizacja(plansza, kto):
 def seaBattle(plansza, x, y, kto, ile):
     plansza.attackerPower = ile
     plansza.defenderPower = plansza.pola[x][y].strength
-    kto.send_move(-8, f"attacking {x},{y}")
+    kto.send_move(-8, f"attacking {x} {y}")
     other=plansza.pola[x][y].owner
-    other.send_move(-8, f"defending {x},{y}")
+    other.send_move(-8, f"defending {x} {y}")
     plansza.attackerColor = kto
     plansza.defenderColor = other
     sila=plansza.pola[x][y].strength
@@ -165,9 +165,9 @@ def seaBattle(plansza, x, y, kto, ile):
 def islandBattle(plansza, x, y, kto, ile):
     plansza.attackerPower = ile
     plansza.defenderPower = plansza.pola[x][y].strength
-    kto.send_move(-8, f"attacking {x},{y}")
+    kto.send_move(-8, f"attacking {x} {y}")
     other=plansza.pola[x][y].owner
-    other.send_move(-8, f"defending {x},{y}")
+    other.send_move(-8, f"defending {x} {y}")
     sila=plansza.pola[x][y].strength
     plansza.attackerColor = kto
     plansza.defenderColor = other
