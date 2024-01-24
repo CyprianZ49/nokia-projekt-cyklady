@@ -26,7 +26,7 @@ class CannotBeSmitten(Exception):
 class InvalidMoveError(Exception):
     pass
 
-#nie wytestowane rzeczy: bitwy lądowa i morska, ruchy lądowy i morski, rekrutacja tylko częściowo
+#for anyone reading the code: kto means who in polish and is used to refer to the player performing an action
 
 def get_battle_move(bot):
     if bot.skipping:
@@ -80,12 +80,12 @@ def Metropolizacja(plansza, kto):
         kto.philosophers-=4
         kto.isBuildingMetropolis = False
 
-def bitwaMorska(plansza, x, y, kto, ile):
+def seaBattle(plansza, x, y, kto, ile):
     plansza.attackerPower = ile
     plansza.defenderPower = plansza.pola[x][y].strength
-    kto.send_move(-1, f"atakujesz {x}, {y}")
+    kto.send_move(-8, f"attacking {x},{y}")
     other=plansza.pola[x][y].owner
-    other.send_move(-1, f"atakujom cie {x}, {y}")
+    other.send_move(-8, f"defending {x},{y}")
     plansza.attackerColor = kto
     plansza.defenderColor = other
     sila=plansza.pola[x][y].strength
@@ -103,11 +103,13 @@ def bitwaMorska(plansza, x, y, kto, ile):
     k2=konwersja[k2]
 
     if ile+k1 >= sila+k2:
-        other.send_move(-1, f"straciles solidera")
+        other.send_move(-10, "friendly")
+        kto.send_move(-10, "enemy")
         plansza.pola[x][y].strength-=1
                 
     if ile+k1 <= sila+k2:
-        kto.send_move(-1, "straciles solidera")
+        kto.send_move(-10, "friendly")
+        other.send_move(-10, "enemy")
         ile-=1
 
     if ile==0 or plansza.pola[x][y].strength == 0:
@@ -119,7 +121,7 @@ def bitwaMorska(plansza, x, y, kto, ile):
         return
 
     plansza.mayReatreat = other
-    other.send_move(-1, f"czy wycofujesz z {x, y}")
+    other.send_move(-11, "retreat?")
     legal = getLegalMoves(plansza, other)
     move = get_battle_move(other)
     odp1 = list(map(int, move))
@@ -137,7 +139,7 @@ def bitwaMorska(plansza, x, y, kto, ile):
         plansza.pola[x][y].strength=ile
     else:
         plansza.mayReatreat = kto
-        kto.send_move(-1, f"czy wycofujesz z {x, y}")
+        kto.send_move(-11, "retreat?")
         legal = getLegalMoves(plansza, kto)
         move = get_battle_move(kto)
         odp2 = list(map(int, move))
@@ -152,12 +154,14 @@ def bitwaMorska(plansza, x, y, kto, ile):
             plansza.changeOwnership(odp2[1], odp2[2], kto)
             plansza.pola[odp2[1]][odp2[2]].strength+=ile
         else:
-            bitwaMorska(plansza, x, y, kto, ile)
+            seaBattle(plansza, x, y, kto, ile)
 
-def bitwaWyspowa(plansza, x, y, kto, ile):
+def islandBattle(plansza, x, y, kto, ile):
     plansza.attackerPower = ile
     plansza.defenderPower = plansza.pola[x][y].strength
+    kto.send_move(-8, f"attacking {x},{y}")
     other=plansza.pola[x][y].owner
+    other.send_move(-8, f"defending {x},{y}")
     sila=plansza.pola[x][y].strength
     plansza.attackerColor = kto
     plansza.defenderColor = other
@@ -173,11 +177,13 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
     k2=konwersja[k2]
 
     if ile+k1 >= sila+k2:
-        other.send_move(-1, f"straciles solidera")
+        other.send_move(-10, "friendly")
+        kto.send_move(-10, "enemy")
         plansza.pola[x][y].strength-=1
                 
     if ile+k1 <= sila+k2:
-        kto.send_move(-1, "straciles solidera")
+        kto.send_move(-10, "friendly")
+        other.send_move(-10, "enemy")
         ile-=1
 
     if ile==0 or plansza.pola[x][y].strength == 0:
@@ -187,7 +193,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
         return
     
     plansza.mayReatreat = other
-    other.send_move(-1, f"czy wycofujesz z {x, y}")
+    other.send_move(-11, "retreat?")
     legal = getLegalMoves(plansza, other)
     move = get_battle_move(other)
     odp1 = list(map(int, move))
@@ -205,7 +211,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
         plansza.pola[x][y].strength=ile
     else:
         plansza.mayReatreat = kto
-        kto.send_move(-1, f"czy wycofujesz z {x, y}")
+        kto.send_move(-11, "retreat?")
         legal = getLegalMoves(plansza, kto)
         move = get_battle_move(kto)
         odp2 = list(map(int, move))
@@ -220,7 +226,7 @@ def bitwaWyspowa(plansza, x, y, kto, ile):
             plansza.changeOwnership(odp2[1], odp2[2], kto)
             plansza.pola[odp2[1]][odp2[2]].strength+=ile
         else:
-            bitwaWyspowa(plansza, x, y, kto, ile)
+            islandBattle(plansza, x, y, kto, ile)
 
 class Ares:
     def __init__(self, plansza):
@@ -275,7 +281,7 @@ class Ares:
             self.plansza.pola[x][y].fighting = True
             self.plansza.pola[x1][y1].fighting = True
             self.plansza.isBridge(x, y, kto, x1, y1, True)
-            bitwaWyspowa(self.plansza, x1, y1, kto, ile)
+            islandBattle(self.plansza, x1, y1, kto, ile)
             self.plansza.isBridge(x, y, kto, x1, y1, True)
             self.plansza.pola[x][y].fighting = False
             self.plansza.pola[x1][y1].fighting = False
@@ -379,7 +385,7 @@ class Poseidon:
             self.plansza.whereFight = (x1, y1)
             self.plansza.pola[x][y].fighting = True
             self.plansza.pola[x1][y1].fighting = True
-            bitwaMorska(self.plansza, x1, y1, kto, ile)
+            seaBattle(self.plansza, x1, y1, kto, ile)
             self.plansza.pola[x][y].fighting = False
             self.plansza.pola[x1][y1].fighting = False
             self.plansza.isFight = False

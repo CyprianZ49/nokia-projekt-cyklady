@@ -18,7 +18,7 @@ l <g> <n>   -    bid n coins for god g.
 p    -    pass (end your turn).
 r <x> <y>    -    recruit a unit on tile (x,y).
 m <x> <y> (after bidding for Zeus)   -    smite tile (x, y) (remove 1 unit from that tile).
-m <x> <y> <n> <x2> <y2> (after bidding for Poseidon or Ares)    -    move n units from tile (x,y) to tile (x2, y2).
+m <x> <y> <n> <x2> <y2> (after bidding for Poseidon or Ares)    -    move n units from tile (x,y) to tile (x2,y2).
 b <x> <y>    -    build on tile (x,y).
 0    -    do not retreat from battle.
 1 <x> <y>    -    retreat from battle to (x,y).
@@ -38,6 +38,10 @@ The rest of the line is the name of python exception caused by this move (curren
 If n = -5, then the last move performed was legal, the rest of the line is "ok".
 If n = -7, then you have to build a metropolis.
 The rest of the line is either "buildings" (if you had 4 distinct building types) or "philosophers" (if you had 4 philosophers).
+If n = -8, then the bot is entering battle. The rest of the line is either "defending (x,y)" or "attacking (x,y)" where (x,y) are the coordinates of the battle.
+If n = -9 then the bot is exiting battle. the rest of the line is either "won" or "lost".
+If n = -10 then the bot receives info about which side lost a troop in battle. The rest of the line is either "friendly" or "enemy".
+If n = -11 then the bot is asked to make a choice whether to retreat from battle the rest of the line is "retreat?"
 
 All data shall be read from stdin and all moves shall be printed to stdout. 
 Remember to flush the output buffer after printing each move!
