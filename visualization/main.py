@@ -312,7 +312,7 @@ def render_players(szerekosc_prostokata,wysokosc_prostokata,screen,players:list[
     pg = [screen.get_width()-odl_miedzy_bokami,odl_miedzy_polami_graczy]
 
     for i in range(liczba_graczy-3):
-        render_gracz(ld.copy(),pg.copy(),screen,players[3+i].name,players[i].coins)
+        render_gracz(ld.copy(),pg.copy(),screen,players[3+i].name,players[3+i].coins)
         ld[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
         pg[1]+=odl_miedzy_polami_graczy+wysokosc_pola_gracza
     

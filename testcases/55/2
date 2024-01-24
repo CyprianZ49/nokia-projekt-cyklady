@@ -1,0 +1,119 @@
+l ze 2
+r
+ p
+l ze 3
+ p
+l po 1
+m 9 9 1 8 9
+r 10 10
+ p
+l at 3
+ p
+l ap 1
+x 9 10
+ p
+l at 6
+r
+ p
+l ze 2
+ p
+l ar 2
+b 3 3 2
+ p
+ l po 1
+r 2 3
+r 10 11
+ p
+l ap 1
+ p
+l ze 5
+r
+ p
+ l ze 4
+r
+ p
+l ar 4
+ p
+l ze 3
+b 9 10 0
+r
+ p
+l ap 1
+ p
+l at 2
+l ar 8
+m 9 10 1 8 8
+ p
+l at 2
+b 8 8 1
+r
+ p
+l ar 4
+l at 6
+ p
+l ar 3
+l at 6
+ p
+l at 1
+l po 3
+r 4 4
+m 4 4 1 5 5
+m 5 5 1 4 4
+m 4 4 1 4 3
+ p
+l at 6
+ p
+l at 4
+l po 4
+m 4 3 1 4 2
+r 3 1
+ p
+l po 4
+r 3 1
+m 10 11 1 10 10
+m 10 10 1 10 9
+ p
+l at 5
+ p
+l po 4
+l ar 5
+l ze 4
+r
+ p
+l ap 1
+ p
+l po 2
+l at 7
+r
+ p
+l ar 2
+l ze 6
+r
+ p
+l ze 5
+ p
+l at 4
+ p
+l ar 7
+l po 7
+r 2 1
+ p
+l ar 5
+r 3 3
+ p
+l ar 5
+r 3 3
+ p
+l ar 6
+r 3 3
+ p
+l ze 3
+r
+ p
+l at 3
+ p
+l ar 6
+ p
+l po 3
+r 1 1
+ p

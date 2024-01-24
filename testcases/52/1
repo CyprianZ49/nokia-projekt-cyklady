@@ -1,0 +1,106 @@
+ l ar 1
+ p
+l at 3
+r
+ p
+l at 1
+ p
+l po 1
+r 4 4
+r 3 1
+m 9 9 1 8 9
+m 8 9 1 9 9
+m 9 9 1 10 9
+ p
+l ap 1
+ p
+l ar 4
+r 3 3
+ p
+l ar 2
+r 9 10
+ p
+l ar 2
+r 3 3
+ p
+ l ze 1
+ p
+l po 2
+m 4 4 1 3 4
+ p
+l ze 2
+ p
+l ap 1
+x 3 3
+ p
+l ar 2
+b 3 3 0
+m 3 3 1 2 4
+r 9 10
+ p
+l ap 1
+ p
+l ze 1
+l po 3
+r 1 6
+m 10 9 1 10 10
+ p
+l ap 1
+ p
+l ze 2
+b 2 4 2
+b 2 4 0
+r
+ p
+l po 3
+r 2 5
+m 1 1 1 1 2
+m 10 10 1 11 10
+m 3 1 1 3 1
+m 3 1 1 4 2
+ p
+ l ar 1
+r 9 10
+m 3 3 1 5 3
+ p
+l ze 4
+l at 3
+ p
+l ap 1
+ p
+l ap 1
+ p
+l ze 4
+m 5 8
+b 2 4 1
+r
+ p
+l at 5
+r
+ p
+l at 3
+ p
+l at 5
+ p
+l ap 1
+ p
+l po 2
+m 3 4 1 2 3
+r 3 5
+m 1 6 1 2 7
+m 11 10 1 11 11
+r 3 5
+m 11 11 1 10 10
+m 2 3 1 1 2
+m 1 2 1 1 3
+m 1 3 1 1 3
+ p
+ l ze 1
+m 7 7
+ p
+l ze 3
+m 7 6
+r
+ p
+l at 2
+ p
