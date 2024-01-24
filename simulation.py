@@ -1,4 +1,4 @@
-from licytacja import Licytacja
+from bidding import Bidding
 from akcje import *
 from custom_rand import random
 from traceback import print_exception
@@ -86,7 +86,7 @@ def turn(players, gods, board):
                     if bud == 2:
                         kto.actionDiscount+=1
     print('bidding phase begins')
-    lic = Licytacja(players)
+    lic = Bidding(players)
     licres=lic.perform()
     print('bidding phase ends')
     print(licres)
