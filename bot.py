@@ -8,7 +8,7 @@ import time
 import platform
 from subprocess import Popen
 if platform.system() == 'Windows':
-    from subprocess import CREATE_NEW_CONSOLE, CREATE_NEW_PROCESS_GROUP
+    from subprocess import CREATE_NEW_CONSOLE, CREATE_NEW_PROCESS_GROUP, DETACHED_PROCESS
 
 server = Server(host, port)
 
@@ -38,7 +38,10 @@ class Bot:
             else:
                 self.proc=Popen(shlex.split(f"python terminalbot.py {name} {log}"), shell=True)
         elif prompt != '':
-            self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"))
+            if platform.system() == 'Windows':
+                self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"), creationflags=CREATE_NEW_PROCESS_GROUP)
+            else:
+                self.proc=Popen(shlex.split(f"python botlauncher.py {name} {log} {prompt}"), start_new_session=True)
 
     def __hash__(self):
         return hash(self.name)

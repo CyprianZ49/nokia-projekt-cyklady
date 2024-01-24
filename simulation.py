@@ -167,7 +167,7 @@ def terminate(*args):
                 if player.terminal:
                     os.kill(player.proc.pid, signal.SIGTERM)
                 else:
-                    os.kill(player.proc.pid, signal.CTRL_C_EVENT)
+                    os.kill(player.proc.pid, signal.CTRL_BREAK_EVENT)
             else:
                 os.kill(player.proc.pid, signal.SIGKILL)
         except PermissionError:

@@ -10,10 +10,14 @@ import os
 import platform
 
 def terminate(*args):
-    proc.terminate()
+    if platform.system() == 'Windows':
+        os.kill(proc.pid, signal.CTRL_BREAK_EVENT)
+    else:
+        os.kill(proc.pid, signal.SIGKILL)
     os.kill(os.getpid(), signal.SIGTERM)
 
 signal.signal(signal.SIGINT, terminate)
+signal.signal(signal.SIGBREAK, terminate)
 
 file = " ".join(argv[3:])
 file_extension = pathlib.Path(file).suffix
@@ -26,7 +30,7 @@ else:
 
 if platform.system() == 'Windows':
     proc = subprocess.Popen(shlex.split(prompt), stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE, bufsize=0, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+                            stdout=subprocess.PIPE, bufsize=0)
 else:
     proc = subprocess.Popen(shlex.split(prompt), stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, bufsize=0, start_new_session=True)
